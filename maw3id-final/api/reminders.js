@@ -8,7 +8,8 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const now = new Date();
+  // const now = new Date();
+  const now = new Date('2026-10-14T07:59:00+03:00'); //test only
   const from = new Date(now.getTime() + 25 * 60 * 1000);
   const to = new Date(now.getTime() + 35 * 60 * 1000);
 
