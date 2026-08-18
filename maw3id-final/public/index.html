@@ -3,7 +3,12 @@
 </style></head><body><main class="wrap"><header class="brand"><h1>مَوعد</h1><p>حجز وإدارة جلسات المحكمة</p></header>
 <section id="booking" class="card"><div class="step">1 — تحديد التاريخ</div><div class="grid"><button class="btn" id="prev">السابق</button><button class="btn" id="next">التالي</button></div><div id="dateLabel" class="notice"></div><div class="step">2 — تحديد الوقت <span class="muted">(مدة الجلسة ساعتان)</span></div><div id="times" class="times"></div><div id="timeError" class="error"></div>
 <div class="step" style="margin-top:20px">3 — بيانات الحاجز</div><div class="field"><label>الاسم الكامل</label><input id="name" autocomplete="name" placeholder="الاسم الكامل"></div><div class="field"><label>البريد الإلكتروني</label><input id="email" type="email" autocomplete="email" placeholder="name@example.com"></div><div class="field"><label>ملاحظات (اختياري)</label><textarea id="notes" rows="3" placeholder="أي تفاصيل إضافية"></textarea></div><div id="formError" class="error"></div><button id="book" class="primary" disabled>تأكيد الحجز</button></section>
-<section id="success" class="card success"><h2>تم الحجز بنجاح ✓</h2><p id="summary"></p><div class="notice">أرسلنا تفاصيل الجلسة إلى بريدك الإلكتروني. إذا لم تجد الرسالة في البريد الوارد، يرجى التحقق من مجلد البريد غير المرغوب فيه (Spam). ويمكنك أيضًا نسخ رابط الجلسة الآن.</div><p class="muted" id="code"></p></section>
+<section id="success" class="card success"><h2>تم الحجز بنجاح ✓</h2><p id="summary"></p><div class="notice">أرسلنا تفاصيل الجلسة إلى بريدك الإلكتروني. إذا لم تجد الرسالة في البريد الوارد، يرجى التحقق من مجلد البريد غير المرغوب فيه (Spam). ويمكنك أيضًا نسخ رابط الجلسة الآن.</div>
+   <div class="linkbox">
+    <input id="meeting" readonly>
+    <button class="copy" id="copy">نسخ</button>
+  </div>
+  <p class="muted" id="code"></p></section>
 </main><script>
 const state={date:new Date(),time:null};const $=id=>document.getElementById(id);function pad(n){return String(n).padStart(2,'0')}function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}function fmtTime(t){let [h,m]=t.split(':').map(Number),ap=h<12?'ص':'م',hh=h%12||12;return `${hh}:${pad(m)} ${ap}`}function fmtDate(d){return d.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
 function slots(){let a=[];for(let mins=8*60;mins<=20*60;mins+=30){let h=Math.floor(mins/60),m=mins%60,end=mins+120; if(end>22*60)return a;a.push(`${pad(h)}:${pad(m)}`)}return a}
