@@ -61,14 +61,19 @@ module.exports = async (req, res) => {
         `
       });
 
-      await supabase()
-        .from('bookings')
-        .update({
-          reminder_sent_at: new Date().toISOString()
-        })
-        .eq('id', b.id);
+      const { error: updateError } = await supabase()
+  .from('bookings')
+  .update({
+    reminder_sent_at: new Date().toISOString()
+  })
+  .eq('id', b.id);
 
-      sent++;
+if (updateError) {
+  console.error('Failed to mark reminder as sent:', updateError);
+  continue;
+}
+
+sent++;
     }
   }
 
