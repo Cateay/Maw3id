@@ -1,1 +1,461 @@
-<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>لوحة مَوعد</title><style>body{font-family:Arial;background:#f6f7fb;padding:20px;color:#172033}.box{max-width:1000px;margin:auto;background:white;border-radius:18px;padding:20px}input,button{padding:11px;border:1px solid #ddd;border-radius:10px}button{cursor:pointer;background:#172033;color:white}table{width:100%;border-collapse:collapse;margin-top:20px}td,th{padding:10px;border-bottom:1px solid #eee;text-align:right}.muted{color:#777}</style><div class="box"><h1>مَوعد — لوحة الإدارة</h1><p class="muted">هذه الصفحة مخصصة لك.</p><input id="p" type="password" placeholder="كلمة المرور"><button onclick="load()">دخول</button><div id="out"></div></div><script>async function load(){let r=await fetch('/api/admin?password='+encodeURIComponent(document.getElementById('p').value));let d=await r.json();if(!r.ok)return out.innerHTML='<p>كلمة المرور غير صحيحة</p>';out.innerHTML='<table><tr><th>الاسم</th><th>التاريخ</th><th>الوقت</th><th>الحضور</th><th>البريد</th></tr>'+d.bookings.map(b=>`<tr><td>${b.name}</td><td>${b.session_date}</td><td>${b.start_time.slice(0,5)}</td><td>${b.attendance_status}</td><td>${b.email}</td></tr>`).join('')+'</table>'}</script>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+
+  <title>لوحة مَوعد</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      color: #172033;
+      padding: 30px 20px;
+    }
+
+    .box {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* Header */
+    .header {
+      background: #172033;
+      color: white;
+      border-radius: 20px;
+      padding: 28px 30px;
+      margin-bottom: 22px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .header p {
+      margin: 0;
+      color: #cbd1dc;
+      font-size: 14px;
+    }
+
+    /* Login */
+    .login {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.04);
+      margin-bottom: 22px;
+    }
+
+    .login-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 13px 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #172033;
+    }
+
+    button {
+      padding: 13px 24px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #172033;
+      color: white;
+      font-size: 14px;
+    }
+
+    button:hover {
+      opacity: .9;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.04);
+    }
+
+    .stat-label {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    /* Table */
+    .table-box {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.04);
+      overflow-x: auto;
+    }
+
+    .table-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .table-title h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      min-width: 800px;
+    }
+
+    th {
+      background: #f7f8fb;
+      color: #666;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    td,
+    th {
+      padding: 15px 12px;
+      border-bottom: 1px solid #eee;
+      text-align: right;
+    }
+
+    tbody tr:hover {
+      background: #fafbfc;
+    }
+
+    .name {
+      font-weight: 600;
+    }
+
+    .email {
+      color: #666;
+      direction: ltr;
+      text-align: right;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .pending {
+      background: #fff4d6;
+      color: #916600;
+    }
+
+    .confirmed {
+      background: #def7e8;
+      color: #167344;
+    }
+
+    .cancelled {
+      background: #ffe2e2;
+      color: #b42318;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #777;
+    }
+
+    .error {
+      color: #b42318;
+      margin-top: 12px;
+    }
+
+    /* Mobile */
+    @media (max-width: 800px) {
+      body {
+        padding: 15px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .login-row {
+        flex-direction: column;
+      }
+
+      .header h1 {
+        font-size: 23px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <div class="header">
+    <h1>مَوعد — لوحة الإدارة</h1>
+    <p>إدارة ومتابعة حجوزات الجلسات</p>
+  </div>
+
+  <div class="login">
+    <div class="login-row">
+      <input
+        id="p"
+        type="password"
+        placeholder="كلمة مرور الإدارة"
+        onkeydown="if(event.key === 'Enter') load()"
+      >
+
+      <button onclick="load()">دخول</button>
+    </div>
+
+    <div id="error"></div>
+  </div>
+
+  <div id="out"></div>
+
+</div>
+
+<script>
+
+async function load() {
+
+  const password = document.getElementById('p').value;
+  const error = document.getElementById('error');
+
+  error.innerHTML = '';
+
+  if (!password) {
+    error.innerHTML = '<p class="error">أدخل كلمة المرور.</p>';
+    return;
+  }
+
+  try {
+
+    const r = await fetch(
+      '/api/admin?password=' + encodeURIComponent(password)
+    );
+
+    const d = await r.json();
+
+    if (!r.ok) {
+      error.innerHTML = '<p class="error">كلمة المرور غير صحيحة.</p>';
+      return;
+    }
+
+    renderDashboard(d.bookings || []);
+
+  } catch (e) {
+
+    error.innerHTML =
+      '<p class="error">حدث خطأ أثناء تحميل البيانات.</p>';
+
+  }
+}
+
+
+function renderDashboard(bookings) {
+
+  const total = bookings.length;
+
+  const pending = bookings.filter(
+    b => b.attendance_status === 'pending'
+  ).length;
+
+  const confirmed = bookings.filter(
+    b => b.attendance_status === 'confirmed'
+  ).length;
+
+  const cancelled = bookings.filter(
+    b =>
+      b.attendance_status === 'cancelled' ||
+      b.attendance_status === 'canceled'
+  ).length;
+
+
+  const statsHTML = `
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-label">إجمالي الحجوزات</div>
+        <div class="stat-number">${total}</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">الحجوزات المعلقة</div>
+        <div class="stat-number">${pending}</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">الحجوزات المؤكدة</div>
+        <div class="stat-number">${confirmed}</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">المعتذر عنها</div>
+        <div class="stat-number">${cancelled}</div>
+      </div>
+
+    </div>
+  `;
+
+
+  let tableHTML = '';
+
+  if (bookings.length === 0) {
+
+    tableHTML = `
+      <div class="empty">
+        لا توجد حجوزات حاليًا.
+      </div>
+    `;
+
+  } else {
+
+    tableHTML = `
+      <table>
+
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>البريد الإلكتروني</th>
+            <th>التاريخ</th>
+            <th>الوقت</th>
+            <th>الحضور</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          ${bookings.map(b => {
+
+            const status = b.attendance_status || 'pending';
+
+            let statusClass = 'pending';
+            let statusText = 'معلق';
+
+            if (status === 'confirmed') {
+              statusClass = 'confirmed';
+              statusText = 'مؤكد';
+            }
+
+            if (
+              status === 'cancelled' ||
+              status === 'canceled'
+            ) {
+              statusClass = 'cancelled';
+              statusText = 'معتذر';
+            }
+
+            return `
+              <tr>
+
+                <td class="name">
+                  ${escapeHTML(b.name || '-')}
+                </td>
+
+                <td class="email">
+                  ${escapeHTML(b.email || '-')}
+                </td>
+
+                <td>
+                  ${escapeHTML(b.session_date || '-')}
+                </td>
+
+                <td>
+                  ${b.start_time
+                    ? escapeHTML(b.start_time.slice(0, 5))
+                    : '-'}
+                </td>
+
+                <td>
+                  <span class="status ${statusClass}">
+                    ${statusText}
+                  </span>
+                </td>
+
+              </tr>
+            `;
+
+          }).join('')}
+
+        </tbody>
+
+      </table>
+    `;
+  }
+
+
+  document.getElementById('out').innerHTML = `
+
+    ${statsHTML}
+
+    <div class="table-box">
+
+      <div class="table-title">
+        <h2>الحجوزات</h2>
+      </div>
+
+      ${tableHTML}
+
+    </div>
+
+  `;
+}
+
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
+</script>
+
+</body>
+</html>
