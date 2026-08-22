@@ -4,9 +4,12 @@
 <head>
 
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
 
-  <title>لوحة مَوعد</title>
+  <title>تسجيل الدخول — مَوعد</title>
 
   <style>
 
@@ -16,656 +19,211 @@
 
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
       background: #f5f6fa;
       color: #172033;
-      padding: 30px 20px;
-    }
 
-    .box {
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    /* =========================
-       Header
-    ========================= */
-
-    .header {
-      background: #172033;
-      color: white;
-      border-radius: 20px;
-      padding: 28px 30px;
-      margin-bottom: 22px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
-
-    .header p {
-      margin: 0;
-      color: #cbd1dc;
-      font-size: 14px;
-    }
-
-
-    /* =========================
-       Login
-    ========================= */
-
-    .login {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 5px 20px rgba(0,0,0,.04);
-      margin-bottom: 22px;
-    }
-
-    .login-row {
       display: flex;
-      gap: 10px;
-    }
-
-    input,
-    select {
-      flex: 1;
-      padding: 13px 15px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 14px;
-      outline: none;
-      background: white;
-      color: #172033;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #172033;
-    }
-
-    #p {
-      direction: ltr;
-      text-align: left;
-    }
-
-    #dateFilter {
-      direction: ltr;
-      text-align: left;
-      font-variant-numeric: lining-nums;
-    }
-
-    button {
-      padding: 13px 24px;
-      border: 0;
-      border-radius: 10px;
-      cursor: pointer;
-      background: #172033;
-      color: white;
-      font-size: 14px;
-    }
-
-    button:hover {
-      opacity: .9;
-    }
-
-
-    /* =========================
-       Stats
-    ========================= */
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .stat {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 5px 20px rgba(0,0,0,.04);
-    }
-
-    .stat-label {
-      color: #777;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .stat-number {
-      font-size: 30px;
-      font-weight: bold;
-      font-variant-numeric: lining-nums;
-    }
-
-
-    /* =========================
-       Main Box
-    ========================= */
-
-    .table-box {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 5px 20px rgba(0,0,0,.04);
-      overflow: hidden;
-    }
-
-
-    /* =========================
-       Title / View Switcher
-    ========================= */
-
-    .table-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-      gap: 15px;
-    }
-
-    .table-title h2 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .view-switch {
-      display: flex;
-      background: #f1f2f5;
-      padding: 4px;
-      border-radius: 10px;
-      gap: 4px;
-    }
-
-    .view-btn {
-      background: transparent;
-      color: #666;
-      padding: 9px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-
-    .view-btn.active {
-      background: #172033;
-      color: white;
-    }
-
-
-    /* =========================
-       Filters
-    ========================= */
-
-    .filters {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr auto;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .clear-btn {
-      background: #eef0f4;
-      color: #172033;
-      border: 1px solid #ddd;
-    }
-
-    .clear-btn:hover {
-      background: #e4e7ed;
-    }
-
-
-    /* =========================
-       Table
-    ========================= */
-
-    .table-scroll {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 800px;
-    }
-
-    th {
-      background: #f7f8fb;
-      color: #666;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    td,
-    th {
-      padding: 15px 12px;
-      border-bottom: 1px solid #eee;
-      text-align: right;
-    }
-
-    tbody tr {
-      cursor: pointer;
-      transition: background .15s;
-    }
-
-    tbody tr:hover {
-      background: #f8f9fc;
-    }
-
-    .name {
-      font-weight: 600;
-    }
-
-    .email {
-      color: #666;
-      direction: ltr;
-      text-align: right;
-    }
-
-    .date-cell,
-    .time-cell {
-      font-variant-numeric: lining-nums;
-      white-space: nowrap;
-    }
-
-
-    /* =========================
-       Status
-    ========================= */
-
-    .status {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .pending {
-      background: #fff4d6;
-      color: #916600;
-    }
-
-    .confirmed {
-      background: #def7e8;
-      color: #167344;
-    }
-
-    .cancelled {
-      background: #ffe2e2;
-      color: #b42318;
-    }
-
-
-    /* =========================
-       Empty
-    ========================= */
-
-    .empty {
-      text-align: center;
-      padding: 40px;
-      color: #777;
-    }
-
-    .results-count {
-      color: #777;
-      font-size: 13px;
-      margin-bottom: 10px;
-      font-variant-numeric: lining-nums;
-    }
-
-    .error {
-      color: #b42318;
-      margin-top: 12px;
-    }
-
-
-    /* =========================
-       Calendar
-    ========================= */
-
-    .calendar {
-      display: none;
-    }
-
-    .calendar.show {
-      display: block;
-    }
-
-    .calendar-navigation {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .calendar-navigation h3 {
-      margin: 0;
-      font-size: 17px;
-      text-align: center;
-      flex: 1;
-    }
-
-    .calendar-nav-btn {
-      background: #f1f2f5;
-      color: #172033;
-      padding: 9px 13px;
-      border: 1px solid #ddd;
-    }
-
-    .calendar-today {
-      background: #172033;
-      color: white;
-      padding: 9px 15px;
-    }
-
-    .calendar-scroll {
-      overflow-x: auto;
-      padding-bottom: 5px;
-    }
-
-    .calendar-grid {
-      min-width: 850px;
-      display: grid;
-      grid-template-columns: 70px repeat(7, 1fr);
-      border: 1px solid #e7e9ee;
-      border-radius: 14px;
-      overflow: hidden;
-      background: white;
-    }
-
-    .calendar-header {
-      background: #f7f8fb;
-      border-bottom: 1px solid #e7e9ee;
-      border-left: 1px solid #e7e9ee;
-      padding: 12px 5px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .calendar-header.today {
-      background: #eef1f7;
-    }
-
-    .calendar-time {
-      min-height: 60px;
-      border-left: 1px solid #e7e9ee;
-      border-bottom: 1px solid #e7e9ee;
-      padding: 8px 4px;
-      text-align: center;
-      color: #777;
-      font-size: 11px;
-      direction: rtl;
-      white-space: nowrap;
-    }
-
-    .calendar-cell {
-      min-height: 60px;
-      border-left: 1px solid #e7e9ee;
-      border-bottom: 1px solid #e7e9ee;
-      padding: 4px;
-      position: relative;
-      background: white;
-    }
-
-    .calendar-cell.today {
-      background: #fafbfe;
-    }
-
-    .calendar-booking {
-      width: 100%;
-      border-radius: 9px;
-      padding: 7px 8px;
-      margin-bottom: 4px;
-      text-align: right;
-      cursor: pointer;
-      font-size: 11px;
-      line-height: 1.5;
-      border: 0;
-      color: #172033;
-      background: #fff4d6;
-      overflow: hidden;
-    }
-
-    .calendar-booking:hover {
-      opacity: .85;
-    }
-
-    .calendar-booking.confirmed-booking {
-      background: #def7e8;
-    }
-
-    .calendar-booking.declined-booking {
-      background: #ffe2e2;
-    }
-
-    .calendar-booking-time {
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .calendar-booking-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-
-    /* =========================
-       Modal
-    ========================= */
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, .48);
-      display: none;
       align-items: center;
       justify-content: center;
+
       padding: 20px;
-      z-index: 1000;
     }
 
-    .modal-overlay.show {
-      display: flex;
-    }
 
-    .modal {
+    .login-container {
       width: 100%;
-      max-width: 540px;
-      max-height: 90vh;
-      overflow-y: auto;
+      max-width: 430px;
+    }
+
+
+    /* =========================
+       Logo / Brand
+    ========================= */
+
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+
+    .brand-title {
+      margin: 0 0 8px;
+      font-size: 30px;
+      font-weight: 700;
+      color: #172033;
+    }
+
+
+    .brand-subtitle {
+      margin: 0;
+      color: #777;
+      font-size: 14px;
+    }
+
+
+    /* =========================
+       Login Box
+    ========================= */
+
+    .login-box {
       background: white;
       border-radius: 22px;
-      padding: 26px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.18);
-      position: relative;
-      animation: modalIn .18s ease-out;
+      padding: 30px;
+
+      box-shadow:
+        0 10px 35px rgba(0, 0, 0, .06);
     }
 
-    @keyframes modalIn {
 
-      from {
-        opacity: 0;
-        transform: translateY(8px) scale(.98);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 22px;
-    }
-
-    .modal-header h2 {
-      margin: 0;
+    .login-title {
+      margin: 0 0 8px;
       font-size: 22px;
     }
 
-    .close-btn {
-      width: 38px;
-      height: 38px;
-      padding: 0;
-      border-radius: 10px;
-      background: #f1f2f5;
-      color: #172033;
-      font-size: 20px;
-    }
 
-    .close-btn:hover {
-      background: #e7e9ee;
-    }
-
-
-    /* =========================
-       Details
-    ========================= */
-
-    .details {
-      display: grid;
-      gap: 12px;
-    }
-
-    .detail {
-      background: #f7f8fb;
-      border-radius: 13px;
-      padding: 14px 16px;
-    }
-
-    .detail-label {
+    .login-description {
+      margin: 0 0 25px;
       color: #777;
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .detail-value {
-      font-size: 15px;
-      font-weight: 600;
-      word-break: break-word;
-    }
-
-    .detail-email {
-      direction: ltr;
-      text-align: right;
-    }
-
-    .booking-code {
-      direction: ltr;
-      text-align: right;
-      letter-spacing: .5px;
-    }
-
-    .created-at {
-      font-variant-numeric: lining-nums;
+      font-size: 14px;
+      line-height: 1.7;
     }
 
 
     /* =========================
-       Meeting
+       Form
     ========================= */
 
-    .detail-link {
+    .field {
+      margin-bottom: 16px;
+    }
+
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+
+      font-size: 13px;
+      font-weight: 600;
+      color: #172033;
+    }
+
+
+    input {
+      width: 100%;
+
+      padding: 14px 15px;
+
+      border: 1px solid #ddd;
+      border-radius: 11px;
+
+      font-size: 14px;
+
+      outline: none;
+
+      background: white;
+      color: #172033;
+
+      transition:
+        border-color .15s,
+        box-shadow .15s;
+    }
+
+
+    input:focus {
+      border-color: #172033;
+
+      box-shadow:
+        0 0 0 3px rgba(23, 32, 51, .08);
+    }
+
+
+    #password {
       direction: ltr;
       text-align: left;
-      color: #3156d3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
-    .meeting-btn {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 9px 14px;
-      border-radius: 9px;
+
+    /* =========================
+       Login Button
+    ========================= */
+
+    .login-button {
+      width: 100%;
+
+      padding: 14px;
+
+      border: 0;
+      border-radius: 11px;
+
       background: #172033;
       color: white;
-      text-decoration: none;
-      font-size: 13px;
+
+      font-size: 14px;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      transition:
+        opacity .15s,
+        transform .05s;
     }
 
-    .meeting-btn:hover {
+
+    .login-button:hover {
       opacity: .9;
     }
 
 
-    /* =========================
-       Notes
-    ========================= */
-
-    .notes-value {
-      line-height: 1.8;
-      font-weight: 500;
-      white-space: normal;
-      overflow-wrap: anywhere;
+    .login-button:active {
+      transform: scale(.99);
     }
 
-    .no-notes {
-      color: #777;
-      font-weight: normal;
+
+    .login-button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
     }
 
 
     /* =========================
-       Status Actions
+       Error
     ========================= */
 
-    .detail-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 8px;
-    }
+    .error {
+      margin-top: 14px;
 
-    .status-action {
-      width: 100%;
-      padding: 12px;
+      padding: 11px 13px;
+
       border-radius: 10px;
-      font-weight: 600;
-    }
 
-    .confirm-action {
-      background: #167344;
-    }
+      background: #ffe8e8;
+      color: #b42318;
 
-    .decline-action {
-      background: #b42318;
-    }
-
-    .action-message {
-      margin-top: 10px;
-      text-align: center;
       font-size: 13px;
-      color: #777;
+      line-height: 1.6;
+
+      display: none;
+    }
+
+
+    .error.show {
+      display: block;
     }
 
 
     /* =========================
-       Cancel
+       Footer
     ========================= */
 
-    .cancel-action {
-      width: 100%;
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #b42318;
-      color: white;
-      font-weight: 600;
-    }
+    .footer {
+      text-align: center;
 
-    .cancel-action:hover {
-      background: #921c14;
+      margin-top: 20px;
+
+      color: #999;
+      font-size: 12px;
     }
 
 
@@ -673,67 +231,21 @@
        Mobile
     ========================= */
 
-    @media (max-width: 800px) {
+    @media (max-width: 500px) {
 
       body {
         padding: 15px;
       }
 
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
+
+      .login-box {
+        padding: 24px 20px;
+        border-radius: 18px;
       }
 
-      .login-row {
-        flex-direction: column;
-      }
 
-      .filters {
-        grid-template-columns: 1fr;
-      }
-
-      .header h1 {
-        font-size: 23px;
-      }
-
-      .table-title {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .view-switch {
-        width: 100%;
-      }
-
-      .view-btn {
-        flex: 1;
-      }
-
-    }
-
-
-    @media (max-width: 450px) {
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .modal {
-        padding: 20px;
-      }
-
-      .detail-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .calendar-navigation {
-        flex-wrap: wrap;
-      }
-
-      .calendar-navigation h3 {
-        order: -1;
-        width: 100%;
-        flex-basis: 100%;
-        margin-bottom: 5px;
+      .brand-title {
+        font-size: 27px;
       }
 
     }
@@ -745,137 +257,129 @@
 
 <body>
 
-<div class="box">
+
+  <main class="login-container">
 
 
-  <!-- Header -->
-<a
-  href="/admin-dashboard.html"
-  style="
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 999;
-    background: #172033;
-    color: white;
-    text-decoration: none;
-    padding: 11px 16px;
-    border-radius: 10px;
-    font-size: 14px;
-  "
->
-  ⚙️ لوحة التحكم
-</a>
-  
-  <div class="header">
+    <!-- =========================
+         Brand
+    ========================= -->
 
-    <h1>
-      مَوعد — لوحة الإدارة
-    </h1>
+    <div class="brand">
 
-    <p>
-      إدارة ومتابعة حجوزات الجلسات
-    </p>
+      <h1 class="brand-title">
+        مَوعد
+      </h1>
 
-  </div>
-
-
-  <!-- Login -->
-
-  <div class="login">
-
-    <form
-      id="loginForm"
-      onsubmit="event.preventDefault(); load()"
-      autocomplete="on"
-    >
-
-      <div class="login-row">
-
-        <input
-          id="p"
-          name="password"
-          type="password"
-          placeholder="كلمة مرور الإدارة"
-          autocomplete="current-password"
-        >
-
-        <button type="submit">
-          دخول
-        </button>
-
-      </div>
-
-    </form>
-
-    <div id="error"></div>
-
-  </div>
-
-
-  <div id="out"></div>
-
-</div>
-
-
-<!-- =========================
-     Booking Details Modal
-========================= -->
-
-<div
-  id="bookingModal"
-  class="modal-overlay"
-  onclick="closeModal(event)"
->
-
-  <div
-    class="modal"
-    onclick="event.stopPropagation()"
-  >
-
-    <div class="modal-header">
-
-      <h2>
-        تفاصيل الحجز
-      </h2>
-
-      <button
-        class="close-btn"
-        onclick="closeModal()"
-        type="button"
-      >
-        ×
-      </button>
+      <p class="brand-subtitle">
+        لوحة الإدارة
+      </p>
 
     </div>
 
 
-    <div
-      id="bookingDetails"
-      class="details"
-    ></div>
+    <!-- =========================
+         Login
+    ========================= -->
 
-  </div>
+    <section class="login-box">
 
-</div>
+      <h2 class="login-title">
+        تسجيل الدخول
+      </h2>
+
+
+      <p class="login-description">
+        أدخل كلمة مرور الإدارة للوصول إلى لوحة التحكم.
+      </p>
+
+
+      <form
+        id="loginForm"
+        autocomplete="on"
+      >
+
+
+        <div class="field">
+
+          <label for="password">
+            كلمة مرور الإدارة
+          </label>
+
+
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="أدخل كلمة المرور"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
+
+
+        <button
+          id="loginButton"
+          class="login-button"
+          type="submit"
+        >
+          دخول
+        </button>
+
+
+      </form>
+
+
+      <div
+        id="error"
+        class="error"
+      ></div>
+
+    </section>
+
+
+    <div class="footer">
+      مَوعد — إدارة حجوزات الجلسات
+    </div>
+
+
+  </main>
 
 
 <script>
 
 
 /* =========================
-   Variables
+   Login
 ========================= */
 
-let allBookings = [];
+const loginForm =
+  document.getElementById(
+    'loginForm'
+  );
 
-let currentView = 'table';
 
-let calendarDate = new Date();
+const passwordInput =
+  document.getElementById(
+    'password'
+  );
+
+
+const loginButton =
+  document.getElementById(
+    'loginButton'
+  );
+
+
+const errorBox =
+  document.getElementById(
+    'error'
+  );
 
 
 /* =========================
-   تحميل الصفحة
+   إذا كان مسجل دخول
 ========================= */
 
 window.addEventListener(
@@ -890,10 +394,14 @@ window.addEventListener(
 
     if (savedPassword) {
 
-      document.getElementById('p').value =
-        savedPassword;
+      /*
+       * إذا كانت الجلسة موجودة
+       * لا نخلي المستخدم يرجع لصفحة
+       * تسجيل الدخول بدون داعي.
+       */
 
-      load(true);
+      window.location.href =
+        '/admin-dashboard.html';
 
     }
 
@@ -902,2168 +410,180 @@ window.addEventListener(
 
 
 /* =========================
-   تسجيل الدخول
+   Submit
 ========================= */
 
-async function load(
-  autoLogin = false
-) {
+loginForm.addEventListener(
+  'submit',
+  async event => {
 
-  const password =
-    document.getElementById('p').value;
-
-
-  const error =
-    document.getElementById('error');
+    event.preventDefault();
 
 
-  error.innerHTML = '';
+    const password =
+      passwordInput.value.trim();
 
 
-  if (!password) {
-
-    if (!autoLogin) {
-
-      error.innerHTML =
-        '<p class="error">أدخل كلمة المرور.</p>';
-
-    }
-
-    return;
-
-  }
+    hideError();
 
 
-  try {
+    if (!password) {
 
-    const r =
-      await fetch(
-        '/api/admin?password=' +
-        encodeURIComponent(password)
+      showError(
+        'أدخل كلمة مرور الإدارة.'
       );
-
-
-    const d =
-      await r.json();
-
-
-    if (!r.ok) {
-
-      sessionStorage.removeItem(
-        'maw3id_admin_password'
-      );
-
-
-      document.getElementById('p').value =
-        '';
-
-
-      error.innerHTML =
-        '<p class="error">كلمة المرور غير صحيحة.</p>';
-
 
       return;
 
     }
 
 
-    sessionStorage.setItem(
-      'maw3id_admin_password',
-      password
-    );
+    loginButton.disabled = true;
+
+    loginButton.textContent =
+      'جاري تسجيل الدخول...';
 
 
-    allBookings =
-      d.bookings || [];
+    try {
+
+      /*
+       * نستخدم نفس API الحالي
+       * للتأكد من صحة كلمة المرور.
+       */
+
+      const response =
+        await fetch(
+          '/api/admin?password=' +
+          encodeURIComponent(password)
+        );
 
 
-    renderDashboard(
-      allBookings
-    );
+      let data = null;
 
 
-  } catch (e) {
+      try {
 
-    error.innerHTML =
-      '<p class="error">حدث خطأ أثناء تحميل البيانات.</p>';
+        data =
+          await response.json();
 
-  }
+      } catch {
 
-}
+        data = null;
 
-
-/* =========================
-   تحويل الوقت إلى 12 ساعة
-========================= */
-
-function formatTime(time) {
-
-  if (!time) return '-';
-
-
-  const parts =
-    time.split(':');
-
-
-  let hour =
-    parseInt(
-      parts[0],
-      10
-    );
-
-
-  const minute =
-    parts[1] || '00';
-
-
-  const period =
-    hour >= 12
-      ? 'م'
-      : 'ص';
-
-
-  hour =
-    hour % 12;
-
-
-  if (hour === 0) {
-    hour = 12;
-  }
-
-
-  return `${hour}:${minute} ${period}`;
-
-}
-
-
-/* =========================
-   تنسيق وقت إنشاء الحجز
-========================= */
-
-function formatCreatedAt(value) {
-
-  if (!value) return '-';
-
-
-  const date =
-    new Date(value);
-
-
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-
-    return escapeHTML(value);
-
-  }
-
-
-  const datePart =
-    date.toLocaleDateString(
-      'en-GB',
-      {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
       }
-    );
 
 
-  const timePart =
-    date.toLocaleTimeString(
-      'en-US',
-      {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
+      if (!response.ok) {
+
+        showError(
+          'كلمة المرور غير صحيحة.'
+        );
+
+        passwordInput.value = '';
+        passwordInput.focus();
+
+        return;
+
       }
-    )
-    .replace('AM', 'ص')
-    .replace('PM', 'م');
 
 
-  return `${datePart} — ${timePart}`;
+      /*
+       * كلمة المرور صحيحة.
+       *
+       * نحفظها في sessionStorage
+       * حتى نستخدمها داخل لوحة الإدارة
+       * وخصوصًا عند إرسال الإيميلات
+       * وتحديث الحجوزات.
+       */
 
-}
+      sessionStorage.setItem(
+        'maw3id_admin_password',
+        password
+      );
 
 
-/* =========================
-   Dashboard
-========================= */
+      /*
+       * انتقال إلى الداشبورد.
+       */
 
-function renderDashboard(
-  bookings
-) {
+      window.location.href =
+        '/admin-dashboard.html';
 
-  const total =
-    allBookings.length;
+    }
 
 
-  const pending =
-    allBookings.filter(
-      b =>
-        b.attendance_status ===
-        'pending'
-    ).length;
+    catch (error) {
 
+      console.error(error);
 
-  const confirmed =
-    allBookings.filter(
-      b =>
-        b.attendance_status ===
-        'confirmed'
-    ).length;
 
-
-  const declined =
-    allBookings.filter(
-      b =>
-        b.attendance_status ===
-        'declined'
-    ).length;
-
-
-  const statsHTML = `
-
-    <div class="stats">
-
-      <div class="stat">
-
-        <div class="stat-label">
-          إجمالي الحجوزات
-        </div>
-
-        <div class="stat-number">
-          ${total}
-        </div>
-
-      </div>
-
-
-      <div class="stat">
-
-        <div class="stat-label">
-          الحجوزات المعلقة
-        </div>
-
-        <div class="stat-number">
-          ${pending}
-        </div>
-
-      </div>
-
-
-      <div class="stat">
-
-        <div class="stat-label">
-          الحجوزات المؤكدة
-        </div>
-
-        <div class="stat-number">
-          ${confirmed}
-        </div>
-
-      </div>
-
-
-      <div class="stat">
-
-        <div class="stat-label">
-          عدم الحضور
-        </div>
-
-        <div class="stat-number">
-          ${declined}
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  const tableHTML = `
-
-    <div class="table-box">
-
-      <div class="table-title">
-
-        <h2>
-          الحجوزات
-        </h2>
-
-
-        <div class="view-switch">
-
-          <button
-            id="tableViewBtn"
-            class="view-btn ${
-              currentView === 'table'
-                ? 'active'
-                : ''
-            }"
-            onclick="switchView('table')"
-            type="button"
-          >
-            ☷ جدول
-          </button>
-
-
-          <button
-            id="calendarViewBtn"
-            class="view-btn ${
-              currentView === 'calendar'
-                ? 'active'
-                : ''
-            }"
-            onclick="switchView('calendar')"
-            type="button"
-          >
-            ▦ تقويم
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="filters">
-
-        <input
-          id="search"
-          type="text"
-          placeholder="ابحث بالاسم أو البريد الإلكتروني..."
-          oninput="applyFilters()"
-        >
-
-
-        <input
-          id="dateFilter"
-          type="date"
-          onchange="applyFilters()"
-        >
-
-
-        <select
-          id="statusFilter"
-          onchange="applyFilters()"
-        >
-
-          <option value="">
-            كل الحالات
-          </option>
-
-          <option value="pending">
-            معلق
-          </option>
-
-          <option value="confirmed">
-            مؤكد
-          </option>
-
-          <option value="declined">
-            معتذر
-          </option>
-
-        </select>
-
-
-        <button
-          class="clear-btn"
-          onclick="clearFilters()"
-          type="button"
-        >
-          مسح
-        </button>
-
-      </div>
-
-
-      <div id="results"></div>
-
-
-      <div
-        id="calendar"
-        class="calendar"
-      ></div>
-
-    </div>
-
-  `;
-
-
-  document.getElementById('out').innerHTML =
-    statsHTML +
-    tableHTML;
-
-
-  if (
-    currentView === 'table'
-  ) {
-
-    renderTable(
-      bookings
-    );
-
-  } else {
-
-    renderCalendar(
-      bookings
-    );
-
-  }
-
-}
-
-
-/* =========================
-   تغيير العرض
-========================= */
-
-function switchView(
-  view
-) {
-
-  currentView =
-    view;
-
-
-  const search =
-    document.getElementById(
-      'search'
-    );
-
-
-  const dateFilter =
-    document.getElementById(
-      'dateFilter'
-    );
-
-
-  const statusFilter =
-    document.getElementById(
-      'statusFilter'
-    );
-
-
-  let filtered =
-    filterBookings(
-      allBookings,
-      search
-        ? search.value
-        : '',
-      dateFilter
-        ? dateFilter.value
-        : '',
-      statusFilter
-        ? statusFilter.value
-        : ''
-    );
-
-
-  const tableViewBtn =
-    document.getElementById(
-      'tableViewBtn'
-    );
-
-
-  const calendarViewBtn =
-    document.getElementById(
-      'calendarViewBtn'
-    );
-
-
-  if (tableViewBtn) {
-
-    tableViewBtn.classList.toggle(
-      'active',
-      view === 'table'
-    );
-
-  }
-
-
-  if (calendarViewBtn) {
-
-    calendarViewBtn.classList.toggle(
-      'active',
-      view === 'calendar'
-    );
-
-  }
-
-
-  if (
-    view === 'table'
-  ) {
-
-    document.getElementById(
-      'results'
-    ).style.display =
-      'block';
-
-
-    document.getElementById(
-      'calendar'
-    ).classList.remove(
-      'show'
-    );
-
-
-    renderTable(
-      filtered
-    );
-
-  } else {
-
-    document.getElementById(
-      'results'
-    ).style.display =
-      'none';
-
-
-    document.getElementById(
-      'calendar'
-    ).classList.add(
-      'show'
-    );
-
-
-    renderCalendar(
-      filtered
-    );
-
-  }
-
-}
-
-
-/* =========================
-   الفلاتر
-========================= */
-
-function filterBookings(
-  bookings,
-  search,
-  date,
-  status
-) {
-
-  search =
-    String(
-      search || ''
-    )
-    .trim()
-    .toLowerCase();
-
-
-  return bookings.filter(
-    b => {
-
-      const name =
-        String(
-          b.name || ''
-        ).toLowerCase();
-
-
-      const email =
-        String(
-          b.email || ''
-        ).toLowerCase();
-
-
-      const matchesSearch =
-        !search ||
-        name.includes(search) ||
-        email.includes(search);
-
-
-      const matchesDate =
-        !date ||
-        b.session_date === date;
-
-
-      const matchesStatus =
-        !status ||
-        b.attendance_status ===
-        status;
-
-
-      return (
-        matchesSearch &&
-        matchesDate &&
-        matchesStatus
+      showError(
+        'حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.'
       );
 
     }
-  );
 
-}
 
+    finally {
 
-function applyFilters() {
+      loginButton.disabled = false;
 
-  const search =
-    document.getElementById(
-      'search'
-    ).value;
-
-
-  const date =
-    document.getElementById(
-      'dateFilter'
-    ).value;
-
-
-  const status =
-    document.getElementById(
-      'statusFilter'
-    ).value;
-
-
-  const filtered =
-    filterBookings(
-      allBookings,
-      search,
-      date,
-      status
-    );
-
-
-  if (
-    currentView === 'calendar'
-  ) {
-
-    renderCalendar(
-      filtered
-    );
-
-  } else {
-
-    renderTable(
-      filtered
-    );
-
-  }
-
-}
-
-
-/* =========================
-   مسح الفلاتر
-========================= */
-
-function clearFilters() {
-
-  document.getElementById(
-    'search'
-  ).value = '';
-
-
-  document.getElementById(
-    'dateFilter'
-  ).value = '';
-
-
-  document.getElementById(
-    'statusFilter'
-  ).value = '';
-
-
-  if (
-    currentView === 'calendar'
-  ) {
-
-    renderCalendar(
-      allBookings
-    );
-
-  } else {
-
-    renderTable(
-      allBookings
-    );
-
-  }
-
-}
-
-
-/* =========================
-   الجدول
-========================= */
-
-function renderTable(
-  bookings
-) {
-
-  const results =
-    document.getElementById(
-      'results'
-    );
-
-
-  if (!results) return;
-
-
-  const countHTML = `
-
-    <div class="results-count">
-
-      عرض ${bookings.length}
-      من أصل ${allBookings.length}
-      حجز
-
-    </div>
-
-  `;
-
-
-  if (
-    bookings.length === 0
-  ) {
-
-    results.innerHTML =
-      countHTML +
-
-      `
-
-        <div class="empty">
-          لا توجد حجوزات مطابقة للبحث.
-        </div>
-
-      `;
-
-
-    return;
-
-  }
-
-
-  const tableHTML = `
-
-    <div class="table-scroll">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>
-              الاسم
-            </th>
-
-            <th>
-              البريد الإلكتروني
-            </th>
-
-            <th>
-              التاريخ
-            </th>
-
-            <th>
-              الوقت
-            </th>
-
-            <th>
-              الحضور
-            </th>
-
-          </tr>
-
-        </thead>
-
-
-        <tbody>
-
-          ${bookings.map(
-            b => {
-
-              const status =
-                b.attendance_status ||
-                'pending';
-
-
-              let statusClass =
-                'pending';
-
-
-              let statusText =
-                'معلق';
-
-
-              if (
-                status ===
-                'confirmed'
-              ) {
-
-                statusClass =
-                  'confirmed';
-
-                statusText =
-                  'مؤكد';
-
-              }
-
-
-              if (
-                status ===
-                'declined'
-              ) {
-
-                statusClass =
-                  'cancelled';
-
-                statusText =
-                  'معتذر';
-
-              }
-
-
-              return `
-
-                <tr
-                  onclick="openBooking(
-                    ${allBookings.indexOf(b)}
-                  )"
-                >
-
-                  <td class="name">
-
-                    ${escapeHTML(
-                      b.name || '-'
-                    )}
-
-                  </td>
-
-
-                  <td class="email">
-
-                    ${escapeHTML(
-                      b.email || '-'
-                    )}
-
-                  </td>
-
-
-                  <td class="date-cell">
-
-                    ${escapeHTML(
-                      b.session_date || '-'
-                    )}
-
-                  </td>
-
-
-                  <td class="time-cell">
-
-                    ${formatTime(
-                      b.start_time
-                    )}
-
-                  </td>
-
-
-                  <td>
-
-                    <span
-                      class="status ${statusClass}"
-                    >
-
-                      ${statusText}
-
-                    </span>
-
-                  </td>
-
-                </tr>
-
-              `;
-
-            }
-          ).join('')}
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-
-  results.innerHTML =
-    countHTML +
-    tableHTML;
-
-}
-
-
-/* =========================
-   Calendar helpers
-========================= */
-
-function getStartOfWeek(
-  date
-) {
-
-  const d =
-    new Date(date);
-
-
-  const day =
-    d.getDay();
-
-
-  const diff =
-    day === 0
-      ? 0
-      : -day;
-
-
-  d.setDate(
-    d.getDate() +
-    diff
-  );
-
-
-  d.setHours(
-    0,
-    0,
-    0,
-    0
-  );
-
-
-  return d;
-
-}
-
-
-function dateKey(
-  date
-) {
-
-  const y =
-    date.getFullYear();
-
-
-  const m =
-    String(
-      date.getMonth() + 1
-    ).padStart(
-      2,
-      '0'
-    );
-
-
-  const d =
-    String(
-      date.getDate()
-    ).padStart(
-      2,
-      '0'
-    );
-
-
-  return `${y}-${m}-${d}`;
-
-}
-
-
-function arabicDayName(
-  date
-) {
-
-  return date.toLocaleDateString(
-    'ar-SA',
-    {
-      weekday: 'short'
-    }
-  );
-
-}
-
-
-function formatCalendarDate(
-  date
-) {
-
-  return date.toLocaleDateString(
-    'ar-SA',
-    {
-      day: 'numeric',
-      month: 'short'
-    }
-  );
-
-}
-
-
-/* =========================
-   Calendar
-========================= */
-
-function renderCalendar(
-  bookings
-) {
-
-  const calendar =
-    document.getElementById(
-      'calendar'
-    );
-
-
-  if (!calendar) return;
-
-
-  const start =
-    getStartOfWeek(
-      calendarDate
-    );
-
-
-  const days =
-    [];
-
-
-  for (
-    let i = 0;
-    i < 7;
-    i++
-  ) {
-
-    const d =
-      new Date(start);
-
-
-    d.setDate(
-      start.getDate() +
-      i
-    );
-
-
-    days.push(d);
-
-  }
-
-
-  const title =
-    `${formatCalendarDate(
-      days[0]
-    )} — ${formatCalendarDate(
-      days[6]
-    )}`;
-
-
-  let html = `
-
-    <div class="calendar-navigation">
-
-      <button
-        type="button"
-        class="calendar-nav-btn"
-        onclick="changeCalendarWeek(-1)"
-      >
-        السابق
-      </button>
-
-
-      <button
-        type="button"
-        class="calendar-today"
-        onclick="goCalendarToday()"
-      >
-        اليوم
-      </button>
-
-
-      <h3>
-        ${title}
-      </h3>
-
-
-      <button
-        type="button"
-        class="calendar-nav-btn"
-        onclick="changeCalendarWeek(1)"
-      >
-        التالي
-      </button>
-
-    </div>
-
-
-    <div class="calendar-scroll">
-
-      <div class="calendar-grid">
-
-        <div class="calendar-header">
-          الوقت
-        </div>
-
-  `;
-
-
-  days.forEach(
-    day => {
-
-      const isToday =
-        dateKey(day) ===
-        dateKey(new Date());
-
-
-      html += `
-
-        <div
-          class="calendar-header ${
-            isToday
-              ? 'today'
-              : ''
-          }"
-        >
-
-          ${arabicDayName(day)}
-
-          <br>
-
-          ${formatCalendarDate(day)}
-
-        </div>
-
-      `;
+      loginButton.textContent =
+        'دخول';
 
     }
-  );
-
-
-  /*
-    8 صباحًا إلى 8 مساءً
-    كل ساعة في التقويم.
-  */
-
-  for (
-    let hour = 8;
-    hour <= 20;
-    hour++
-  ) {
-
-    html += `
-
-      <div class="calendar-time">
-
-        ${formatTime(
-          String(hour).padStart(
-            2,
-            '0'
-          ) + ':00'
-        )}
-
-      </div>
-
-    `;
-
-
-    days.forEach(
-      day => {
-
-        const key =
-          dateKey(day);
-
-
-        const isToday =
-          key ===
-          dateKey(new Date());
-
-
-        const dayBookings =
-          bookings.filter(
-            b =>
-              b.session_date ===
-              key &&
-              parseInt(
-                String(
-                  b.start_time || ''
-                ).split(':')[0],
-                10
-              ) === hour
-          );
-
-
-        html += `
-
-          <div
-            class="calendar-cell ${
-              isToday
-                ? 'today'
-                : ''
-            }"
-          >
-
-            ${
-              dayBookings
-                .map(
-                  b =>
-                    calendarBookingHTML(
-                      b
-                    )
-                )
-                .join('')
-            }
-
-          </div>
-
-        `;
-
-      }
-    );
 
   }
+);
 
 
-  html += `
+/* =========================
+   Error
+========================= */
 
-      </div>
+function showError(
+  message
+) {
 
-    </div>
+  errorBox.textContent =
+    message;
 
-  `;
 
-
-  calendar.innerHTML =
-    html;
+  errorBox.classList.add(
+    'show'
+  );
 
 }
 
 
-function calendarBookingHTML(
-  booking
-) {
+function hideError() {
 
-  const status =
-    booking.attendance_status ||
-    'pending';
-
-
-  let statusClass =
+  errorBox.textContent =
     '';
 
 
-  if (
-    status ===
-    'confirmed'
-  ) {
-
-    statusClass =
-      'confirmed-booking';
-
-  }
-
-
-  if (
-    status ===
-    'declined'
-  ) {
-
-    statusClass =
-      'declined-booking';
-
-  }
-
-
-  const index =
-    allBookings.indexOf(
-      booking
-    );
-
-
-  return `
-
-    <button
-      type="button"
-      class="calendar-booking ${statusClass}"
-      onclick="openBooking(${index})"
-    >
-
-      <div class="calendar-booking-time">
-
-        ${formatTime(
-          booking.start_time
-        )}
-
-        -
-
-        ${formatTime(
-          booking.end_time
-        )}
-
-      </div>
-
-
-      <div class="calendar-booking-name">
-
-        ${escapeHTML(
-          booking.name || '-'
-        )}
-
-      </div>
-
-    </button>
-
-  `;
-
-}
-
-
-function changeCalendarWeek(
-  amount
-) {
-
-  calendarDate.setDate(
-    calendarDate.getDate() +
-    amount * 7
-  );
-
-
-  const search =
-    document.getElementById(
-      'search'
-    );
-
-
-  const dateFilter =
-    document.getElementById(
-      'dateFilter'
-    );
-
-
-  const statusFilter =
-    document.getElementById(
-      'statusFilter'
-    );
-
-
-  const filtered =
-    filterBookings(
-      allBookings,
-      search
-        ? search.value
-        : '',
-      dateFilter
-        ? dateFilter.value
-        : '',
-      statusFilter
-        ? statusFilter.value
-        : ''
-    );
-
-
-  renderCalendar(
-    filtered
-  );
-
-}
-
-
-function goCalendarToday() {
-
-  calendarDate =
-    new Date();
-
-
-  const search =
-    document.getElementById(
-      'search'
-    );
-
-
-  const dateFilter =
-    document.getElementById(
-      'dateFilter'
-    );
-
-
-  const statusFilter =
-    document.getElementById(
-      'statusFilter'
-    );
-
-
-  const filtered =
-    filterBookings(
-      allBookings,
-      search
-        ? search.value
-        : '',
-      dateFilter
-        ? dateFilter.value
-        : '',
-      statusFilter
-        ? statusFilter.value
-        : ''
-    );
-
-
-  renderCalendar(
-    filtered
+  errorBox.classList.remove(
+    'show'
   );
 
 }
 
 
 /* =========================
-   تفاصيل الحجز
+   Enter
 ========================= */
 
-function openBooking(
-  index
-) {
-
-  const booking =
-    allBookings[index];
-
-
-  if (!booking) return;
-
-
-  let statusClass =
-    'pending';
-
-
-  let statusText =
-    'معلق';
-
-
-  if (
-    booking.attendance_status ===
-    'confirmed'
-  ) {
-
-    statusClass =
-      'confirmed';
-
-    statusText =
-      'مؤكد';
-
-  }
-
-
-  if (
-    booking.attendance_status ===
-    'declined'
-  ) {
-
-    statusClass =
-      'cancelled';
-
-    statusText =
-      'معتذر';
-
-  }
-
-
-  const meetingURL =
-    booking.meeting_url
-      ? escapeHTML(
-          booking.meeting_url
-        )
-      : '';
-
-
-  const notesHTML =
-    booking.notes
-      ? escapeHTML(
-          booking.notes
-        ).replace(
-          /\n/g,
-          '<br>'
-        )
-      : `
-
-          <span class="no-notes">
-            لا توجد ملاحظات
-          </span>
-
-        `;
-
-
-  document.getElementById(
-    'bookingDetails'
-  ).innerHTML = `
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        الاسم
-      </div>
-
-      <div class="detail-value">
-
-        ${escapeHTML(
-          booking.name || '-'
-        )}
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        البريد الإلكتروني
-      </div>
-
-      <div class="detail-value detail-email">
-
-        ${escapeHTML(
-          booking.email || '-'
-        )}
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        رقم الحجز
-      </div>
-
-      <div class="detail-value booking-code">
-
-        ${escapeHTML(
-          booking.booking_code || '-'
-        )}
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        موعد الجلسة
-      </div>
-
-      <div class="detail-value">
-
-        ${escapeHTML(
-          booking.session_date || '-'
-        )}
-
-        <br>
-
-        ${formatTime(
-          booking.start_time
-        )}
-
-        -
-
-        ${formatTime(
-          booking.end_time
-        )}
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        حالة الحضور
-      </div>
-
-      <div class="detail-value">
-
-        <span
-          class="status ${statusClass}"
-        >
-
-          ${statusText}
-
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        تم الحجز في
-      </div>
-
-      <div class="detail-value created-at">
-
-        ${formatCreatedAt(
-          booking.created_at
-        )}
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        رابط الجلسة
-      </div>
-
-      <div class="detail-value">
-
-        ${
-          booking.meeting_url
-
-            ? `
-
-              <div class="detail-link">
-
-                ${meetingURL}
-
-              </div>
-
-
-              <a
-                class="meeting-btn"
-                href="${meetingURL}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                فتح رابط الجلسة
-              </a>
-
-            `
-
-            : `
-
-              لا يوجد رابط جلسة
-
-            `
-        }
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        ملاحظات العميل
-      </div>
-
-      <div class="detail-value notes-value">
-
-        ${notesHTML}
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        تحديث حالة الحضور
-      </div>
-
-      <div class="detail-actions">
-
-        <button
-          type="button"
-          class="status-action confirm-action"
-          onclick="updateBookingStatus(
-            '${escapeHTML(
-              booking.booking_code
-            )}',
-            'confirmed'
-          )"
-        >
-          تأكيد الحضور
-        </button>
-
-
-        <button
-          type="button"
-          class="status-action decline-action"
-          onclick="updateBookingStatus(
-            '${escapeHTML(
-              booking.booking_code
-            )}',
-            'declined'
-          )"
-        >
-          تسجيل عدم الحضور
-        </button>
-
-      </div>
-
-
-      <div
-        id="actionMessage"
-        class="action-message"
-      ></div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        إدارة الموعد
-      </div>
-
-      <button
-        type="button"
-        class="cancel-action"
-        onclick="cancelBooking(
-          '${escapeHTML(
-            booking.booking_code
-          )}'
-        )"
-      >
-        إلغاء الموعد
-      </button>
-
-
-      <div
-        id="cancelMessage"
-        class="action-message"
-      ></div>
-
-    </div>
-
-  `;
-
-
-  document
-    .getElementById(
-      'bookingModal'
-    )
-    .classList.add(
-      'show'
-    );
-
-}
-
-
-/* =========================
-   تحديث حالة الحضور
-========================= */
-
-async function updateBookingStatus(
-  bookingCode,
-  status
-) {
-
-  const message =
-    document.getElementById(
-      'actionMessage'
-    );
-
-
-  if (!bookingCode) {
-    return;
-  }
-
-
-  const actionText =
-    status === 'confirmed'
-      ? 'تأكيد حضور هذا العميل؟'
-      : 'تسجيل عدم حضور هذا العميل؟';
-
-
-  if (!confirm(actionText)) {
-    return;
-  }
-
-
-  message.textContent =
-    'جاري تحديث الحالة...';
-
-
-  try {
-
-    const password =
-      document.getElementById(
-        'p'
-      ).value;
-
-
-    const response =
-      await fetch(
-        '/api/admin-status.js',
-        {
-
-          method: 'POST',
-
-          headers: {
-
-            'Content-Type':
-              'application/json',
-
-            'X-Admin-Password':
-              password
-
-          },
-
-          body:
-            JSON.stringify({
-
-              booking_code:
-                bookingCode,
-
-              status:
-                status
-
-            })
-
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if (!response.ok) {
-
-      message.textContent =
-        data.error ||
-        'تعذر تحديث الحالة.';
-
-      return;
-
-    }
-
-
-    const booking =
-      allBookings.find(
-        b =>
-          b.booking_code ===
-          bookingCode
-      );
-
-
-    if (booking) {
-
-      booking.attendance_status =
-        status;
-
-      booking.confirmed_at =
-        status === 'confirmed'
-          ? new Date().toISOString()
-          : null;
-
-    }
-
-
-    message.textContent =
-      status === 'confirmed'
-        ? 'تم تأكيد الحضور ✓'
-        : 'تم تسجيل عدم الحضور ✓';
-
-
-    if (
-      currentView === 'calendar'
-    ) {
-
-      const search =
-        document.getElementById(
-          'search'
-        );
-
-
-      const dateFilter =
-        document.getElementById(
-          'dateFilter'
-        );
-
-
-      const statusFilter =
-        document.getElementById(
-          'statusFilter'
-        );
-
-
-      renderCalendar(
-        filterBookings(
-          allBookings,
-          search
-            ? search.value
-            : '',
-          dateFilter
-            ? dateFilter.value
-            : '',
-          statusFilter
-            ? statusFilter.value
-            : ''
-        )
-      );
-
-    } else {
-
-      renderTable(
-        allBookings
-      );
-
-    }
-
-
-    setTimeout(
-      () => {
-        closeModal();
-      },
-      700
-    );
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    message.textContent =
-      'حدث خطأ أثناء تحديث الحالة.';
-
-  }
-
-}
-
-
-/* =========================
-   إلغاء الموعد
-========================= */
-
-async function cancelBooking(
-  bookingCode
-) {
-
-  if (!bookingCode) {
-    return;
-  }
-
-
-  const confirmed =
-    confirm(
-      'هل أنت متأكد من حذف هذا الموعد؟\n\n' +
-      'سيتم إلغاء الحجز وإرسال إشعار للعميل، ' +
-      'وسيصبح الوقت متاحًا للحجز مرة أخرى.'
-    );
-
-
-  if (!confirmed) {
-    return;
-  }
-
-
-  const message =
-    document.getElementById(
-      'cancelMessage'
-    );
-
-
-  if (message) {
-
-    message.textContent =
-      'جاري إلغاء الموعد...';
-
-  }
-
-
-  try {
-
-    const password =
-      document.getElementById(
-        'p'
-      ).value;
-
-
-    const response =
-      await fetch(
-        '/api/admin-cancel.js',
-        {
-
-          method: 'POST',
-
-          headers: {
-
-            'Content-Type':
-              'application/json',
-
-            'X-Admin-Password':
-              password
-
-          },
-
-          body:
-            JSON.stringify({
-
-              booking_code:
-                bookingCode
-
-            })
-
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if (!response.ok) {
-
-      if (message) {
-
-        message.textContent =
-          data.error ||
-          'تعذر إلغاء الموعد.';
-
-      }
-
-      return;
-
-    }
-
-
-    allBookings =
-      allBookings.filter(
-        booking =>
-          booking.booking_code !==
-          bookingCode
-      );
-
-
-    renderDashboard(
-      allBookings
-    );
-
-
-    closeModal();
-
-
-    alert(
-      'تم إلغاء الموعد بنجاح ✓\n\n' +
-      'تم إرسال إشعار للعميل، ' +
-      'وأصبح الوقت متاحًا للحجز مرة أخرى.'
-    );
-
-
-  } catch (error) {
-
-    console.error(error);
-
-
-    if (message) {
-
-      message.textContent =
-        'حدث خطأ أثناء إلغاء الموعد.';
-
-    }
-
-  }
-
-}
-
-
-/* =========================
-   إغلاق النافذة
-========================= */
-
-function closeModal(
-  event
-) {
-
-  if (
-    event &&
-    event.target !==
-      document.getElementById(
-        'bookingModal'
-      )
-  ) {
-
-    return;
-
-  }
-
-
-  document
-    .getElementById(
-      'bookingModal'
-    )
-    .classList.remove(
-      'show'
-    );
-
-}
-
-
-document.addEventListener(
-  'keydown',
-  event => {
-
-    if (
-      event.key ===
-      'Escape'
-    ) {
-
-      closeModal();
-
-    }
+passwordInput.addEventListener(
+  'input',
+  () => {
+
+    hideError();
 
   }
 );
 
-
-/* =========================
-   حماية HTML
-========================= */
-
-function escapeHTML(
-  value
-) {
-
-  return String(value)
-
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-
-    .replace(
-      /</g,
-      '&lt;'
-    )
-
-    .replace(
-      />/g,
-      '&gt;'
-    )
-
-    .replace(
-      /"/g,
-      '&quot;'
-    )
-
-    .replace(
-      /'/g,
-      '&#039;'
-    );
-
-}
-
 </script>
+
 
 </body>
 
