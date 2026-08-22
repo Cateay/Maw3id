@@ -1,21 +1,46 @@
-const { supabase, resend, dateLabel, timeLabel } = require('./_lib');
+const {
+  supabase,
+  resend,
+  dateLabel,
+  timeLabel
+} = require('./_lib');
 
 module.exports = async (req, res) => {
   if (
     req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}` &&
     process.env.CRON_SECRET
   ) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({
+      error: 'Unauthorized'
+    });
   }
 
+  // الوقت الحالي بتوقيت السعودية (UTC+3)
   const now = new Date();
-  // const now = new Date('2026-10-14T07:59:00+03:00'); //test only
-  const from = new Date(now.getTime() + 25 * 60 * 1000);
-  const to = new Date(now.getTime() + 35 * 60 * 1000);
+  const saudiNow = new Date(
+    now.toLocaleString('en-US', {
+      timeZone: 'Asia/Riyadh'
+    })
+  );
 
-  const today = now.toISOString().slice(0, 10);
+  const from = new Date(
+    saudiNow.getTime() + 25 * 60 * 1000
+  );
 
-  const { data, error } = await supabase()
+  const to = new Date(
+    saudiNow.getTime() + 35 * 60 * 1000
+  );
+
+  // تاريخ اليوم بتوقيت السعودية
+  const today =
+    `${saudiNow.getFullYear()}-` +
+    `${String(saudiNow.getMonth() + 1).padStart(2, '0')}-` +
+    `${String(saudiNow.getDate()).padStart(2, '0')}`;
+
+  const {
+    data,
+    error
+  } = await supabase()
     .from('bookings')
     .select('*')
     .in('attendance_status', ['pending', 'confirmed'])
@@ -24,7 +49,10 @@ module.exports = async (req, res) => {
 
   if (error) {
     console.error(error);
-    return res.status(500).json({ error: 'db' });
+
+    return res.status(500).json({
+      error: 'db'
+    });
   }
 
   let sent = 0;
@@ -34,49 +62,81 @@ module.exports = async (req, res) => {
       `${b.session_date}T${String(b.start_time).slice(0, 5)}:00+03:00`
     );
 
-    const diff = start.getTime() - now.getTime();
+    const diff = start.getTime() - saudiNow.getTime();
 
     // إرسال التذكير إذا كانت الجلسة بعد 25–35 دقيقة
-    if (diff >= 25 * 60 * 1000 && diff <= 35 * 60 * 1000) {
-      if (!resend()) continue;
+    if (
+      diff >= 25 * 60 * 1000 &&
+      diff <= 35 * 60 * 1000
+    ) {
+      if (!resend()) {
+        continue;
+      }
 
-      await resend().emails.send({
-       // before from: 'Maw3id <onboarding@resend.dev>',
+      const {
+        error: emailError
+      } = await resend().emails.send({
         from: 'Maw3id <noreply@maw3id.online>',
         to: b.email,
         subject: 'تذكير بجلسة مَوعد',
         html: `
           <div dir="rtl" style="font-family:Arial;line-height:1.8">
             <h2>تذكير بجلسة مَوعد</h2>
+
             <p>
               جلستك ستكون بعد 30 دقيقة.
             </p>
+
             <p>
-              <b>التاريخ:</b> ${dateLabel(b.session_date)}<br>
-              <b>الوقت:</b> ${timeLabel(String(b.start_time).slice(0, 5))}
+              <b>التاريخ:</b>
+              ${dateLabel(b.session_date)}
+              <br>
+
+              <b>الوقت:</b>
+              ${timeLabel(String(b.start_time).slice(0, 5))}
             </p>
+
             <p>
-              <a href="${b.meeting_url}">دخول الجلسة</a>
+              <a href="${b.meeting_url}">
+                دخول الجلسة
+              </a>
             </p>
           </div>
         `
       });
 
-      const { error: updateError } = await supabase()
-  .from('bookings')
-  .update({
-    reminder_sent_at: new Date().toISOString()
-  })
-  .eq('id', b.id);
+      if (emailError) {
+        console.error(
+          'Failed to send reminder:',
+          emailError
+        );
 
-if (updateError) {
-  console.error('Failed to mark reminder as sent:', updateError);
-  continue;
-}
+        continue;
+      }
 
-sent++;
+      const {
+        error: updateError
+      } = await supabase()
+        .from('bookings')
+        .update({
+          reminder_sent_at: new Date().toISOString()
+        })
+        .eq('id', b.id);
+
+      if (updateError) {
+        console.error(
+          'Failed to mark reminder as sent:',
+          updateError
+        );
+
+        continue;
+      }
+
+      sent++;
     }
   }
 
-  return res.json({ sent });
+  return res.json({
+    sent
+  });
 };
