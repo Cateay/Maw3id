@@ -75,6 +75,13 @@
       border-color: #172033;
     }
 
+    /* التاريخ */
+    #dateFilter {
+      direction: ltr;
+      text-align: left;
+      font-variant-numeric: lining-nums;
+    }
+
     button {
       padding: 13px 24px;
       border: 0;
@@ -113,9 +120,10 @@
     .stat-number {
       font-size: 30px;
       font-weight: bold;
+      font-variant-numeric: lining-nums;
     }
 
-    /* Table box */
+    /* Table */
     .table-box {
       background: white;
       border-radius: 18px;
@@ -189,6 +197,13 @@
       text-align: right;
     }
 
+    .date-cell,
+    .time-cell {
+      direction: ltr;
+      text-align: right;
+      font-variant-numeric: lining-nums;
+    }
+
     .status {
       display: inline-block;
       padding: 6px 10px;
@@ -222,6 +237,7 @@
       color: #777;
       font-size: 13px;
       margin-bottom: 10px;
+      font-variant-numeric: lining-nums;
     }
 
     .error {
@@ -231,6 +247,7 @@
 
     /* Mobile */
     @media (max-width: 800px) {
+
       body {
         padding: 15px;
       }
@@ -253,10 +270,13 @@
     }
 
     @media (max-width: 450px) {
+
       .stats {
         grid-template-columns: 1fr;
       }
+
     }
+
   </style>
 </head>
 
@@ -270,7 +290,9 @@
   </div>
 
   <div class="login">
+
     <div class="login-row">
+
       <input
         id="p"
         type="password"
@@ -279,34 +301,72 @@
       >
 
       <button onclick="load()">دخول</button>
+
     </div>
 
     <div id="error"></div>
+
   </div>
 
   <div id="out"></div>
 
 </div>
 
+
 <script>
 
 let allBookings = [];
 
 
-/* تسجيل الدخول وتحميل الحجوزات */
+/* =========================
+   تحميل الصفحة
+========================= */
 
-async function load() {
+window.addEventListener('DOMContentLoaded', () => {
 
-  const password = document.getElementById('p').value;
-  const error = document.getElementById('error');
+  const savedPassword =
+    sessionStorage.getItem('maw3id_admin_password');
+
+  if (savedPassword) {
+
+    document.getElementById('p').value =
+      savedPassword;
+
+    load(true);
+
+  }
+
+});
+
+
+/* =========================
+   تسجيل الدخول
+========================= */
+
+async function load(autoLogin = false) {
+
+  const password =
+    document.getElementById('p').value;
+
+  const error =
+    document.getElementById('error');
 
   error.innerHTML = '';
 
+
   if (!password) {
-    error.innerHTML =
-      '<p class="error">أدخل كلمة المرور.</p>';
+
+    if (!autoLogin) {
+
+      error.innerHTML =
+        '<p class="error">أدخل كلمة المرور.</p>';
+
+    }
+
     return;
+
   }
+
 
   try {
 
@@ -315,17 +375,40 @@ async function load() {
       encodeURIComponent(password)
     );
 
+
     const d = await r.json();
 
+
     if (!r.ok) {
+
+      sessionStorage.removeItem(
+        'maw3id_admin_password'
+      );
+
+      document.getElementById('p').value = '';
+
       error.innerHTML =
         '<p class="error">كلمة المرور غير صحيحة.</p>';
+
       return;
+
     }
 
-    allBookings = d.bookings || [];
+
+    /* حفظ الباسورد للجلسة */
+
+    sessionStorage.setItem(
+      'maw3id_admin_password',
+      password
+    );
+
+
+    allBookings =
+      d.bookings || [];
+
 
     renderDashboard(allBookings);
+
 
   } catch (e) {
 
@@ -333,54 +416,89 @@ async function load() {
       '<p class="error">حدث خطأ أثناء تحميل البيانات.</p>';
 
   }
+
 }
 
 
-/* عرض الداشبورد */
+/* =========================
+   Dashboard
+========================= */
 
 function renderDashboard(bookings) {
 
-  const total = allBookings.length;
+  const total =
+    allBookings.length;
 
-  const pending = allBookings.filter(
-    b => b.attendance_status === 'pending'
-  ).length;
 
-  const confirmed = allBookings.filter(
-    b => b.attendance_status === 'confirmed'
-  ).length;
+  const pending =
+    allBookings.filter(
+      b => b.attendance_status === 'pending'
+    ).length;
 
-  const cancelled = allBookings.filter(
-    b =>
-      b.attendance_status === 'cancelled' ||
-      b.attendance_status === 'canceled'
-  ).length;
+
+  const confirmed =
+    allBookings.filter(
+      b => b.attendance_status === 'confirmed'
+    ).length;
+
+
+  const cancelled =
+    allBookings.filter(
+      b =>
+        b.attendance_status === 'cancelled' ||
+        b.attendance_status === 'canceled'
+    ).length;
 
 
   const statsHTML = `
+
     <div class="stats">
 
       <div class="stat">
-        <div class="stat-label">إجمالي الحجوزات</div>
-        <div class="stat-number">${total}</div>
+        <div class="stat-label">
+          إجمالي الحجوزات
+        </div>
+
+        <div class="stat-number">
+          ${total}
+        </div>
       </div>
 
-      <div class="stat">
-        <div class="stat-label">الحجوزات المعلقة</div>
-        <div class="stat-number">${pending}</div>
-      </div>
 
       <div class="stat">
-        <div class="stat-label">الحجوزات المؤكدة</div>
-        <div class="stat-number">${confirmed}</div>
+        <div class="stat-label">
+          الحجوزات المعلقة
+        </div>
+
+        <div class="stat-number">
+          ${pending}
+        </div>
       </div>
 
+
       <div class="stat">
-        <div class="stat-label">المعتذر عنها</div>
-        <div class="stat-number">${cancelled}</div>
+        <div class="stat-label">
+          الحجوزات المؤكدة
+        </div>
+
+        <div class="stat-number">
+          ${confirmed}
+        </div>
+      </div>
+
+
+      <div class="stat">
+        <div class="stat-label">
+          المعتذر عنها
+        </div>
+
+        <div class="stat-number">
+          ${cancelled}
+        </div>
       </div>
 
     </div>
+
   `;
 
 
@@ -389,8 +507,13 @@ function renderDashboard(bookings) {
     <div class="table-box">
 
       <div class="table-title">
-        <h2>الحجوزات</h2>
+
+        <h2>
+          الحجوزات
+        </h2>
+
       </div>
+
 
       <div class="filters">
 
@@ -401,21 +524,37 @@ function renderDashboard(bookings) {
           oninput="applyFilters()"
         >
 
+
         <input
           id="dateFilter"
           type="date"
           onchange="applyFilters()"
         >
 
+
         <select
           id="statusFilter"
           onchange="applyFilters()"
         >
-          <option value="">كل الحالات</option>
-          <option value="pending">معلق</option>
-          <option value="confirmed">مؤكد</option>
-          <option value="cancelled">معتذر</option>
+
+          <option value="">
+            كل الحالات
+          </option>
+
+          <option value="pending">
+            معلق
+          </option>
+
+          <option value="confirmed">
+            مؤكد
+          </option>
+
+          <option value="cancelled">
+            معتذر
+          </option>
+
         </select>
+
 
         <button
           class="clear-btn"
@@ -425,6 +564,7 @@ function renderDashboard(bookings) {
         </button>
 
       </div>
+
 
       <div id="results"></div>
 
@@ -436,11 +576,15 @@ function renderDashboard(bookings) {
   document.getElementById('out').innerHTML =
     statsHTML + tableHTML;
 
+
   renderTable(bookings);
+
 }
 
 
-/* تطبيق الفلاتر */
+/* =========================
+   الفلاتر
+========================= */
 
 function applyFilters() {
 
@@ -450,82 +594,109 @@ function applyFilters() {
       .trim()
       .toLowerCase();
 
+
   const date =
-    document.getElementById('dateFilter').value;
+    document.getElementById('dateFilter')
+      .value;
+
 
   const status =
-    document.getElementById('statusFilter').value;
+    document.getElementById('statusFilter')
+      .value;
 
 
-  const filtered = allBookings.filter(b => {
+  const filtered =
+    allBookings.filter(b => {
 
-    const name =
-      String(b.name || '').toLowerCase();
+      const name =
+        String(b.name || '')
+          .toLowerCase();
 
-    const email =
-      String(b.email || '').toLowerCase();
 
-    const matchesSearch =
-      !search ||
-      name.includes(search) ||
-      email.includes(search);
+      const email =
+        String(b.email || '')
+          .toLowerCase();
 
-    const matchesDate =
-      !date ||
-      b.session_date === date;
 
-    let bookingStatus =
-      b.attendance_status || 'pending';
+      const matchesSearch =
+        !search ||
+        name.includes(search) ||
+        email.includes(search);
 
-    if (
-      bookingStatus === 'canceled'
-    ) {
-      bookingStatus = 'cancelled';
-    }
 
-    const matchesStatus =
-      !status ||
-      bookingStatus === status;
+      const matchesDate =
+        !date ||
+        b.session_date === date;
 
-    return (
-      matchesSearch &&
-      matchesDate &&
-      matchesStatus
-    );
 
-  });
+      let bookingStatus =
+        b.attendance_status || 'pending';
+
+
+      if (bookingStatus === 'canceled') {
+        bookingStatus = 'cancelled';
+      }
+
+
+      const matchesStatus =
+        !status ||
+        bookingStatus === status;
+
+
+      return (
+        matchesSearch &&
+        matchesDate &&
+        matchesStatus
+      );
+
+    });
 
 
   renderTable(filtered);
+
 }
 
 
-/* مسح الفلاتر */
+/* =========================
+   مسح الفلاتر
+========================= */
 
 function clearFilters() {
 
   document.getElementById('search').value = '';
+
   document.getElementById('dateFilter').value = '';
+
   document.getElementById('statusFilter').value = '';
 
   renderTable(allBookings);
+
 }
 
 
-/* رسم الجدول */
+/* =========================
+   الجدول
+========================= */
 
 function renderTable(bookings) {
 
   const results =
     document.getElementById('results');
 
+
   if (!results) return;
 
 
   const countHTML = `
+
     <div class="results-count">
-      عرض ${bookings.length} من أصل ${allBookings.length} حجز
+
+      عرض ${bookings.length}
+      من أصل ${allBookings.length}
+      حجز
+
     </div>
+
   `;
 
 
@@ -534,12 +705,15 @@ function renderTable(bookings) {
     results.innerHTML =
       countHTML +
       `
+
         <div class="empty">
           لا توجد حجوزات مطابقة للبحث.
         </div>
+
       `;
 
     return;
+
   }
 
 
@@ -550,14 +724,31 @@ function renderTable(bookings) {
       <thead>
 
         <tr>
-          <th>الاسم</th>
-          <th>البريد الإلكتروني</th>
-          <th>التاريخ</th>
-          <th>الوقت</th>
-          <th>الحضور</th>
+
+          <th>
+            الاسم
+          </th>
+
+          <th>
+            البريد الإلكتروني
+          </th>
+
+          <th>
+            التاريخ
+          </th>
+
+          <th>
+            الوقت
+          </th>
+
+          <th>
+            الحضور
+          </th>
+
         </tr>
 
       </thead>
+
 
       <tbody>
 
@@ -566,20 +757,37 @@ function renderTable(bookings) {
           const status =
             b.attendance_status || 'pending';
 
-          let statusClass = 'pending';
-          let statusText = 'معلق';
+
+          let statusClass =
+            'pending';
+
+
+          let statusText =
+            'معلق';
+
 
           if (status === 'confirmed') {
-            statusClass = 'confirmed';
-            statusText = 'مؤكد';
+
+            statusClass =
+              'confirmed';
+
+            statusText =
+              'مؤكد';
+
           }
+
 
           if (
             status === 'cancelled' ||
             status === 'canceled'
           ) {
-            statusClass = 'cancelled';
-            statusText = 'معتذر';
+
+            statusClass =
+              'cancelled';
+
+            statusText =
+              'معتذر';
+
           }
 
 
@@ -588,18 +796,28 @@ function renderTable(bookings) {
             <tr>
 
               <td class="name">
-                ${escapeHTML(b.name || '-')}
+                ${escapeHTML(
+                  b.name || '-'
+                )}
               </td>
+
 
               <td class="email">
-                ${escapeHTML(b.email || '-')}
+                ${escapeHTML(
+                  b.email || '-'
+                )}
               </td>
 
-              <td>
-                ${escapeHTML(b.session_date || '-')}
+
+              <td class="date-cell">
+                ${escapeHTML(
+                  b.session_date || '-'
+                )}
               </td>
 
-              <td>
+
+              <td class="time-cell">
+
                 ${
                   b.start_time
                     ? escapeHTML(
@@ -607,11 +825,15 @@ function renderTable(bookings) {
                       )
                     : '-'
                 }
+
               </td>
+
 
               <td>
 
-                <span class="status ${statusClass}">
+                <span
+                  class="status ${statusClass}"
+                >
                   ${statusText}
                 </span>
 
@@ -632,18 +854,26 @@ function renderTable(bookings) {
 
   results.innerHTML =
     countHTML + tableHTML;
+
 }
 
 
-/* حماية عرض النصوص */
+/* =========================
+   حماية HTML
+========================= */
 
 function escapeHTML(value) {
 
   return String(value)
+
     .replace(/&/g, '&amp;')
+
     .replace(/</g, '&lt;')
+
     .replace(/>/g, '&gt;')
+
     .replace(/"/g, '&quot;')
+
     .replace(/'/g, '&#039;');
 
 }
