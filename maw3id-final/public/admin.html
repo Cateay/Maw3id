@@ -58,16 +58,20 @@
       gap: 10px;
     }
 
-    input {
+    input,
+    select {
       flex: 1;
       padding: 13px 15px;
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 14px;
       outline: none;
+      background: white;
+      color: #172033;
     }
 
-    input:focus {
+    input:focus,
+    select:focus {
       border-color: #172033;
     }
 
@@ -111,7 +115,7 @@
       font-weight: bold;
     }
 
-    /* Table */
+    /* Table box */
     .table-box {
       background: white;
       border-radius: 18px;
@@ -124,7 +128,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
 
     .table-title h2 {
@@ -132,10 +136,28 @@
       font-size: 20px;
     }
 
+    /* Filters */
+    .filters {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .clear-btn {
+      background: #eef0f4;
+      color: #172033;
+      border: 1px solid #ddd;
+    }
+
+    .clear-btn:hover {
+      background: #e4e7ed;
+    }
+
+    /* Table */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
       min-width: 800px;
     }
 
@@ -196,6 +218,12 @@
       color: #777;
     }
 
+    .results-count {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
     .error {
       color: #b42318;
       margin-top: 12px;
@@ -213,6 +241,10 @@
 
       .login-row {
         flex-direction: column;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
       }
 
       .header h1 {
@@ -258,6 +290,11 @@
 
 <script>
 
+let allBookings = [];
+
+
+/* تسجيل الدخول وتحميل الحجوزات */
+
 async function load() {
 
   const password = document.getElementById('p').value;
@@ -266,24 +303,29 @@ async function load() {
   error.innerHTML = '';
 
   if (!password) {
-    error.innerHTML = '<p class="error">أدخل كلمة المرور.</p>';
+    error.innerHTML =
+      '<p class="error">أدخل كلمة المرور.</p>';
     return;
   }
 
   try {
 
     const r = await fetch(
-      '/api/admin?password=' + encodeURIComponent(password)
+      '/api/admin?password=' +
+      encodeURIComponent(password)
     );
 
     const d = await r.json();
 
     if (!r.ok) {
-      error.innerHTML = '<p class="error">كلمة المرور غير صحيحة.</p>';
+      error.innerHTML =
+        '<p class="error">كلمة المرور غير صحيحة.</p>';
       return;
     }
 
-    renderDashboard(d.bookings || []);
+    allBookings = d.bookings || [];
+
+    renderDashboard(allBookings);
 
   } catch (e) {
 
@@ -294,19 +336,21 @@ async function load() {
 }
 
 
+/* عرض الداشبورد */
+
 function renderDashboard(bookings) {
 
-  const total = bookings.length;
+  const total = allBookings.length;
 
-  const pending = bookings.filter(
+  const pending = allBookings.filter(
     b => b.attendance_status === 'pending'
   ).length;
 
-  const confirmed = bookings.filter(
+  const confirmed = allBookings.filter(
     b => b.attendance_status === 'confirmed'
   ).length;
 
-  const cancelled = bookings.filter(
+  const cancelled = allBookings.filter(
     b =>
       b.attendance_status === 'cancelled' ||
       b.attendance_status === 'canceled'
@@ -340,95 +384,7 @@ function renderDashboard(bookings) {
   `;
 
 
-  let tableHTML = '';
-
-  if (bookings.length === 0) {
-
-    tableHTML = `
-      <div class="empty">
-        لا توجد حجوزات حاليًا.
-      </div>
-    `;
-
-  } else {
-
-    tableHTML = `
-      <table>
-
-        <thead>
-          <tr>
-            <th>الاسم</th>
-            <th>البريد الإلكتروني</th>
-            <th>التاريخ</th>
-            <th>الوقت</th>
-            <th>الحضور</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${bookings.map(b => {
-
-            const status = b.attendance_status || 'pending';
-
-            let statusClass = 'pending';
-            let statusText = 'معلق';
-
-            if (status === 'confirmed') {
-              statusClass = 'confirmed';
-              statusText = 'مؤكد';
-            }
-
-            if (
-              status === 'cancelled' ||
-              status === 'canceled'
-            ) {
-              statusClass = 'cancelled';
-              statusText = 'معتذر';
-            }
-
-            return `
-              <tr>
-
-                <td class="name">
-                  ${escapeHTML(b.name || '-')}
-                </td>
-
-                <td class="email">
-                  ${escapeHTML(b.email || '-')}
-                </td>
-
-                <td>
-                  ${escapeHTML(b.session_date || '-')}
-                </td>
-
-                <td>
-                  ${b.start_time
-                    ? escapeHTML(b.start_time.slice(0, 5))
-                    : '-'}
-                </td>
-
-                <td>
-                  <span class="status ${statusClass}">
-                    ${statusText}
-                  </span>
-                </td>
-
-              </tr>
-            `;
-
-          }).join('')}
-
-        </tbody>
-
-      </table>
-    `;
-  }
-
-
-  document.getElementById('out').innerHTML = `
-
-    ${statsHTML}
+  const tableHTML = `
 
     <div class="table-box">
 
@@ -436,13 +392,250 @@ function renderDashboard(bookings) {
         <h2>الحجوزات</h2>
       </div>
 
-      ${tableHTML}
+      <div class="filters">
+
+        <input
+          id="search"
+          type="text"
+          placeholder="ابحث بالاسم أو البريد الإلكتروني..."
+          oninput="applyFilters()"
+        >
+
+        <input
+          id="dateFilter"
+          type="date"
+          onchange="applyFilters()"
+        >
+
+        <select
+          id="statusFilter"
+          onchange="applyFilters()"
+        >
+          <option value="">كل الحالات</option>
+          <option value="pending">معلق</option>
+          <option value="confirmed">مؤكد</option>
+          <option value="cancelled">معتذر</option>
+        </select>
+
+        <button
+          class="clear-btn"
+          onclick="clearFilters()"
+        >
+          مسح
+        </button>
+
+      </div>
+
+      <div id="results"></div>
 
     </div>
 
   `;
+
+
+  document.getElementById('out').innerHTML =
+    statsHTML + tableHTML;
+
+  renderTable(bookings);
 }
 
+
+/* تطبيق الفلاتر */
+
+function applyFilters() {
+
+  const search =
+    document.getElementById('search')
+      .value
+      .trim()
+      .toLowerCase();
+
+  const date =
+    document.getElementById('dateFilter').value;
+
+  const status =
+    document.getElementById('statusFilter').value;
+
+
+  const filtered = allBookings.filter(b => {
+
+    const name =
+      String(b.name || '').toLowerCase();
+
+    const email =
+      String(b.email || '').toLowerCase();
+
+    const matchesSearch =
+      !search ||
+      name.includes(search) ||
+      email.includes(search);
+
+    const matchesDate =
+      !date ||
+      b.session_date === date;
+
+    let bookingStatus =
+      b.attendance_status || 'pending';
+
+    if (
+      bookingStatus === 'canceled'
+    ) {
+      bookingStatus = 'cancelled';
+    }
+
+    const matchesStatus =
+      !status ||
+      bookingStatus === status;
+
+    return (
+      matchesSearch &&
+      matchesDate &&
+      matchesStatus
+    );
+
+  });
+
+
+  renderTable(filtered);
+}
+
+
+/* مسح الفلاتر */
+
+function clearFilters() {
+
+  document.getElementById('search').value = '';
+  document.getElementById('dateFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+
+  renderTable(allBookings);
+}
+
+
+/* رسم الجدول */
+
+function renderTable(bookings) {
+
+  const results =
+    document.getElementById('results');
+
+  if (!results) return;
+
+
+  const countHTML = `
+    <div class="results-count">
+      عرض ${bookings.length} من أصل ${allBookings.length} حجز
+    </div>
+  `;
+
+
+  if (bookings.length === 0) {
+
+    results.innerHTML =
+      countHTML +
+      `
+        <div class="empty">
+          لا توجد حجوزات مطابقة للبحث.
+        </div>
+      `;
+
+    return;
+  }
+
+
+  const tableHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>الاسم</th>
+          <th>البريد الإلكتروني</th>
+          <th>التاريخ</th>
+          <th>الوقت</th>
+          <th>الحضور</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        ${bookings.map(b => {
+
+          const status =
+            b.attendance_status || 'pending';
+
+          let statusClass = 'pending';
+          let statusText = 'معلق';
+
+          if (status === 'confirmed') {
+            statusClass = 'confirmed';
+            statusText = 'مؤكد';
+          }
+
+          if (
+            status === 'cancelled' ||
+            status === 'canceled'
+          ) {
+            statusClass = 'cancelled';
+            statusText = 'معتذر';
+          }
+
+
+          return `
+
+            <tr>
+
+              <td class="name">
+                ${escapeHTML(b.name || '-')}
+              </td>
+
+              <td class="email">
+                ${escapeHTML(b.email || '-')}
+              </td>
+
+              <td>
+                ${escapeHTML(b.session_date || '-')}
+              </td>
+
+              <td>
+                ${
+                  b.start_time
+                    ? escapeHTML(
+                        b.start_time.slice(0, 5)
+                      )
+                    : '-'
+                }
+              </td>
+
+              <td>
+
+                <span class="status ${statusClass}">
+                  ${statusText}
+                </span>
+
+              </td>
+
+            </tr>
+
+          `;
+
+        }).join('')}
+
+      </tbody>
+
+    </table>
+
+  `;
+
+
+  results.innerHTML =
+    countHTML + tableHTML;
+}
+
+
+/* حماية عرض النصوص */
 
 function escapeHTML(value) {
 
