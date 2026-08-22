@@ -24,8 +24,6 @@
       margin: auto;
     }
 
-    /* Header */
-
     .header {
       background: #172033;
       color: white;
@@ -44,8 +42,6 @@
       color: #cbd1dc;
       font-size: 14px;
     }
-
-    /* Login */
 
     .login {
       background: white;
@@ -102,8 +98,6 @@
       opacity: .9;
     }
 
-    /* Stats */
-
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -130,8 +124,6 @@
       font-variant-numeric: lining-nums;
     }
 
-    /* Table */
-
     .table-box {
       background: white;
       border-radius: 18px;
@@ -152,8 +144,6 @@
       font-size: 20px;
     }
 
-    /* Filters */
-
     .filters {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr auto;
@@ -170,8 +160,6 @@
     .clear-btn:hover {
       background: #e4e7ed;
     }
-
-    /* Table */
 
     table {
       width: 100%;
@@ -214,9 +202,8 @@
 
     .date-cell,
     .time-cell {
-      direction: ltr;
-      text-align: right;
       font-variant-numeric: lining-nums;
+      white-space: nowrap;
     }
 
     .status {
@@ -279,7 +266,9 @@
 
     .modal {
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
       background: white;
       border-radius: 22px;
       padding: 26px;
@@ -354,14 +343,39 @@
       text-align: right;
     }
 
-    .detail-date,
-    .detail-time {
+    .detail-link {
       direction: ltr;
-      text-align: right;
-      font-variant-numeric: lining-nums;
+      text-align: left;
+      color: #3156d3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    /* Mobile */
+    .meeting-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 9px 14px;
+      border-radius: 9px;
+      background: #172033;
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .meeting-btn:hover {
+      opacity: .9;
+    }
+
+    .booking-code {
+      direction: ltr;
+      text-align: right;
+      letter-spacing: .5px;
+    }
+
+    .created-at {
+      font-variant-numeric: lining-nums;
+    }
 
     @media (max-width: 800px) {
 
@@ -502,7 +516,6 @@ window.addEventListener('DOMContentLoaded', () => {
       savedPassword;
 
     load(true);
-
   }
 
 });
@@ -526,10 +539,8 @@ async function load(autoLogin = false) {
   if (!password) {
 
     if (!autoLogin) {
-
       error.innerHTML =
         '<p class="error">أدخل كلمة المرور.</p>';
-
     }
 
     return;
@@ -542,7 +553,6 @@ async function load(autoLogin = false) {
       '/api/admin?password=' +
       encodeURIComponent(password)
     );
-
 
     const d = await r.json();
 
@@ -574,7 +584,6 @@ async function load(autoLogin = false) {
 
     renderDashboard(allBookings);
 
-
   } catch (e) {
 
     error.innerHTML =
@@ -582,6 +591,65 @@ async function load(autoLogin = false) {
 
   }
 
+}
+
+
+/* =========================
+   تحويل الوقت إلى 12 ساعة
+========================= */
+
+function formatTime(time) {
+
+  if (!time) return '-';
+
+  const parts = time.split(':');
+
+  let hour = parseInt(parts[0], 10);
+  const minute = parts[1] || '00';
+
+  const period = hour >= 12 ? 'م' : 'ص';
+
+  hour = hour % 12;
+
+  if (hour === 0) {
+    hour = 12;
+  }
+
+  return `${hour}:${minute} ${period}`;
+}
+
+
+/* =========================
+   تنسيق تاريخ إنشاء الحجز
+========================= */
+
+function formatCreatedAt(value) {
+
+  if (!value) return '-';
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return escapeHTML(value);
+  }
+
+  const datePart =
+    date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+
+  const timePart =
+    date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    })
+    .replace('AM', 'ص')
+    .replace('PM', 'م');
+
+  return `${datePart} — ${timePart}`;
 }
 
 
@@ -594,18 +662,15 @@ function renderDashboard(bookings) {
   const total =
     allBookings.length;
 
-
   const pending =
     allBookings.filter(
       b => b.attendance_status === 'pending'
     ).length;
 
-
   const confirmed =
     allBookings.filter(
       b => b.attendance_status === 'confirmed'
     ).length;
-
 
   const cancelled =
     allBookings.filter(
@@ -629,7 +694,6 @@ function renderDashboard(bookings) {
         </div>
       </div>
 
-
       <div class="stat">
         <div class="stat-label">
           الحجوزات المعلقة
@@ -640,7 +704,6 @@ function renderDashboard(bookings) {
         </div>
       </div>
 
-
       <div class="stat">
         <div class="stat-label">
           الحجوزات المؤكدة
@@ -650,7 +713,6 @@ function renderDashboard(bookings) {
           ${confirmed}
         </div>
       </div>
-
 
       <div class="stat">
         <div class="stat-label">
@@ -663,7 +725,6 @@ function renderDashboard(bookings) {
       </div>
 
     </div>
-
   `;
 
 
@@ -672,11 +733,9 @@ function renderDashboard(bookings) {
     <div class="table-box">
 
       <div class="table-title">
-
         <h2>
           الحجوزات
         </h2>
-
       </div>
 
 
@@ -689,13 +748,11 @@ function renderDashboard(bookings) {
           oninput="applyFilters()"
         >
 
-
         <input
           id="dateFilter"
           type="date"
           onchange="applyFilters()"
         >
-
 
         <select
           id="statusFilter"
@@ -720,7 +777,6 @@ function renderDashboard(bookings) {
 
         </select>
 
-
         <button
           class="clear-btn"
           onclick="clearFilters()"
@@ -735,7 +791,6 @@ function renderDashboard(bookings) {
       <div id="results"></div>
 
     </div>
-
   `;
 
 
@@ -744,7 +799,6 @@ function renderDashboard(bookings) {
 
 
   renderTable(bookings);
-
 }
 
 
@@ -760,11 +814,9 @@ function applyFilters() {
       .trim()
       .toLowerCase();
 
-
   const date =
     document.getElementById('dateFilter')
       .value;
-
 
   const status =
     document.getElementById('statusFilter')
@@ -778,17 +830,14 @@ function applyFilters() {
         String(b.name || '')
           .toLowerCase();
 
-
       const email =
         String(b.email || '')
           .toLowerCase();
-
 
       const matchesSearch =
         !search ||
         name.includes(search) ||
         email.includes(search);
-
 
       const matchesDate =
         !date ||
@@ -814,12 +863,10 @@ function applyFilters() {
         matchesDate &&
         matchesStatus
       );
-
     });
 
 
   renderTable(filtered);
-
 }
 
 
@@ -830,13 +877,10 @@ function applyFilters() {
 function clearFilters() {
 
   document.getElementById('search').value = '';
-
   document.getElementById('dateFilter').value = '';
-
   document.getElementById('statusFilter').value = '';
 
   renderTable(allBookings);
-
 }
 
 
@@ -849,20 +893,16 @@ function renderTable(bookings) {
   const results =
     document.getElementById('results');
 
-
   if (!results) return;
 
 
   const countHTML = `
 
     <div class="results-count">
-
       عرض ${bookings.length}
       من أصل ${allBookings.length}
       حجز
-
     </div>
-
   `;
 
 
@@ -871,11 +911,9 @@ function renderTable(bookings) {
     results.innerHTML =
       countHTML +
       `
-
         <div class="empty">
           لا توجد حجوزات مطابقة للبحث.
         </div>
-
       `;
 
     return;
@@ -889,27 +927,11 @@ function renderTable(bookings) {
       <thead>
 
         <tr>
-
-          <th>
-            الاسم
-          </th>
-
-          <th>
-            البريد الإلكتروني
-          </th>
-
-          <th>
-            التاريخ
-          </th>
-
-          <th>
-            الوقت
-          </th>
-
-          <th>
-            الحضور
-          </th>
-
+          <th>الاسم</th>
+          <th>البريد الإلكتروني</th>
+          <th>التاريخ</th>
+          <th>الوقت</th>
+          <th>الحضور</th>
         </tr>
 
       </thead>
@@ -917,28 +939,19 @@ function renderTable(bookings) {
 
       <tbody>
 
-        ${bookings.map((b, index) => {
+        ${bookings.map(b => {
 
           const status =
             b.attendance_status || 'pending';
 
 
-          let statusClass =
-            'pending';
-
-
-          let statusText =
-            'معلق';
+          let statusClass = 'pending';
+          let statusText = 'معلق';
 
 
           if (status === 'confirmed') {
-
-            statusClass =
-              'confirmed';
-
-            statusText =
-              'مؤكد';
-
+            statusClass = 'confirmed';
+            statusText = 'مؤكد';
           }
 
 
@@ -946,13 +959,8 @@ function renderTable(bookings) {
             status === 'cancelled' ||
             status === 'canceled'
           ) {
-
-            statusClass =
-              'cancelled';
-
-            statusText =
-              'معتذر';
-
+            statusClass = 'cancelled';
+            statusText = 'معتذر';
           }
 
 
@@ -963,47 +971,25 @@ function renderTable(bookings) {
             >
 
               <td class="name">
-                ${escapeHTML(
-                  b.name || '-'
-                )}
+                ${escapeHTML(b.name || '-')}
               </td>
-
 
               <td class="email">
-                ${escapeHTML(
-                  b.email || '-'
-                )}
+                ${escapeHTML(b.email || '-')}
               </td>
-
 
               <td class="date-cell">
-                ${escapeHTML(
-                  b.session_date || '-'
-                )}
+                ${escapeHTML(b.session_date || '-')}
               </td>
-
 
               <td class="time-cell">
-
-                ${
-                  b.start_time
-                    ? escapeHTML(
-                        b.start_time.slice(0, 5)
-                      )
-                    : '-'
-                }
-
+                ${formatTime(b.start_time)}
               </td>
 
-
               <td>
-
-                <span
-                  class="status ${statusClass}"
-                >
+                <span class="status ${statusClass}">
                   ${statusText}
                 </span>
-
               </td>
 
             </tr>
@@ -1015,18 +1001,16 @@ function renderTable(bookings) {
       </tbody>
 
     </table>
-
   `;
 
 
   results.innerHTML =
     countHTML + tableHTML;
-
 }
 
 
 /* =========================
-   فتح تفاصيل الحجز
+   تفاصيل الحجز
 ========================= */
 
 function openBooking(index) {
@@ -1037,24 +1021,13 @@ function openBooking(index) {
   if (!booking) return;
 
 
-  let statusClass =
-    'pending';
+  let statusClass = 'pending';
+  let statusText = 'معلق';
 
 
-  let statusText =
-    'معلق';
-
-
-  if (
-    booking.attendance_status === 'confirmed'
-  ) {
-
-    statusClass =
-      'confirmed';
-
-    statusText =
-      'مؤكد';
-
+  if (booking.attendance_status === 'confirmed') {
+    statusClass = 'confirmed';
+    statusText = 'مؤكد';
   }
 
 
@@ -1062,14 +1035,15 @@ function openBooking(index) {
     booking.attendance_status === 'cancelled' ||
     booking.attendance_status === 'canceled'
   ) {
-
-    statusClass =
-      'cancelled';
-
-    statusText =
-      'معتذر';
-
+    statusClass = 'cancelled';
+    statusText = 'معتذر';
   }
+
+
+  const meetingURL =
+    booking.meeting_url
+      ? escapeHTML(booking.meeting_url)
+      : '';
 
 
   document.getElementById('bookingDetails').innerHTML = `
@@ -1103,11 +1077,11 @@ function openBooking(index) {
     <div class="detail">
 
       <div class="detail-label">
-        التاريخ
+        رقم الحجز
       </div>
 
-      <div class="detail-value detail-date">
-        ${escapeHTML(booking.session_date || '-')}
+      <div class="detail-value booking-code">
+        ${escapeHTML(booking.booking_code || '-')}
       </div>
 
     </div>
@@ -1116,17 +1090,23 @@ function openBooking(index) {
     <div class="detail">
 
       <div class="detail-label">
-        الوقت
+        موعد الجلسة
       </div>
 
-      <div class="detail-value detail-time">
+      <div class="detail-value">
+
+        ${escapeHTML(booking.session_date || '-')}
+
+        <br>
 
         ${
-          booking.start_time
-            ? escapeHTML(
-                booking.start_time.slice(0, 5)
-              )
-            : '-'
+          formatTime(booking.start_time)
+        }
+
+        -
+
+        ${
+          formatTime(booking.end_time)
         }
 
       </div>
@@ -1150,13 +1130,57 @@ function openBooking(index) {
 
     </div>
 
+
+    <div class="detail">
+
+      <div class="detail-label">
+        تم الحجز في
+      </div>
+
+      <div class="detail-value created-at">
+        ${formatCreatedAt(booking.created_at)}
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        رابط الجلسة
+      </div>
+
+      <div class="detail-value">
+
+        ${
+          booking.meeting_url
+            ? `
+              <div class="detail-link">
+                ${meetingURL}
+              </div>
+
+              <a
+                class="meeting-btn"
+                href="${meetingURL}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                فتح رابط الجلسة
+              </a>
+            `
+            : 'لا يوجد رابط جلسة'
+        }
+
+      </div>
+
+    </div>
+
   `;
 
 
   document
     .getElementById('bookingModal')
     .classList.add('show');
-
 }
 
 
@@ -1178,7 +1202,6 @@ function closeModal(event) {
   document
     .getElementById('bookingModal')
     .classList.remove('show');
-
 }
 
 
@@ -1198,17 +1221,11 @@ document.addEventListener('keydown', event => {
 function escapeHTML(value) {
 
   return String(value)
-
     .replace(/&/g, '&amp;')
-
     .replace(/</g, '&lt;')
-
     .replace(/>/g, '&gt;')
-
     .replace(/"/g, '&quot;')
-
     .replace(/'/g, '&#039;');
-
 }
 
 </script>
