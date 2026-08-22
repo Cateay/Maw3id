@@ -27,7 +27,9 @@
       margin: auto;
     }
 
-    /* Header */
+    /* =========================
+       Header
+    ========================= */
 
     .header {
       background: #172033;
@@ -48,7 +50,10 @@
       font-size: 14px;
     }
 
-    /* Login */
+
+    /* =========================
+       Login
+    ========================= */
 
     .login {
       background: white;
@@ -105,7 +110,10 @@
       opacity: .9;
     }
 
-    /* Stats */
+
+    /* =========================
+       Stats
+    ========================= */
 
     .stats {
       display: grid;
@@ -133,21 +141,30 @@
       font-variant-numeric: lining-nums;
     }
 
-    /* Table */
+
+    /* =========================
+       Main Box
+    ========================= */
 
     .table-box {
       background: white;
       border-radius: 18px;
       padding: 22px;
       box-shadow: 0 5px 20px rgba(0,0,0,.04);
-      overflow-x: auto;
+      overflow: hidden;
     }
+
+
+    /* =========================
+       Title / View Switcher
+    ========================= */
 
     .table-title {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
+      gap: 15px;
     }
 
     .table-title h2 {
@@ -155,7 +172,31 @@
       font-size: 20px;
     }
 
-    /* Filters */
+    .view-switch {
+      display: flex;
+      background: #f1f2f5;
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+    }
+
+    .view-btn {
+      background: transparent;
+      color: #666;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .view-btn.active {
+      background: #172033;
+      color: white;
+    }
+
+
+    /* =========================
+       Filters
+    ========================= */
 
     .filters {
       display: grid;
@@ -174,7 +215,14 @@
       background: #e4e7ed;
     }
 
-    /* Table */
+
+    /* =========================
+       Table
+    ========================= */
+
+    .table-scroll {
+      overflow-x: auto;
+    }
 
     table {
       width: 100%;
@@ -221,7 +269,10 @@
       white-space: nowrap;
     }
 
-    /* Status */
+
+    /* =========================
+       Status
+    ========================= */
 
     .status {
       display: inline-block;
@@ -246,7 +297,10 @@
       color: #b42318;
     }
 
-    /* Empty */
+
+    /* =========================
+       Empty
+    ========================= */
 
     .empty {
       text-align: center;
@@ -266,7 +320,143 @@
       margin-top: 12px;
     }
 
-    /* Modal */
+
+    /* =========================
+       Calendar
+    ========================= */
+
+    .calendar {
+      display: none;
+    }
+
+    .calendar.show {
+      display: block;
+    }
+
+    .calendar-navigation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .calendar-navigation h3 {
+      margin: 0;
+      font-size: 17px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .calendar-nav-btn {
+      background: #f1f2f5;
+      color: #172033;
+      padding: 9px 13px;
+      border: 1px solid #ddd;
+    }
+
+    .calendar-today {
+      background: #172033;
+      color: white;
+      padding: 9px 15px;
+    }
+
+    .calendar-scroll {
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .calendar-grid {
+      min-width: 850px;
+      display: grid;
+      grid-template-columns: 70px repeat(7, 1fr);
+      border: 1px solid #e7e9ee;
+      border-radius: 14px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .calendar-header {
+      background: #f7f8fb;
+      border-bottom: 1px solid #e7e9ee;
+      border-left: 1px solid #e7e9ee;
+      padding: 12px 5px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .calendar-header.today {
+      background: #eef1f7;
+    }
+
+    .calendar-time {
+      min-height: 60px;
+      border-left: 1px solid #e7e9ee;
+      border-bottom: 1px solid #e7e9ee;
+      padding: 8px 4px;
+      text-align: center;
+      color: #777;
+      font-size: 11px;
+      direction: rtl;
+      white-space: nowrap;
+    }
+
+    .calendar-cell {
+      min-height: 60px;
+      border-left: 1px solid #e7e9ee;
+      border-bottom: 1px solid #e7e9ee;
+      padding: 4px;
+      position: relative;
+      background: white;
+    }
+
+    .calendar-cell.today {
+      background: #fafbfe;
+    }
+
+    .calendar-booking {
+      width: 100%;
+      border-radius: 9px;
+      padding: 7px 8px;
+      margin-bottom: 4px;
+      text-align: right;
+      cursor: pointer;
+      font-size: 11px;
+      line-height: 1.5;
+      border: 0;
+      color: #172033;
+      background: #fff4d6;
+      overflow: hidden;
+    }
+
+    .calendar-booking:hover {
+      opacity: .85;
+    }
+
+    .calendar-booking.confirmed-booking {
+      background: #def7e8;
+    }
+
+    .calendar-booking.declined-booking {
+      background: #ffe2e2;
+    }
+
+    .calendar-booking-time {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .calendar-booking-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+
+    /* =========================
+       Modal
+    ========================= */
 
     .modal-overlay {
       position: fixed;
@@ -336,7 +526,10 @@
       background: #e7e9ee;
     }
 
-    /* Details */
+
+    /* =========================
+       Details
+    ========================= */
 
     .details {
       display: grid;
@@ -376,7 +569,10 @@
       font-variant-numeric: lining-nums;
     }
 
-    /* Meeting */
+
+    /* =========================
+       Meeting
+    ========================= */
 
     .detail-link {
       direction: ltr;
@@ -402,7 +598,10 @@
       opacity: .9;
     }
 
-    /* Notes */
+
+    /* =========================
+       Notes
+    ========================= */
 
     .notes-value {
       line-height: 1.8;
@@ -416,7 +615,10 @@
       font-weight: normal;
     }
 
-    /* Status Actions */
+
+    /* =========================
+       Status Actions
+    ========================= */
 
     .detail-actions {
       display: grid;
@@ -447,7 +649,10 @@
       color: #777;
     }
 
-    /* Cancel */
+
+    /* =========================
+       Cancel
+    ========================= */
 
     .cancel-action {
       width: 100%;
@@ -463,7 +668,10 @@
       background: #921c14;
     }
 
-    /* Mobile */
+
+    /* =========================
+       Mobile
+    ========================= */
 
     @media (max-width: 800px) {
 
@@ -487,7 +695,21 @@
         font-size: 23px;
       }
 
+      .table-title {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .view-switch {
+        width: 100%;
+      }
+
+      .view-btn {
+        flex: 1;
+      }
+
     }
+
 
     @media (max-width: 450px) {
 
@@ -503,6 +725,17 @@
         grid-template-columns: 1fr;
       }
 
+      .calendar-navigation {
+        flex-wrap: wrap;
+      }
+
+      .calendar-navigation h3 {
+        order: -1;
+        width: 100%;
+        flex-basis: 100%;
+        margin-bottom: 5px;
+      }
+
     }
 
   </style>
@@ -513,6 +746,7 @@
 <body>
 
 <div class="box">
+
 
   <!-- Header -->
 
@@ -567,7 +801,9 @@
 </div>
 
 
-<!-- Booking Details Modal -->
+<!-- =========================
+     Booking Details Modal
+========================= -->
 
 <div
   id="bookingModal"
@@ -609,7 +845,16 @@
 
 <script>
 
+
+/* =========================
+   Variables
+========================= */
+
 let allBookings = [];
+
+let currentView = 'table';
+
+let calendarDate = new Date();
 
 
 /* =========================
@@ -624,6 +869,7 @@ window.addEventListener(
       sessionStorage.getItem(
         'maw3id_admin_password'
       );
+
 
     if (savedPassword) {
 
@@ -642,13 +888,17 @@ window.addEventListener(
    تسجيل الدخول
 ========================= */
 
-async function load(autoLogin = false) {
+async function load(
+  autoLogin = false
+) {
 
   const password =
     document.getElementById('p').value;
 
+
   const error =
     document.getElementById('error');
+
 
   error.innerHTML = '';
 
@@ -663,6 +913,7 @@ async function load(autoLogin = false) {
     }
 
     return;
+
   }
 
 
@@ -674,6 +925,7 @@ async function load(autoLogin = false) {
         encodeURIComponent(password)
       );
 
+
     const d =
       await r.json();
 
@@ -684,13 +936,17 @@ async function load(autoLogin = false) {
         'maw3id_admin_password'
       );
 
+
       document.getElementById('p').value =
         '';
+
 
       error.innerHTML =
         '<p class="error">كلمة المرور غير صحيحة.</p>';
 
+
       return;
+
     }
 
 
@@ -922,6 +1178,38 @@ function renderDashboard(
           الحجوزات
         </h2>
 
+
+        <div class="view-switch">
+
+          <button
+            id="tableViewBtn"
+            class="view-btn ${
+              currentView === 'table'
+                ? 'active'
+                : ''
+            }"
+            onclick="switchView('table')"
+            type="button"
+          >
+            ☷ جدول
+          </button>
+
+
+          <button
+            id="calendarViewBtn"
+            class="view-btn ${
+              currentView === 'calendar'
+                ? 'active'
+                : ''
+            }"
+            onclick="switchView('calendar')"
+            type="button"
+          >
+            ▦ تقويم
+          </button>
+
+        </div>
+
       </div>
 
 
@@ -979,6 +1267,12 @@ function renderDashboard(
 
       <div id="results"></div>
 
+
+      <div
+        id="calendar"
+        class="calendar"
+      ></div>
+
     </div>
 
   `;
@@ -989,9 +1283,143 @@ function renderDashboard(
     tableHTML;
 
 
-  renderTable(
-    bookings
-  );
+  if (
+    currentView === 'table'
+  ) {
+
+    renderTable(
+      bookings
+    );
+
+  } else {
+
+    renderCalendar(
+      bookings
+    );
+
+  }
+
+}
+
+
+/* =========================
+   تغيير العرض
+========================= */
+
+function switchView(
+  view
+) {
+
+  currentView =
+    view;
+
+
+  const search =
+    document.getElementById(
+      'search'
+    );
+
+
+  const dateFilter =
+    document.getElementById(
+      'dateFilter'
+    );
+
+
+  const statusFilter =
+    document.getElementById(
+      'statusFilter'
+    );
+
+
+  let filtered =
+    filterBookings(
+      allBookings,
+      search
+        ? search.value
+        : '',
+      dateFilter
+        ? dateFilter.value
+        : '',
+      statusFilter
+        ? statusFilter.value
+        : ''
+    );
+
+
+  const tableViewBtn =
+    document.getElementById(
+      'tableViewBtn'
+    );
+
+
+  const calendarViewBtn =
+    document.getElementById(
+      'calendarViewBtn'
+    );
+
+
+  if (tableViewBtn) {
+
+    tableViewBtn.classList.toggle(
+      'active',
+      view === 'table'
+    );
+
+  }
+
+
+  if (calendarViewBtn) {
+
+    calendarViewBtn.classList.toggle(
+      'active',
+      view === 'calendar'
+    );
+
+  }
+
+
+  if (
+    view === 'table'
+  ) {
+
+    document.getElementById(
+      'results'
+    ).style.display =
+      'block';
+
+
+    document.getElementById(
+      'calendar'
+    ).classList.remove(
+      'show'
+    );
+
+
+    renderTable(
+      filtered
+    );
+
+  } else {
+
+    document.getElementById(
+      'results'
+    ).style.display =
+      'none';
+
+
+    document.getElementById(
+      'calendar'
+    ).classList.add(
+      'show'
+    );
+
+
+    renderCalendar(
+      filtered
+    );
+
+  }
 
 }
 
@@ -1000,13 +1428,71 @@ function renderDashboard(
    الفلاتر
 ========================= */
 
+function filterBookings(
+  bookings,
+  search,
+  date,
+  status
+) {
+
+  search =
+    String(
+      search || ''
+    )
+    .trim()
+    .toLowerCase();
+
+
+  return bookings.filter(
+    b => {
+
+      const name =
+        String(
+          b.name || ''
+        ).toLowerCase();
+
+
+      const email =
+        String(
+          b.email || ''
+        ).toLowerCase();
+
+
+      const matchesSearch =
+        !search ||
+        name.includes(search) ||
+        email.includes(search);
+
+
+      const matchesDate =
+        !date ||
+        b.session_date === date;
+
+
+      const matchesStatus =
+        !status ||
+        b.attendance_status ===
+        status;
+
+
+      return (
+        matchesSearch &&
+        matchesDate &&
+        matchesStatus
+      );
+
+    }
+  );
+
+}
+
+
 function applyFilters() {
 
   const search =
-    document.getElementById('search')
-      .value
-      .trim()
-      .toLowerCase();
+    document.getElementById(
+      'search'
+    ).value;
 
 
   const date =
@@ -1022,51 +1508,29 @@ function applyFilters() {
 
 
   const filtered =
-    allBookings.filter(
-      b => {
-
-        const name =
-          String(
-            b.name || ''
-          ).toLowerCase();
-
-
-        const email =
-          String(
-            b.email || ''
-          ).toLowerCase();
-
-
-        const matchesSearch =
-          !search ||
-          name.includes(search) ||
-          email.includes(search);
-
-
-        const matchesDate =
-          !date ||
-          b.session_date === date;
-
-
-        const matchesStatus =
-          !status ||
-          b.attendance_status ===
-          status;
-
-
-        return (
-          matchesSearch &&
-          matchesDate &&
-          matchesStatus
-        );
-
-      }
+    filterBookings(
+      allBookings,
+      search,
+      date,
+      status
     );
 
 
-  renderTable(
-    filtered
-  );
+  if (
+    currentView === 'calendar'
+  ) {
+
+    renderCalendar(
+      filtered
+    );
+
+  } else {
+
+    renderTable(
+      filtered
+    );
+
+  }
 
 }
 
@@ -1092,9 +1556,21 @@ function clearFilters() {
   ).value = '';
 
 
-  renderTable(
-    allBookings
-  );
+  if (
+    currentView === 'calendar'
+  ) {
+
+    renderCalendar(
+      allBookings
+    );
+
+  } else {
+
+    renderTable(
+      allBookings
+    );
+
+  }
 
 }
 
@@ -1152,149 +1628,153 @@ function renderTable(
 
   const tableHTML = `
 
-    <table>
+    <div class="table-scroll">
 
-      <thead>
+      <table>
 
-        <tr>
+        <thead>
 
-          <th>
-            الاسم
-          </th>
+          <tr>
 
-          <th>
-            البريد الإلكتروني
-          </th>
+            <th>
+              الاسم
+            </th>
 
-          <th>
-            التاريخ
-          </th>
+            <th>
+              البريد الإلكتروني
+            </th>
 
-          <th>
-            الوقت
-          </th>
+            <th>
+              التاريخ
+            </th>
 
-          <th>
-            الحضور
-          </th>
+            <th>
+              الوقت
+            </th>
 
-        </tr>
+            <th>
+              الحضور
+            </th>
 
-      </thead>
+          </tr>
 
-
-      <tbody>
-
-        ${bookings.map(
-          b => {
-
-            const status =
-              b.attendance_status ||
-              'pending';
+        </thead>
 
 
-            let statusClass =
-              'pending';
+        <tbody>
+
+          ${bookings.map(
+            b => {
+
+              const status =
+                b.attendance_status ||
+                'pending';
 
 
-            let statusText =
-              'معلق';
+              let statusClass =
+                'pending';
 
 
-            if (
-              status ===
-              'confirmed'
-            ) {
+              let statusText =
+                'معلق';
 
-              statusClass =
-                'confirmed';
 
-              statusText =
-                'مؤكد';
+              if (
+                status ===
+                'confirmed'
+              ) {
+
+                statusClass =
+                  'confirmed';
+
+                statusText =
+                  'مؤكد';
+
+              }
+
+
+              if (
+                status ===
+                'declined'
+              ) {
+
+                statusClass =
+                  'cancelled';
+
+                statusText =
+                  'معتذر';
+
+              }
+
+
+              return `
+
+                <tr
+                  onclick="openBooking(
+                    ${allBookings.indexOf(b)}
+                  )"
+                >
+
+                  <td class="name">
+
+                    ${escapeHTML(
+                      b.name || '-'
+                    )}
+
+                  </td>
+
+
+                  <td class="email">
+
+                    ${escapeHTML(
+                      b.email || '-'
+                    )}
+
+                  </td>
+
+
+                  <td class="date-cell">
+
+                    ${escapeHTML(
+                      b.session_date || '-'
+                    )}
+
+                  </td>
+
+
+                  <td class="time-cell">
+
+                    ${formatTime(
+                      b.start_time
+                    )}
+
+                  </td>
+
+
+                  <td>
+
+                    <span
+                      class="status ${statusClass}"
+                    >
+
+                      ${statusText}
+
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              `;
 
             }
+          ).join('')}
 
+        </tbody>
 
-            if (
-              status ===
-              'declined'
-            ) {
+      </table>
 
-              statusClass =
-                'cancelled';
-
-              statusText =
-                'معتذر';
-
-            }
-
-
-            return `
-
-              <tr
-                onclick="openBooking(
-                  ${allBookings.indexOf(b)}
-                )"
-              >
-
-                <td class="name">
-
-                  ${escapeHTML(
-                    b.name || '-'
-                  )}
-
-                </td>
-
-
-                <td class="email">
-
-                  ${escapeHTML(
-                    b.email || '-'
-                  )}
-
-                </td>
-
-
-                <td class="date-cell">
-
-                  ${escapeHTML(
-                    b.session_date || '-'
-                  )}
-
-                </td>
-
-
-                <td class="time-cell">
-
-                  ${formatTime(
-                    b.start_time
-                  )}
-
-                </td>
-
-
-                <td>
-
-                  <span
-                    class="status ${statusClass}"
-                  >
-
-                    ${statusText}
-
-                  </span>
-
-                </td>
-
-              </tr>
-
-            `;
-
-          }
-        ).join('')}
-
-      </tbody>
-
-    </table>
+    </div>
 
   `;
 
@@ -1302,6 +1782,518 @@ function renderTable(
   results.innerHTML =
     countHTML +
     tableHTML;
+
+}
+
+
+/* =========================
+   Calendar helpers
+========================= */
+
+function getStartOfWeek(
+  date
+) {
+
+  const d =
+    new Date(date);
+
+
+  const day =
+    d.getDay();
+
+
+  const diff =
+    day === 0
+      ? 0
+      : -day;
+
+
+  d.setDate(
+    d.getDate() +
+    diff
+  );
+
+
+  d.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  return d;
+
+}
+
+
+function dateKey(
+  date
+) {
+
+  const y =
+    date.getFullYear();
+
+
+  const m =
+    String(
+      date.getMonth() + 1
+    ).padStart(
+      2,
+      '0'
+    );
+
+
+  const d =
+    String(
+      date.getDate()
+    ).padStart(
+      2,
+      '0'
+    );
+
+
+  return `${y}-${m}-${d}`;
+
+}
+
+
+function arabicDayName(
+  date
+) {
+
+  return date.toLocaleDateString(
+    'ar-SA',
+    {
+      weekday: 'short'
+    }
+  );
+
+}
+
+
+function formatCalendarDate(
+  date
+) {
+
+  return date.toLocaleDateString(
+    'ar-SA',
+    {
+      day: 'numeric',
+      month: 'short'
+    }
+  );
+
+}
+
+
+/* =========================
+   Calendar
+========================= */
+
+function renderCalendar(
+  bookings
+) {
+
+  const calendar =
+    document.getElementById(
+      'calendar'
+    );
+
+
+  if (!calendar) return;
+
+
+  const start =
+    getStartOfWeek(
+      calendarDate
+    );
+
+
+  const days =
+    [];
+
+
+  for (
+    let i = 0;
+    i < 7;
+    i++
+  ) {
+
+    const d =
+      new Date(start);
+
+
+    d.setDate(
+      start.getDate() +
+      i
+    );
+
+
+    days.push(d);
+
+  }
+
+
+  const title =
+    `${formatCalendarDate(
+      days[0]
+    )} — ${formatCalendarDate(
+      days[6]
+    )}`;
+
+
+  let html = `
+
+    <div class="calendar-navigation">
+
+      <button
+        type="button"
+        class="calendar-nav-btn"
+        onclick="changeCalendarWeek(-1)"
+      >
+        السابق
+      </button>
+
+
+      <button
+        type="button"
+        class="calendar-today"
+        onclick="goCalendarToday()"
+      >
+        اليوم
+      </button>
+
+
+      <h3>
+        ${title}
+      </h3>
+
+
+      <button
+        type="button"
+        class="calendar-nav-btn"
+        onclick="changeCalendarWeek(1)"
+      >
+        التالي
+      </button>
+
+    </div>
+
+
+    <div class="calendar-scroll">
+
+      <div class="calendar-grid">
+
+        <div class="calendar-header">
+          الوقت
+        </div>
+
+  `;
+
+
+  days.forEach(
+    day => {
+
+      const isToday =
+        dateKey(day) ===
+        dateKey(new Date());
+
+
+      html += `
+
+        <div
+          class="calendar-header ${
+            isToday
+              ? 'today'
+              : ''
+          }"
+        >
+
+          ${arabicDayName(day)}
+
+          <br>
+
+          ${formatCalendarDate(day)}
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  /*
+    8 صباحًا إلى 8 مساءً
+    كل ساعة في التقويم.
+  */
+
+  for (
+    let hour = 8;
+    hour <= 20;
+    hour++
+  ) {
+
+    html += `
+
+      <div class="calendar-time">
+
+        ${formatTime(
+          String(hour).padStart(
+            2,
+            '0'
+          ) + ':00'
+        )}
+
+      </div>
+
+    `;
+
+
+    days.forEach(
+      day => {
+
+        const key =
+          dateKey(day);
+
+
+        const isToday =
+          key ===
+          dateKey(new Date());
+
+
+        const dayBookings =
+          bookings.filter(
+            b =>
+              b.session_date ===
+              key &&
+              parseInt(
+                String(
+                  b.start_time || ''
+                ).split(':')[0],
+                10
+              ) === hour
+          );
+
+
+        html += `
+
+          <div
+            class="calendar-cell ${
+              isToday
+                ? 'today'
+                : ''
+            }"
+          >
+
+            ${
+              dayBookings
+                .map(
+                  b =>
+                    calendarBookingHTML(
+                      b
+                    )
+                )
+                .join('')
+            }
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
+
+
+  html += `
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  calendar.innerHTML =
+    html;
+
+}
+
+
+function calendarBookingHTML(
+  booking
+) {
+
+  const status =
+    booking.attendance_status ||
+    'pending';
+
+
+  let statusClass =
+    '';
+
+
+  if (
+    status ===
+    'confirmed'
+  ) {
+
+    statusClass =
+      'confirmed-booking';
+
+  }
+
+
+  if (
+    status ===
+    'declined'
+  ) {
+
+    statusClass =
+      'declined-booking';
+
+  }
+
+
+  const index =
+    allBookings.indexOf(
+      booking
+    );
+
+
+  return `
+
+    <button
+      type="button"
+      class="calendar-booking ${statusClass}"
+      onclick="openBooking(${index})"
+    >
+
+      <div class="calendar-booking-time">
+
+        ${formatTime(
+          booking.start_time
+        )}
+
+        -
+
+        ${formatTime(
+          booking.end_time
+        )}
+
+      </div>
+
+
+      <div class="calendar-booking-name">
+
+        ${escapeHTML(
+          booking.name || '-'
+        )}
+
+      </div>
+
+    </button>
+
+  `;
+
+}
+
+
+function changeCalendarWeek(
+  amount
+) {
+
+  calendarDate.setDate(
+    calendarDate.getDate() +
+    amount * 7
+  );
+
+
+  const search =
+    document.getElementById(
+      'search'
+    );
+
+
+  const dateFilter =
+    document.getElementById(
+      'dateFilter'
+    );
+
+
+  const statusFilter =
+    document.getElementById(
+      'statusFilter'
+    );
+
+
+  const filtered =
+    filterBookings(
+      allBookings,
+      search
+        ? search.value
+        : '',
+      dateFilter
+        ? dateFilter.value
+        : '',
+      statusFilter
+        ? statusFilter.value
+        : ''
+    );
+
+
+  renderCalendar(
+    filtered
+  );
+
+}
+
+
+function goCalendarToday() {
+
+  calendarDate =
+    new Date();
+
+
+  const search =
+    document.getElementById(
+      'search'
+    );
+
+
+  const dateFilter =
+    document.getElementById(
+      'dateFilter'
+    );
+
+
+  const statusFilter =
+    document.getElementById(
+      'statusFilter'
+    );
+
+
+  const filtered =
+    filterBookings(
+      allBookings,
+      search
+        ? search.value
+        : '',
+      dateFilter
+        ? dateFilter.value
+        : '',
+      statusFilter
+        ? statusFilter.value
+        : ''
+    );
+
+
+  renderCalendar(
+    filtered
+  );
 
 }
 
@@ -1766,9 +2758,50 @@ async function updateBookingStatus(
         : 'تم تسجيل عدم الحضور ✓';
 
 
-    renderTable(
-      allBookings
-    );
+    if (
+      currentView === 'calendar'
+    ) {
+
+      const search =
+        document.getElementById(
+          'search'
+        );
+
+
+      const dateFilter =
+        document.getElementById(
+          'dateFilter'
+        );
+
+
+      const statusFilter =
+        document.getElementById(
+          'statusFilter'
+        );
+
+
+      renderCalendar(
+        filterBookings(
+          allBookings,
+          search
+            ? search.value
+            : '',
+          dateFilter
+            ? dateFilter.value
+            : '',
+          statusFilter
+            ? statusFilter.value
+            : ''
+        )
+      );
+
+    } else {
+
+      renderTable(
+        allBookings
+      );
+
+    }
 
 
     setTimeout(
