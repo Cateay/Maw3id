@@ -4,14 +4,9 @@
 <head>
 
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-
-  <title>مَوعد — لوحة التحكم</title>
-
+  <title>مَوعد — لوحة الإدارة</title>
 
   <style>
 
@@ -19,199 +14,320 @@
       box-sizing: border-box;
     }
 
-
     :root {
       --dark: #172033;
-      --dark-hover: #202b40;
-      --background: #f5f6fa;
-      --card: #ffffff;
-      --border: #e7e9ee;
+      --dark-hover: #222d43;
+      --bg: #f5f6fa;
+      --white: #ffffff;
       --text: #172033;
       --muted: #777;
-      --light: #f1f2f5;
+      --border: #e7e9ee;
+      --light: #f7f8fb;
+      --green: #167344;
+      --red: #b42318;
     }
-
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: var(--background);
+      background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
     }
 
 
     /* =========================
-       Sidebar
+       LOGIN
+    ========================= */
+
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.07);
+    }
+
+    .login-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: var(--dark);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      font-weight: bold;
+      margin: 0 auto 20px;
+    }
+
+    .login-box h1 {
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 25px;
+    }
+
+    .login-box p {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 25px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #ddd;
+      border-radius: 11px;
+      font-size: 14px;
+      outline: none;
+      direction: ltr;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .login-input:focus {
+      border-color: var(--dark);
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--dark);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .login-button:hover {
+      opacity: .9;
+    }
+
+    .login-error {
+      color: var(--red);
+      font-size: 13px;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+
+    /* =========================
+       APP
+    ========================= */
+
+    #app {
+      display: none;
+      min-height: 100vh;
+    }
+
+    #app.show {
+      display: block;
+    }
+
+
+    /* =========================
+       SIDEBAR
     ========================= */
 
     .sidebar {
       position: fixed;
       top: 0;
       right: 0;
+      bottom: 0;
+
       width: 270px;
-      height: 100vh;
+
       background: var(--dark);
       color: white;
+
       z-index: 1000;
 
       display: flex;
       flex-direction: column;
 
-      transition:
-        transform .25s ease;
+      padding: 20px 14px;
 
-      box-shadow:
-        -5px 0 25px rgba(0,0,0,.08);
+      transition:
+        transform .25s ease,
+        width .25s ease;
     }
 
-
-    .sidebar.closed {
+    .sidebar.collapsed {
       transform: translateX(100%);
     }
 
-
     .sidebar-header {
-      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      padding: 8px 10px 22px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .sidebar-logo {
+      width: 42px;
+      height: 42px;
+
+      border-radius: 12px;
+
+      background: rgba(255,255,255,.1);
 
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
 
-      border-bottom:
-        1px solid rgba(255,255,255,.08);
-    }
-
-
-    .brand {
-      font-size: 21px;
+      font-size: 19px;
       font-weight: bold;
     }
 
+    .sidebar-title {
+      font-size: 17px;
+      font-weight: bold;
+    }
 
-    .brand-subtitle {
-      margin-top: 5px;
+    .sidebar-subtitle {
       color: #aeb6c5;
-      font-size: 12px;
+      font-size: 11px;
+      margin-top: 3px;
     }
 
 
-    .sidebar-close {
-      width: 36px;
-      height: 36px;
-
-      padding: 0;
-
-      border: 0;
-      border-radius: 9px;
-
-      background: rgba(255,255,255,.08);
-      color: white;
-
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-
-    .sidebar-close:hover {
-      background: rgba(255,255,255,.15);
-    }
-
+    /* Navigation */
 
     .sidebar-nav {
-      padding: 18px 12px;
-      flex: 1;
+      padding-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
 
-
-    .nav-label {
-      color: #8993a5;
-      font-size: 11px;
-      margin: 5px 12px 10px;
-    }
-
-
-    .nav-item {
+    .nav-button {
       width: 100%;
 
       display: flex;
       align-items: center;
-
       gap: 12px;
 
-      padding: 12px 14px;
-
-      margin-bottom: 5px;
-
       border: 0;
-      border-radius: 10px;
+      border-radius: 11px;
+
+      padding: 12px 13px;
 
       background: transparent;
-      color: #d9dee7;
-
-      text-decoration: none;
+      color: #cbd1dc;
 
       font-size: 14px;
 
-      cursor: pointer;
-
       text-align: right;
+
+      transition: .15s;
     }
 
-
-    .nav-item:hover {
-      background: rgba(255,255,255,.08);
+    .nav-button:hover {
+      background: var(--dark-hover);
       color: white;
     }
 
-
-    .nav-item.active {
-      background: rgba(255,255,255,.12);
+    .nav-button.active {
+      background: rgba(255,255,255,.1);
       color: white;
     }
-
 
     .nav-icon {
       width: 22px;
       text-align: center;
       font-size: 17px;
+      flex-shrink: 0;
     }
 
 
-    .sidebar-footer {
-      padding: 15px 18px;
+    /* Bottom section */
 
-      border-top:
-        1px solid rgba(255,255,255,.08);
+    .sidebar-bottom {
+      margin-top: auto;
 
-      color: #8993a5;
-      font-size: 11px;
+      padding-top: 15px;
+
+      border-top: 1px solid rgba(255,255,255,.1);
+
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .logout-button {
+      color: #ffb5b0;
+    }
+
+    .logout-button:hover {
+      background: rgba(180,35,24,.16);
+      color: #ffd0cc;
     }
 
 
     /* =========================
-       Overlay
+       SIDEBAR TOGGLE
     ========================= */
 
-    .sidebar-overlay {
+    .sidebar-toggle {
       position: fixed;
-      inset: 0;
 
-      background: rgba(15,23,42,.35);
+      top: 18px;
+      right: 288px;
 
-      z-index: 900;
+      width: 42px;
+      height: 42px;
 
-      display: none;
+      border: 0;
+      border-radius: 11px;
+
+      background: white;
+      color: var(--dark);
+
+      box-shadow: 0 4px 18px rgba(0,0,0,.08);
+
+      z-index: 1100;
+
+      font-size: 20px;
+
+      transition:
+        right .25s ease;
     }
 
+    .sidebar.collapsed + .sidebar-toggle {
+      right: 18px;
+    }
 
-    .sidebar-overlay.show {
-      display: block;
+    .sidebar-toggle:hover {
+      background: #f1f2f5;
     }
 
 
     /* =========================
-       Main
+       MAIN
     ========================= */
 
     .main {
@@ -219,545 +335,775 @@
 
       margin-right: 270px;
 
+      padding: 30px;
+
       transition:
         margin-right .25s ease;
     }
 
-
-    .sidebar.closed ~ .main {
+    .sidebar.collapsed ~ .main {
       margin-right: 0;
     }
 
-
-    /* =========================
-       Topbar
-    ========================= */
-
-    .topbar {
-      height: 72px;
-
-      background: white;
-
-      border-bottom:
-        1px solid var(--border);
-
-      display: flex;
-
-      align-items: center;
-
-      padding: 0 25px;
-
-      gap: 15px;
-    }
-
-
-    .menu-button {
-      width: 42px;
-      height: 42px;
-
-      border: 0;
-      border-radius: 10px;
-
-      background: var(--light);
-      color: var(--dark);
-
-      cursor: pointer;
-
-      font-size: 20px;
-    }
-
-
-    .menu-button:hover {
-      background: #e7e9ee;
-    }
-
-
-    .topbar-title {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-
-    .topbar-subtitle {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-
-    /* =========================
-       Content
-    ========================= */
-
     .content {
-      max-width: 1100px;
-
+      max-width: 1250px;
       margin: auto;
-
-      padding: 35px 25px;
+      padding-top: 45px;
     }
 
 
-    .page {
-      display: none;
-    }
-
-
-    .page.active {
-      display: block;
-    }
-
+    /* =========================
+       PAGE HEADER
+    ========================= */
 
     .page-header {
-      margin-bottom: 25px;
+      margin-bottom: 22px;
     }
 
-
     .page-header h1 {
-      margin: 0 0 8px;
-
+      margin: 0 0 7px;
       font-size: 27px;
     }
 
-
     .page-header p {
       margin: 0;
-
       color: var(--muted);
-
       font-size: 14px;
     }
 
 
     /* =========================
-       Cards
+       CARDS
     ========================= */
 
     .card {
-      background: var(--card);
-
-      border-radius: 18px;
-
-      padding: 25px;
-
-      box-shadow:
-        0 5px 20px rgba(0,0,0,.04);
-
-      border:
-        1px solid rgba(0,0,0,.02);
-    }
-
-
-    .welcome-card {
-      background: var(--dark);
-      color: white;
-
-      padding: 30px;
-
-      border-radius: 20px;
-
-      margin-bottom: 20px;
-    }
-
-
-    .welcome-card h2 {
-      margin: 0 0 8px;
-      font-size: 23px;
-    }
-
-
-    .welcome-card p {
-      margin: 0;
-      color: #cbd1dc;
-      font-size: 14px;
-    }
-
-
-    .quick-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, 1fr);
-
-      gap: 16px;
-    }
-
-
-    .quick-card {
       background: white;
-
-      border-radius: 16px;
-
+      border-radius: 18px;
       padding: 22px;
-
-      border:
-        1px solid var(--border);
-
-      cursor: pointer;
-
-      transition:
-        transform .15s,
-        box-shadow .15s;
-    }
-
-
-    .quick-card:hover {
-      transform: translateY(-2px);
-
-      box-shadow:
-        0 8px 25px rgba(0,0,0,.06);
-    }
-
-
-    .quick-icon {
-      font-size: 25px;
-      margin-bottom: 12px;
-    }
-
-
-    .quick-card h3 {
-      margin: 0 0 7px;
-      font-size: 16px;
-    }
-
-
-    .quick-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
+      box-shadow: 0 5px 20px rgba(0,0,0,.04);
     }
 
 
     /* =========================
-       Email Form
+       STATS
     ========================= */
 
-    .form-grid {
+    .stats {
       display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
 
-      gap: 18px;
+    .stat {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.04);
+    }
+
+    .stat-label {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: bold;
+      font-variant-numeric: lining-nums;
     }
 
 
-    .field {
-      display: grid;
-      gap: 8px;
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-box {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.04);
+      overflow: hidden;
+    }
+
+    .table-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .table-title h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .view-switch {
+      display: flex;
+      background: #f1f2f5;
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+    }
+
+    .view-btn {
+      background: transparent;
+      color: #666;
+      padding: 9px 14px;
+      border-radius: 8px;
+      border: 0;
+      font-size: 13px;
+    }
+
+    .view-btn.active {
+      background: var(--dark);
+      color: white;
     }
 
 
-    .field label {
+    /* =========================
+       FILTERS
+    ========================= */
+
+    .filters {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+
+      padding: 13px 15px;
+
+      border: 1px solid #ddd;
+      border-radius: 10px;
+
+      font-size: 14px;
+
+      outline: none;
+
+      background: white;
+      color: var(--text);
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: var(--dark);
+    }
+
+    .date-input {
+      direction: ltr;
+      text-align: left;
+    }
+
+    .clear-btn {
+      background: #eef0f4;
+      color: var(--dark);
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 13px 20px;
+    }
+
+
+    /* =========================
+       TABLE CONTENT
+    ========================= */
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th {
+      background: #f7f8fb;
+      color: #666;
       font-size: 13px;
       font-weight: 600;
     }
 
-
-    .field-help {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: -2px;
+    td,
+    th {
+      padding: 15px 12px;
+      border-bottom: 1px solid #eee;
+      text-align: right;
     }
 
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-
-      padding: 13px 14px;
-
-      border:
-        1px solid #ddd;
-
-      border-radius: 10px;
-
-      font-family: Arial, sans-serif;
-
-      font-size: 14px;
-
-      color: var(--text);
-
-      background: white;
-
-      outline: none;
-
-      transition:
-        border-color .15s,
-        box-shadow .15s;
-    }
-
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--dark);
-
-      box-shadow:
-        0 0 0 3px rgba(23,32,51,.06);
-    }
-
-
-    select {
+    tbody tr {
       cursor: pointer;
+      transition: background .15s;
     }
 
-
-    textarea {
-      min-height: 220px;
-
-      resize: vertical;
-
-      line-height: 1.8;
+    tbody tr:hover {
+      background: #f8f9fc;
     }
 
-
-    .recipient-preview {
-      display: none;
-
-      background: #f7f8fb;
-
-      border-radius: 12px;
-
-      padding: 13px 15px;
-
-      margin-top: 2px;
+    .name {
+      font-weight: 600;
     }
 
-
-    .recipient-preview.show {
-      display: block;
-    }
-
-
-    .recipient-name {
-      font-weight: bold;
-      font-size: 13px;
-    }
-
-
-    .recipient-email {
+    .email {
+      color: #666;
       direction: ltr;
       text-align: right;
+    }
 
-      color: var(--muted);
+    .date-cell,
+    .time-cell {
+      font-variant-numeric: lining-nums;
+      white-space: nowrap;
+    }
 
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
       font-size: 12px;
-
-      margin-top: 4px;
+      font-weight: 600;
     }
 
-
-    .email-actions {
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      margin-top: 5px;
+    .pending {
+      background: #fff4d6;
+      color: #916600;
     }
 
-
-    .send-button {
-      background: var(--dark);
-
-      color: white;
-
-      border: 0;
-
-      border-radius: 10px;
-
-      padding: 13px 25px;
-
-      font-size: 14px;
-
-      cursor: pointer;
-    }
-
-
-    .send-button:hover {
-      background: var(--dark-hover);
-    }
-
-
-    .send-button:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-    }
-
-
-    .reset-button {
-      background: #eef0f4;
-
-      color: var(--dark);
-
-      border: 1px solid #ddd;
-
-      border-radius: 10px;
-
-      padding: 12px 20px;
-
-      font-size: 14px;
-
-      cursor: pointer;
-    }
-
-
-    .reset-button:hover {
-      background: #e4e7ed;
-    }
-
-
-    .message {
-      display: none;
-
-      padding: 13px 15px;
-
-      border-radius: 10px;
-
-      font-size: 13px;
-
-      line-height: 1.6;
-    }
-
-
-    .message.show {
-      display: block;
-    }
-
-
-    .message.success {
+    .confirmed {
       background: #def7e8;
       color: #167344;
     }
 
-
-    .message.error {
+    .cancelled {
       background: #ffe2e2;
       color: #b42318;
     }
 
-
-    .loading {
-      display: inline-block;
-
-      width: 14px;
-      height: 14px;
-
-      border: 2px solid rgba(255,255,255,.4);
-
-      border-top-color: white;
-
-      border-radius: 50%;
-
-      animation:
-        spin .7s linear infinite;
-
-      vertical-align: -2px;
-
-      margin-left: 7px;
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #777;
     }
 
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-
-    /* =========================
-       Status
-    ========================= */
-
-    .connection-card {
-      margin-top: 20px;
-
-      background: #f7f8fb;
-
-      border-radius: 13px;
-
-      padding: 15px;
-
+    .results-count {
+      color: #777;
       font-size: 13px;
-
-      color: var(--muted);
-    }
-
-
-    .connection-dot {
-      display: inline-block;
-
-      width: 8px;
-      height: 8px;
-
-      border-radius: 50%;
-
-      background: #167344;
-
-      margin-left: 6px;
+      margin-bottom: 10px;
     }
 
 
     /* =========================
-       Mobile
+       CALENDAR
     ========================= */
 
-    @media (max-width: 800px) {
+    .calendar {
+      display: none;
+    }
+
+    .calendar.show {
+      display: block;
+    }
+
+    .calendar-navigation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .calendar-navigation h3 {
+      margin: 0;
+      font-size: 17px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .calendar-nav-btn,
+    .calendar-today {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 14px;
+    }
+
+    .calendar-nav-btn {
+      background: #f1f2f5;
+      color: var(--dark);
+    }
+
+    .calendar-today {
+      background: var(--dark);
+      color: white;
+    }
+
+    .calendar-scroll {
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .calendar-grid {
+      min-width: 850px;
+      display: grid;
+      grid-template-columns: 70px repeat(7, 1fr);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .calendar-header {
+      background: #f7f8fb;
+      border-bottom: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      padding: 12px 5px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .calendar-header.today {
+      background: #eef1f7;
+    }
+
+    .calendar-time {
+      min-height: 60px;
+      border-left: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 4px;
+      text-align: center;
+      color: #777;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .calendar-cell {
+      min-height: 60px;
+      border-left: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 4px;
+      position: relative;
+      background: white;
+    }
+
+    .calendar-cell.today {
+      background: #fafbfe;
+    }
+
+    .calendar-booking {
+      width: 100%;
+      border-radius: 9px;
+      padding: 7px 8px;
+      margin-bottom: 4px;
+      text-align: right;
+      cursor: pointer;
+      font-size: 11px;
+      line-height: 1.5;
+      border: 0;
+      color: var(--dark);
+      background: #fff4d6;
+      overflow: hidden;
+    }
+
+    .calendar-booking.confirmed-booking {
+      background: #def7e8;
+    }
+
+    .calendar-booking.declined-booking {
+      background: #ffe2e2;
+    }
+
+    .calendar-booking-time {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .calendar-booking-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+
+    /* =========================
+       EMAIL PAGE
+    ========================= */
+
+    .email-card {
+      max-width: 850px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .recipient-options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .recipient-option {
+      border: 1px solid #ddd;
+      background: #f7f8fb;
+      color: var(--dark);
+      padding: 9px 13px;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    .recipient-option.active {
+      background: var(--dark);
+      color: white;
+      border-color: var(--dark);
+    }
+
+    .booking-recipient {
+      display: none;
+    }
+
+    .booking-recipient.show {
+      display: block;
+    }
+
+    .email-textarea {
+      min-height: 220px;
+      resize: vertical;
+      line-height: 1.8;
+    }
+
+    .send-email-btn {
+      background: var(--dark);
+      color: white;
+      border: 0;
+      padding: 13px 22px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .send-email-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .email-message {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    .email-success {
+      color: var(--green);
+    }
+
+    .email-error {
+      color: var(--red);
+    }
+
+
+    /* =========================
+       SETTINGS
+    ========================= */
+
+    .settings-card {
+      max-width: 850px;
+    }
+
+    .settings-row {
+      padding: 17px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .settings-row:last-child {
+      border-bottom: 0;
+    }
+
+    .settings-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .settings-description {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+
+      background: rgba(15,23,42,.48);
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      z-index: 2000;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+
+      overflow-y: auto;
+
+      background: white;
+
+      border-radius: 22px;
+
+      padding: 26px;
+
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: #f1f2f5;
+      color: var(--dark);
+
+      font-size: 20px;
+    }
+
+    .details {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail {
+      background: #f7f8fb;
+      border-radius: 13px;
+      padding: 14px 16px;
+    }
+
+    .detail-label {
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .detail-email {
+      direction: ltr;
+      text-align: right;
+    }
+
+    .booking-code {
+      direction: ltr;
+      text-align: right;
+    }
+
+    .detail-link {
+      direction: ltr;
+      text-align: left;
+      color: #3156d3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .meeting-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 9px 14px;
+      border-radius: 9px;
+      background: var(--dark);
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .notes-value {
+      line-height: 1.8;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .no-notes {
+      color: #777;
+      font-weight: normal;
+    }
+
+    .detail-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .status-action,
+    .cancel-action {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+    }
+
+    .confirm-action {
+      background: var(--green);
+    }
+
+    .decline-action,
+    .cancel-action {
+      background: var(--red);
+    }
+
+    .action-message {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 900px) {
 
       .sidebar {
-        width: 280px;
+        width: 270px;
       }
-
 
       .main {
         margin-right: 0;
+        padding: 20px;
       }
 
-
-      .quick-grid {
-        grid-template-columns: 1fr;
+      .sidebar-toggle {
+        right: 18px;
       }
 
-
-      .content {
-        padding: 25px 15px;
+      .sidebar:not(.collapsed) + .sidebar-toggle {
+        right: 288px;
       }
 
-
-      .topbar {
-        padding: 0 15px;
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
       }
 
     }
 
 
-    @media (max-width: 500px) {
+    @media (max-width: 650px) {
 
-      .card {
-        padding: 18px;
+      .main {
+        padding: 15px;
       }
 
-
-      .welcome-card {
-        padding: 23px;
+      .content {
+        padding-top: 55px;
       }
 
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 17px;
+      }
+
+      .stat-number {
+        font-size: 25px;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .table-title {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .view-switch {
+        width: 100%;
+      }
+
+      .view-btn {
+        flex: 1;
+      }
+
+      .detail-actions {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+
+    @media (max-width: 450px) {
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
 
       .page-header h1 {
         font-size: 23px;
       }
 
-
-      .email-actions {
-        flex-direction: column;
-        align-items: stretch;
+      .sidebar {
+        width: 85%;
+        max-width: 300px;
       }
 
-
-      .send-button,
-      .reset-button {
-        width: 100%;
+      .sidebar:not(.collapsed) + .sidebar-toggle {
+        right: auto;
+        left: 18px;
       }
 
     }
@@ -770,665 +1116,613 @@
 <body>
 
 
-<!-- =========================
-     Sidebar
-========================= -->
+<!-- =========================================================
+     LOGIN
+========================================================= -->
 
-<aside
-  id="sidebar"
-  class="sidebar"
->
+<div id="loginScreen">
 
-  <div class="sidebar-header">
+  <div class="login-box">
 
-    <div>
-
-      <div class="brand">
-        مَوعد
-      </div>
-
-      <div class="brand-subtitle">
-        لوحة الإدارة
-      </div>
-
+    <div class="login-logo">
+      م
     </div>
 
+    <h1>
+      لوحة مَوعد
+    </h1>
 
-    <button
-      type="button"
-      class="sidebar-close"
-      onclick="toggleSidebar()"
-      aria-label="إغلاق القائمة"
-    >
-      ×
-    </button>
+    <p>
+      تسجيل الدخول إلى لوحة الإدارة
+    </p>
 
-  </div>
-
-
-  <nav class="sidebar-nav">
-
-    <div class="nav-label">
-      الإدارة
-    </div>
-
-
-    <button
-      type="button"
-      class="nav-item active"
-      id="navHome"
-      onclick="showPage('home')"
+    <form
+      id="loginForm"
+      autocomplete="on"
     >
 
-      <span class="nav-icon">
-        ⌂
-      </span>
-
-      <span>
-        الرئيسية
-      </span>
-
-    </button>
-
-
-    <button
-      type="button"
-      class="nav-item"
-      id="navEmail"
-      onclick="showPage('email')"
-    >
-
-      <span class="nav-icon">
-        ✉
-      </span>
-
-      <span>
-        إرسال بريد
-      </span>
-
-    </button>
-
-
-    <div class="nav-label" style="margin-top:25px;">
-      النظام
-    </div>
-
-
-    <a
-      href="/admin.html"
-      class="nav-item"
-    >
-
-      <span class="nav-icon">
-        ◫
-      </span>
-
-      <span>
-        الحجوزات
-      </span>
-
-    </a>
-
-  </nav>
-
-
-  <div class="sidebar-footer">
-
-    مَوعد — نظام إدارة الجلسات
-
-  </div>
-
-</aside>
-
-
-<!-- =========================
-     Overlay
-========================= -->
-
-<div
-  id="sidebarOverlay"
-  class="sidebar-overlay"
-  onclick="closeSidebarMobile()"
-></div>
-
-
-<!-- =========================
-     Main
-========================= -->
-
-<main class="main">
-
-
-  <!-- Topbar -->
-
-  <header class="topbar">
-
-    <button
-      type="button"
-      class="menu-button"
-      onclick="toggleSidebar()"
-      aria-label="فتح القائمة"
-    >
-      ☰
-    </button>
-
-
-    <div>
-
-      <div
-        id="topbarTitle"
-        class="topbar-title"
+      <input
+        id="passwordInput"
+        class="login-input"
+        name="password"
+        type="password"
+        placeholder="كلمة مرور الإدارة"
+        autocomplete="current-password"
       >
-        الرئيسية
+
+      <button
+        class="login-button"
+        type="submit"
+      >
+        دخول
+      </button>
+
+    </form>
+
+    <div
+      id="loginError"
+      class="login-error"
+    ></div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     APP
+========================================================= -->
+
+<div id="app">
+
+
+  <!-- =======================================================
+       SIDEBAR
+  ======================================================== -->
+
+  <aside
+    id="sidebar"
+    class="sidebar"
+  >
+
+    <div class="sidebar-header">
+
+      <div class="sidebar-logo">
+        م
       </div>
 
-      <div class="topbar-subtitle">
-        إدارة مَوعد
+      <div>
+
+        <div class="sidebar-title">
+          مَوعد
+        </div>
+
+        <div class="sidebar-subtitle">
+          لوحة الإدارة
+        </div>
+
       </div>
 
     </div>
 
-  </header>
+
+    <!-- Navigation -->
+
+    <nav class="sidebar-nav">
+
+      <button
+        id="navHome"
+        class="nav-button active"
+        type="button"
+        onclick="showPage('home')"
+      >
+
+        <span class="nav-icon">
+          ☷
+        </span>
+
+        <span>
+          الحجوزات
+        </span>
+
+      </button>
 
 
-  <!-- Content -->
+      <button
+        id="navEmail"
+        class="nav-button"
+        type="button"
+        onclick="showPage('email')"
+      >
 
-  <div class="content">
+        <span class="nav-icon">
+          ✉
+        </span>
 
+        <span>
+          إرسال إيميل
+        </span>
 
-    <!-- =========================
-         Home Page
-    ========================= -->
+      </button>
 
-    <section
-      id="homePage"
-      class="page active"
-    >
-
-      <div class="page-header">
-
-        <h1>
-          الرئيسية
-        </h1>
-
-        <p>
-          الوصول السريع إلى أدوات إدارة مَوعد.
-        </p>
-
-      </div>
+    </nav>
 
 
-      <div class="welcome-card">
+    <!-- Bottom -->
 
-        <h2>
-          أهلًا بك في لوحة التحكم
-        </h2>
+    <div class="sidebar-bottom">
 
-        <p>
-          من هنا تقدر تدير الحجوزات وتتواصل مع العملاء بسهولة.
-        </p>
+      <button
+        id="navSettings"
+        class="nav-button"
+        type="button"
+        onclick="showPage('settings')"
+      >
 
-      </div>
+        <span class="nav-icon">
+          ⚙
+        </span>
+
+        <span>
+          الإعدادات
+        </span>
+
+      </button>
 
 
-      <div class="quick-grid">
+      <button
+        class="nav-button logout-button"
+        type="button"
+        onclick="logout()"
+      >
+
+        <span class="nav-icon">
+          ↪
+        </span>
+
+        <span>
+          تسجيل الخروج
+        </span>
+
+      </button>
+
+    </div>
+
+  </aside>
 
 
-        <div
-          class="quick-card"
-          onclick="showPage('email')"
-        >
 
-          <div class="quick-icon">
-            ✉️
-          </div>
+  <!-- =======================================================
+       SIDEBAR TOGGLE
+  ======================================================== -->
 
-          <h3>
-            إرسال بريد إلكتروني
-          </h3>
+  <button
+    id="sidebarToggle"
+    class="sidebar-toggle"
+    type="button"
+    onclick="toggleSidebar()"
+    aria-label="فتح القائمة"
+  >
+    ☰
+  </button>
+
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
+  <main class="main">
+
+    <div class="content">
+
+
+      <!-- ===================================================
+           HOME PAGE
+      ==================================================== -->
+
+      <section
+        id="homePage"
+        class="page"
+      >
+
+        <div class="page-header">
+
+          <h1>
+            لوحة مَوعد
+          </h1>
 
           <p>
-            أرسل رسالة لأي حاجز، أو أدخل بريدًا خارجيًا يدويًا.
+            إدارة ومتابعة حجوزات الجلسات
           </p>
 
         </div>
 
 
-        <a
-          href="/admin.html"
-          class="quick-card"
-          style="text-decoration:none;color:inherit;"
-        >
+        <div id="dashboardContent"></div>
 
-          <div class="quick-icon">
-            📅
-          </div>
+      </section>
 
-          <h3>
-            الحجوزات
-          </h3>
+
+
+      <!-- ===================================================
+           EMAIL PAGE
+      ==================================================== -->
+
+      <section
+        id="emailPage"
+        class="page"
+        style="display:none;"
+      >
+
+        <div class="page-header">
+
+          <h1>
+            إرسال إيميل
+          </h1>
 
           <p>
-            الانتقال إلى لوحة الحجوزات ومتابعة المواعيد.
+            إرسال رسالة بريد إلكتروني لأي عميل أو عنوان خارجي
           </p>
 
-        </a>
+        </div>
 
 
-      </div>
-
-    </section>
+        <div class="card email-card">
 
 
-    <!-- =========================
-         Email Page
-    ========================= -->
+          <!-- Recipient -->
 
-    <section
-      id="emailPage"
-      class="page"
-    >
+          <div class="form-group">
 
-      <div class="page-header">
-
-        <h1>
-          إرسال بريد إلكتروني
-        </h1>
-
-        <p>
-          أرسل رسالة مباشرة إلى أحد الحاجزين أو إلى بريد إلكتروني خارجي.
-        </p>
-
-      </div>
+            <label class="form-label">
+              المستلم
+            </label>
 
 
-      <div class="card">
+            <div class="recipient-options">
 
-
-        <form
-          id="emailForm"
-          onsubmit="sendEmail(event)"
-        >
-
-
-          <div class="form-grid">
-
-
-            <!-- Recipient Type -->
-
-            <div class="field">
-
-              <label for="recipientType">
-                المستلم
-              </label>
-
-              <select
-                id="recipientType"
-                onchange="changeRecipientType()"
+              <button
+                id="recipientBookingBtn"
+                class="recipient-option active"
+                type="button"
+                onclick="selectRecipientType('booking')"
               >
+                عميل من الحجوزات
+              </button>
 
-                <option value="booking">
-                  حاجز من الحجوزات
-                </option>
 
-                <option value="other">
-                  مستلم آخر
-                </option>
-
-              </select>
+              <button
+                id="recipientOtherBtn"
+                class="recipient-option"
+                type="button"
+                onclick="selectRecipientType('other')"
+              >
+                بريد آخر
+              </button>
 
             </div>
 
 
-            <!-- Booking -->
-
             <div
-              id="bookingRecipientField"
-              class="field"
+              id="bookingRecipient"
+              class="booking-recipient show"
             >
 
-              <label for="bookingRecipient">
-                اختر الحاجز
-              </label>
-
               <select
-                id="bookingRecipient"
-                onchange="updateRecipientPreview()"
+                id="bookingSelect"
+                class="select"
               >
 
                 <option value="">
-                  جاري تحميل الحجوزات...
+                  اختر العميل
                 </option>
 
               </select>
 
-
-              <div
-                id="recipientPreview"
-                class="recipient-preview"
-              >
-
-                <div
-                  id="recipientName"
-                  class="recipient-name"
-                ></div>
-
-                <div
-                  id="recipientEmail"
-                  class="recipient-email"
-                ></div>
-
-              </div>
-
             </div>
 
 
-            <!-- External Email -->
-
             <div
-              id="otherRecipientField"
-              class="field"
-              style="display:none;"
+              id="otherRecipient"
+              class="booking-recipient"
             >
-
-              <label for="otherEmail">
-                البريد الإلكتروني
-              </label>
 
               <input
                 id="otherEmail"
+                class="input"
                 type="email"
-                dir="ltr"
                 placeholder="example@email.com"
-                autocomplete="email"
-              >
-
-              <div class="field-help">
-                استخدم هذا الخيار إذا كان البريد المسجل في الحجز غير صحيح.
-              </div>
-
-            </div>
-
-
-            <!-- Subject -->
-
-            <div class="field">
-
-              <label for="emailSubject">
-                عنوان الرسالة
-              </label>
-
-              <input
-                id="emailSubject"
-                type="text"
-                placeholder="عنوان البريد الإلكتروني"
-                maxlength="200"
-                required
+                direction="ltr"
               >
 
             </div>
-
-
-            <!-- Message -->
-
-            <div class="field">
-
-              <label for="emailMessage">
-                نص الرسالة
-              </label>
-
-              <textarea
-                id="emailMessage"
-                placeholder="اكتب رسالتك هنا..."
-                maxlength="10000"
-                required
-              ></textarea>
-
-            </div>
-
-
-            <!-- Message -->
-
-            <div
-              id="sendMessage"
-              class="message"
-            ></div>
-
-
-            <!-- Actions -->
-
-            <div class="email-actions">
-
-              <button
-                id="sendButton"
-                type="submit"
-                class="send-button"
-              >
-                إرسال البريد
-              </button>
-
-
-              <button
-                type="button"
-                class="reset-button"
-                onclick="resetEmailForm()"
-              >
-                مسح
-              </button>
-
-            </div>
-
 
           </div>
 
 
-        </form>
+
+          <!-- Subject -->
+
+          <div class="form-group">
+
+            <label class="form-label">
+              عنوان الإيميل
+            </label>
+
+            <input
+              id="emailSubject"
+              class="input"
+              type="text"
+              placeholder="اكتب عنوان الرسالة"
+            >
+
+          </div>
 
 
-        <div class="connection-card">
 
-          <span class="connection-dot"></span>
+          <!-- Message -->
 
-          البريد سيتم إرساله من نظام مَوعد.
+          <div class="form-group">
+
+            <label class="form-label">
+              نص الرسالة
+            </label>
+
+            <textarea
+              id="emailMessage"
+              class="textarea email-textarea"
+              placeholder="اكتب الرسالة هنا..."
+            ></textarea>
+
+          </div>
+
+
+
+          <!-- Send -->
+
+          <button
+            id="sendEmailButton"
+            class="send-email-btn"
+            type="button"
+            onclick="sendEmail()"
+          >
+            إرسال الإيميل
+          </button>
+
+
+          <div
+            id="emailStatus"
+            class="email-message"
+          ></div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ===================================================
+           SETTINGS PAGE
+      ==================================================== -->
+
+      <section
+        id="settingsPage"
+        class="page"
+        style="display:none;"
+      >
+
+        <div class="page-header">
+
+          <h1>
+            الإعدادات
+          </h1>
+
+          <p>
+            إعدادات لوحة إدارة مَوعد
+          </p>
 
         </div>
 
 
-      </div>
+        <div class="card settings-card">
 
-    </section>
+          <div class="settings-row">
 
+            <div class="settings-title">
+              حساب الإدارة
+            </div>
+
+            <div class="settings-description">
+              أنت مسجل الدخول حاليًا إلى لوحة إدارة مَوعد.
+            </div>
+
+          </div>
+
+
+          <div class="settings-row">
+
+            <div class="settings-title">
+              الجلسة
+            </div>
+
+            <div class="settings-description">
+              يتم الاحتفاظ بتسجيل الدخول خلال جلسة المتصفح الحالية فقط.
+            </div>
+
+          </div>
+
+
+          <div class="settings-row">
+
+            <div class="settings-title">
+              تسجيل الخروج
+            </div>
+
+            <div class="settings-description">
+              سيتم حذف جلسة الإدارة وإعادتك إلى شاشة تسجيل الدخول.
+            </div>
+
+            <br>
+
+            <button
+              class="cancel-action"
+              type="button"
+              style="max-width:200px;"
+              onclick="logout()"
+            >
+              تسجيل الخروج
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+    </div>
+
+  </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     BOOKING MODAL
+========================================================= -->
+
+<div
+  id="bookingModal"
+  class="modal-overlay"
+  onclick="closeModal(event)"
+>
+
+  <div
+    class="modal"
+    onclick="event.stopPropagation()"
+  >
+
+    <div class="modal-header">
+
+      <h2>
+        تفاصيل الحجز
+      </h2>
+
+      <button
+        class="close-btn"
+        onclick="closeModal()"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      id="bookingDetails"
+      class="details"
+    ></div>
 
   </div>
 
-</main>
+</div>
 
 
 
 <script>
 
 
-/* =========================
-   Variables
-========================= */
+/* =========================================================
+   VARIABLES
+========================================================= */
 
 let allBookings = [];
 
-let sidebarOpen = true;
+let currentView = 'table';
+
+let calendarDate = new Date();
+
+let recipientType = 'booking';
+
+let isLoggedIn = false;
 
 
-/* =========================
-   Initial Load
-========================= */
+/* =========================================================
+   DOM READY
+========================================================= */
 
 window.addEventListener(
   'DOMContentLoaded',
   () => {
 
-    loadBookings();
+    const savedPassword =
+      sessionStorage.getItem(
+        'maw3id_admin_password'
+      );
+
+
+    if (savedPassword) {
+
+      document.getElementById(
+        'passwordInput'
+      ).value = savedPassword;
+
+      login(true);
+
+    }
 
   }
 );
 
 
-/* =========================
-   Sidebar
-========================= */
 
-function toggleSidebar() {
+/* =========================================================
+   LOGIN
+========================================================= */
 
-  const sidebar =
-    document.getElementById('sidebar');
+document
+  .getElementById('loginForm')
+  .addEventListener(
+    'submit',
+    event => {
 
-  const overlay =
-    document.getElementById('sidebarOverlay');
+      event.preventDefault();
 
+      login(false);
 
-  sidebarOpen =
-    !sidebarOpen;
-
-
-  sidebar.classList.toggle(
-    'closed',
-    !sidebarOpen
+    }
   );
 
 
-  if (
-    window.innerWidth <= 800
-  ) {
-
-    overlay.classList.toggle(
-      'show',
-      sidebarOpen
-    );
-
-  }
-
-}
-
-
-function closeSidebarMobile() {
-
-  if (
-    window.innerWidth > 800
-  ) {
-
-    return;
-
-  }
-
-
-  const sidebar =
-    document.getElementById('sidebar');
-
-  const overlay =
-    document.getElementById('sidebarOverlay');
-
-
-  sidebarOpen = false;
-
-
-  sidebar.classList.add(
-    'closed'
-  );
-
-
-  overlay.classList.remove(
-    'show'
-  );
-
-}
-
-
-/* =========================
-   Page Navigation
-========================= */
-
-function showPage(page) {
-
-  const homePage =
-    document.getElementById('homePage');
-
-  const emailPage =
-    document.getElementById('emailPage');
-
-
-  const navHome =
-    document.getElementById('navHome');
-
-  const navEmail =
-    document.getElementById('navEmail');
-
-
-  homePage.classList.remove('active');
-
-  emailPage.classList.remove('active');
-
-  navHome.classList.remove('active');
-
-  navEmail.classList.remove('active');
-
-
-  if (page === 'email') {
-
-    emailPage.classList.add('active');
-
-    navEmail.classList.add('active');
-
-
-    document.getElementById(
-      'topbarTitle'
-    ).textContent =
-      'إرسال بريد';
-
-
-    loadBookings();
-
-  } else {
-
-    homePage.classList.add('active');
-
-    navHome.classList.add('active');
-
-
-    document.getElementById(
-      'topbarTitle'
-    ).textContent =
-      'الرئيسية';
-
-  }
-
-
-  if (
-    window.innerWidth <= 800
-  ) {
-
-    closeSidebarMobile();
-
-  }
-
-}
-
-
-/* =========================
-   Load Bookings
-========================= */
-
-async function loadBookings() {
+async function login(autoLogin = false) {
 
   const password =
-    sessionStorage.getItem(
-      'maw3id_admin_password'
+    document.getElementById(
+      'passwordInput'
+    ).value.trim();
+
+
+  const error =
+    document.getElementById(
+      'loginError'
     );
+
+
+  error.textContent = '';
 
 
   if (!password) {
 
-    showSendMessage(
-      'لم يتم العثور على جلسة الإدارة. افتح لوحة الحجوزات وسجل الدخول أولًا.',
-      'error'
-    );
+    if (!autoLogin) {
+
+      error.textContent =
+        'أدخل كلمة المرور.';
+
+    }
 
     return;
 
@@ -1450,21 +1744,54 @@ async function loadBookings() {
 
     if (!response.ok) {
 
-      showSendMessage(
-        'انتهت جلسة الإدارة. سجل الدخول من لوحة الحجوزات مرة أخرى.',
-        'error'
+      sessionStorage.removeItem(
+        'maw3id_admin_password'
       );
+
+
+      document.getElementById(
+        'passwordInput'
+      ).value = '';
+
+
+      error.textContent =
+        'كلمة المرور غير صحيحة.';
 
       return;
 
     }
 
 
+    /*
+      تسجيل الدخول نجح
+    */
+
+    isLoggedIn = true;
+
+
+    sessionStorage.setItem(
+      'maw3id_admin_password',
+      password
+    );
+
+
     allBookings =
       data.bookings || [];
 
 
-    populateBookings();
+    document.getElementById(
+      'loginScreen'
+    ).style.display = 'none';
+
+
+    document
+      .getElementById('app')
+      .classList.add('show');
+
+
+    populateBookingRecipients();
+
+    renderHome();
 
 
   } catch (error) {
@@ -1472,9 +1799,563 @@ async function loadBookings() {
     console.error(error);
 
 
-    showSendMessage(
-      'تعذر تحميل الحجوزات.',
-      'error'
+    if (!autoLogin) {
+
+      document.getElementById(
+        'loginError'
+      ).textContent =
+        'حدث خطأ أثناء تسجيل الدخول.';
+
+    }
+
+  }
+
+}
+
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout() {
+
+  /*
+    حذف بيانات الجلسة
+  */
+
+  sessionStorage.removeItem(
+    'maw3id_admin_password'
+  );
+
+
+  isLoggedIn = false;
+
+
+  /*
+    إغلاق الـ sidebar
+  */
+
+  document
+    .getElementById('sidebar')
+    .classList.add('collapsed');
+
+
+  /*
+    إخفاء التطبيق
+  */
+
+  document
+    .getElementById('app')
+    .classList.remove('show');
+
+
+  /*
+    إعادة شاشة تسجيل الدخول
+  */
+
+  document
+    .getElementById('loginScreen')
+    .style.display = 'flex';
+
+
+  /*
+    مسح كلمة المرور
+  */
+
+  document
+    .getElementById('passwordInput')
+    .value = '';
+
+
+  /*
+    تنظيف رسالة الخطأ
+  */
+
+  document
+    .getElementById('loginError')
+    .textContent = '';
+
+
+  /*
+    الرجوع للصفحة الرئيسية افتراضيًا
+  */
+
+  showPage('home');
+
+}
+
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleSidebar() {
+
+  const sidebar =
+    document.getElementById(
+      'sidebar'
+    );
+
+
+  sidebar.classList.toggle(
+    'collapsed'
+  );
+
+}
+
+
+function closeSidebarOnMobile() {
+
+  if (
+    window.innerWidth <= 900
+  ) {
+
+    document
+      .getElementById('sidebar')
+      .classList.add('collapsed');
+
+  }
+
+}
+
+
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+function showPage(page) {
+
+  /*
+    ممنوع الوصول للصفحات الداخلية
+    بدون تسجيل الدخول
+  */
+
+  if (!isLoggedIn) {
+
+    return;
+
+  }
+
+
+  const pages = {
+
+    home:
+      document.getElementById(
+        'homePage'
+      ),
+
+    email:
+      document.getElementById(
+        'emailPage'
+      ),
+
+    settings:
+      document.getElementById(
+        'settingsPage'
+      )
+
+  };
+
+
+  Object.values(pages)
+    .forEach(
+      element => {
+
+        element.style.display =
+          'none';
+
+      }
+    );
+
+
+  pages[page].style.display =
+    'block';
+
+
+  document
+    .getElementById('navHome')
+    .classList.toggle(
+      'active',
+      page === 'home'
+    );
+
+
+  document
+    .getElementById('navEmail')
+    .classList.toggle(
+      'active',
+      page === 'email'
+    );
+
+
+  document
+    .getElementById('navSettings')
+    .classList.toggle(
+      'active',
+      page === 'settings'
+    );
+
+
+  closeSidebarOnMobile();
+
+
+  if (page === 'email') {
+
+    populateBookingRecipients();
+
+  }
+
+
+  if (page === 'home') {
+
+    renderHome();
+
+  }
+
+}
+
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function renderHome() {
+
+  renderDashboard(
+    allBookings
+  );
+
+}
+
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+function formatTime(time) {
+
+  if (!time) return '-';
+
+
+  const parts =
+    time.split(':');
+
+
+  let hour =
+    parseInt(
+      parts[0],
+      10
+    );
+
+
+  const minute =
+    parts[1] || '00';
+
+
+  const period =
+    hour >= 12
+      ? 'م'
+      : 'ص';
+
+
+  hour =
+    hour % 12;
+
+
+  if (hour === 0) {
+
+    hour = 12;
+
+  }
+
+
+  return `${hour}:${minute} ${period}`;
+
+}
+
+
+
+/* =========================================================
+   CREATED AT
+========================================================= */
+
+function formatCreatedAt(value) {
+
+  if (!value) return '-';
+
+
+  const date =
+    new Date(value);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return escapeHTML(value);
+
+  }
+
+
+  const datePart =
+    date.toLocaleDateString(
+      'en-GB',
+      {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      }
+    );
+
+
+  const timePart =
+    date.toLocaleTimeString(
+      'en-US',
+      {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }
+    )
+    .replace('AM', 'ص')
+    .replace('PM', 'م');
+
+
+  return `${datePart} — ${timePart}`;
+
+}
+
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard(bookings) {
+
+  const total =
+    allBookings.length;
+
+
+  const pending =
+    allBookings.filter(
+      b =>
+        b.attendance_status ===
+        'pending'
+    ).length;
+
+
+  const confirmed =
+    allBookings.filter(
+      b =>
+        b.attendance_status ===
+        'confirmed'
+    ).length;
+
+
+  const declined =
+    allBookings.filter(
+      b =>
+        b.attendance_status ===
+        'declined'
+    ).length;
+
+
+  const html = `
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <div class="stat-label">
+          إجمالي الحجوزات
+        </div>
+
+        <div class="stat-number">
+          ${total}
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          الحجوزات المعلقة
+        </div>
+
+        <div class="stat-number">
+          ${pending}
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          الحجوزات المؤكدة
+        </div>
+
+        <div class="stat-number">
+          ${confirmed}
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          عدم الحضور
+        </div>
+
+        <div class="stat-number">
+          ${declined}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-box">
+
+      <div class="table-title">
+
+        <h2>
+          الحجوزات
+        </h2>
+
+
+        <div class="view-switch">
+
+          <button
+            id="tableViewBtn"
+            class="view-btn ${
+              currentView === 'table'
+                ? 'active'
+                : ''
+            }"
+            onclick="switchView('table')"
+            type="button"
+          >
+            ☷ جدول
+          </button>
+
+
+          <button
+            id="calendarViewBtn"
+            class="view-btn ${
+              currentView === 'calendar'
+                ? 'active'
+                : ''
+            }"
+            onclick="switchView('calendar')"
+            type="button"
+          >
+            ▦ تقويم
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="filters">
+
+        <input
+          id="search"
+          class="input"
+          type="text"
+          placeholder="ابحث بالاسم أو البريد الإلكتروني..."
+          oninput="applyFilters()"
+        >
+
+
+        <input
+          id="dateFilter"
+          class="input date-input"
+          type="date"
+          onchange="applyFilters()"
+        >
+
+
+        <select
+          id="statusFilter"
+          class="select"
+          onchange="applyFilters()"
+        >
+
+          <option value="">
+            كل الحالات
+          </option>
+
+          <option value="pending">
+            معلق
+          </option>
+
+          <option value="confirmed">
+            مؤكد
+          </option>
+
+          <option value="declined">
+            معتذر
+          </option>
+
+        </select>
+
+
+        <button
+          class="clear-btn"
+          onclick="clearFilters()"
+          type="button"
+        >
+          مسح
+        </button>
+
+      </div>
+
+
+      <div id="results"></div>
+
+
+      <div
+        id="calendar"
+        class="calendar"
+      ></div>
+
+    </div>
+
+  `;
+
+
+  document
+    .getElementById(
+      'dashboardContent'
+    )
+    .innerHTML = html;
+
+
+  if (
+    currentView === 'table'
+  ) {
+
+    renderTable(
+      bookings
+    );
+
+  } else {
+
+    renderCalendar(
+      bookings
     );
 
   }
@@ -1482,85 +2363,1707 @@ async function loadBookings() {
 }
 
 
-/* =========================
-   Populate Bookings
-========================= */
 
-function populateBookings() {
+/* =========================================================
+   VIEW
+========================================================= */
 
-  const select =
+function switchView(view) {
+
+  currentView = view;
+
+
+  const search =
     document.getElementById(
-      'bookingRecipient'
+      'search'
     );
 
 
-  if (!select) return;
+  const dateFilter =
+    document.getElementById(
+      'dateFilter'
+    );
 
 
-  select.innerHTML = '';
+  const statusFilter =
+    document.getElementById(
+      'statusFilter'
+    );
+
+
+  const filtered =
+    filterBookings(
+      allBookings,
+      search
+        ? search.value
+        : '',
+      dateFilter
+        ? dateFilter.value
+        : '',
+      statusFilter
+        ? statusFilter.value
+        : ''
+    );
+
+
+  const tableViewBtn =
+    document.getElementById(
+      'tableViewBtn'
+    );
+
+
+  const calendarViewBtn =
+    document.getElementById(
+      'calendarViewBtn'
+    );
+
+
+  if (tableViewBtn) {
+
+    tableViewBtn.classList.toggle(
+      'active',
+      view === 'table'
+    );
+
+  }
+
+
+  if (calendarViewBtn) {
+
+    calendarViewBtn.classList.toggle(
+      'active',
+      view === 'calendar'
+    );
+
+  }
 
 
   if (
-    allBookings.length === 0
+    view === 'table'
   ) {
 
-    select.innerHTML = `
+    document.getElementById(
+      'results'
+    ).style.display =
+      'block';
 
-      <option value="">
-        لا توجد حجوزات
-      </option>
 
-    `;
+    document.getElementById(
+      'calendar'
+    ).classList.remove(
+      'show'
+    );
+
+
+    renderTable(
+      filtered
+    );
+
+  } else {
+
+    document.getElementById(
+      'results'
+    ).style.display =
+      'none';
+
+
+    document.getElementById(
+      'calendar'
+    ).classList.add(
+      'show'
+    );
+
+
+    renderCalendar(
+      filtered
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+function filterBookings(
+  bookings,
+  search,
+  date,
+  status
+) {
+
+  search =
+    String(
+      search || ''
+    )
+    .trim()
+    .toLowerCase();
+
+
+  return bookings.filter(
+    b => {
+
+      const name =
+        String(
+          b.name || ''
+        ).toLowerCase();
+
+
+      const email =
+        String(
+          b.email || ''
+        ).toLowerCase();
+
+
+      const matchesSearch =
+        !search ||
+        name.includes(search) ||
+        email.includes(search);
+
+
+      const matchesDate =
+        !date ||
+        b.session_date === date;
+
+
+      const matchesStatus =
+        !status ||
+        b.attendance_status ===
+        status;
+
+
+      return (
+        matchesSearch &&
+        matchesDate &&
+        matchesStatus
+      );
+
+    }
+  );
+
+}
+
+
+
+function applyFilters() {
+
+  const search =
+    document.getElementById(
+      'search'
+    ).value;
+
+
+  const date =
+    document.getElementById(
+      'dateFilter'
+    ).value;
+
+
+  const status =
+    document.getElementById(
+      'statusFilter'
+    ).value;
+
+
+  const filtered =
+    filterBookings(
+      allBookings,
+      search,
+      date,
+      status
+    );
+
+
+  if (
+    currentView === 'calendar'
+  ) {
+
+    renderCalendar(
+      filtered
+    );
+
+  } else {
+
+    renderTable(
+      filtered
+    );
+
+  }
+
+}
+
+
+
+function clearFilters() {
+
+  document.getElementById(
+    'search'
+  ).value = '';
+
+
+  document.getElementById(
+    'dateFilter'
+  ).value = '';
+
+
+  document.getElementById(
+    'statusFilter'
+  ).value = '';
+
+
+  if (
+    currentView === 'calendar'
+  ) {
+
+    renderCalendar(
+      allBookings
+    );
+
+  } else {
+
+    renderTable(
+      allBookings
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+function renderTable(bookings) {
+
+  const results =
+    document.getElementById(
+      'results'
+    );
+
+
+  if (!results) return;
+
+
+  const countHTML = `
+
+    <div class="results-count">
+
+      عرض ${bookings.length}
+      من أصل ${allBookings.length}
+      حجز
+
+    </div>
+
+  `;
+
+
+  if (
+    bookings.length === 0
+  ) {
+
+    results.innerHTML =
+      countHTML +
+
+      `
+
+        <div class="empty">
+          لا توجد حجوزات مطابقة للبحث.
+        </div>
+
+      `;
+
 
     return;
 
   }
 
 
-  const defaultOption =
-    document.createElement('option');
+  const rows =
+    bookings.map(
+      b => {
+
+        const status =
+          b.attendance_status ||
+          'pending';
 
 
-  defaultOption.value = '';
-
-  defaultOption.textContent =
-    'اختر حاجزًا...';
+        let statusClass =
+          'pending';
 
 
-  select.appendChild(
-    defaultOption
+        let statusText =
+          'معلق';
+
+
+        if (
+          status ===
+          'confirmed'
+        ) {
+
+          statusClass =
+            'confirmed';
+
+          statusText =
+            'مؤكد';
+
+        }
+
+
+        if (
+          status ===
+          'declined'
+        ) {
+
+          statusClass =
+            'cancelled';
+
+          statusText =
+            'معتذر';
+
+        }
+
+
+        return `
+
+          <tr
+            onclick="openBooking(
+              ${allBookings.indexOf(b)}
+            )"
+          >
+
+            <td class="name">
+              ${escapeHTML(
+                b.name || '-'
+              )}
+            </td>
+
+
+            <td class="email">
+              ${escapeHTML(
+                b.email || '-'
+              )}
+            </td>
+
+
+            <td class="date-cell">
+              ${escapeHTML(
+                b.session_date || '-'
+              )}
+            </td>
+
+
+            <td class="time-cell">
+              ${formatTime(
+                b.start_time
+              )}
+            </td>
+
+
+            <td>
+
+              <span
+                class="status ${statusClass}"
+              >
+                ${statusText}
+              </span>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    )
+    .join('');
+
+
+  results.innerHTML =
+    countHTML +
+
+    `
+
+      <div class="table-scroll">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                الاسم
+              </th>
+
+              <th>
+                البريد الإلكتروني
+              </th>
+
+              <th>
+                التاريخ
+              </th>
+
+              <th>
+                الوقت
+              </th>
+
+              <th>
+                الحضور
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            ${rows}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+}
+
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+function getStartOfWeek(date) {
+
+  const d =
+    new Date(date);
+
+
+  const day =
+    d.getDay();
+
+
+  const diff =
+    day === 0
+      ? 0
+      : -day;
+
+
+  d.setDate(
+    d.getDate() +
+    diff
   );
+
+
+  d.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  return d;
+
+}
+
+
+
+function dateKey(date) {
+
+  const y =
+    date.getFullYear();
+
+
+  const m =
+    String(
+      date.getMonth() + 1
+    ).padStart(
+      2,
+      '0'
+    );
+
+
+  const d =
+    String(
+      date.getDate()
+    ).padStart(
+      2,
+      '0'
+    );
+
+
+  return `${y}-${m}-${d}`;
+
+}
+
+
+
+function arabicDayName(date) {
+
+  return date.toLocaleDateString(
+    'ar-SA',
+    {
+      weekday: 'short'
+    }
+  );
+
+}
+
+
+
+function formatCalendarDate(date) {
+
+  return date.toLocaleDateString(
+    'ar-SA',
+    {
+      day: 'numeric',
+      month: 'short'
+    }
+  );
+
+}
+
+
+
+function renderCalendar(bookings) {
+
+  const calendar =
+    document.getElementById(
+      'calendar'
+    );
+
+
+  if (!calendar) return;
+
+
+  const start =
+    getStartOfWeek(
+      calendarDate
+    );
+
+
+  const days = [];
+
+
+  for (
+    let i = 0;
+    i < 7;
+    i++
+  ) {
+
+    const d =
+      new Date(start);
+
+
+    d.setDate(
+      start.getDate() +
+      i
+    );
+
+
+    days.push(d);
+
+  }
+
+
+  const title =
+    `${formatCalendarDate(
+      days[0]
+    )} — ${formatCalendarDate(
+      days[6]
+    )}`;
+
+
+  let html = `
+
+    <div class="calendar-navigation">
+
+      <button
+        type="button"
+        class="calendar-nav-btn"
+        onclick="changeCalendarWeek(-1)"
+      >
+        السابق
+      </button>
+
+
+      <button
+        type="button"
+        class="calendar-today"
+        onclick="goCalendarToday()"
+      >
+        اليوم
+      </button>
+
+
+      <h3>
+        ${title}
+      </h3>
+
+
+      <button
+        type="button"
+        class="calendar-nav-btn"
+        onclick="changeCalendarWeek(1)"
+      >
+        التالي
+      </button>
+
+    </div>
+
+
+    <div class="calendar-scroll">
+
+      <div class="calendar-grid">
+
+        <div class="calendar-header">
+          الوقت
+        </div>
+
+  `;
+
+
+  days.forEach(
+    day => {
+
+      const isToday =
+        dateKey(day) ===
+        dateKey(new Date());
+
+
+      html += `
+
+        <div
+          class="calendar-header ${
+            isToday
+              ? 'today'
+              : ''
+          }"
+        >
+
+          ${arabicDayName(day)}
+
+          <br>
+
+          ${formatCalendarDate(day)}
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  for (
+    let hour = 8;
+    hour <= 20;
+    hour++
+  ) {
+
+    html += `
+
+      <div class="calendar-time">
+
+        ${formatTime(
+          String(hour).padStart(
+            2,
+            '0'
+          ) + ':00'
+        )}
+
+      </div>
+
+    `;
+
+
+    days.forEach(
+      day => {
+
+        const key =
+          dateKey(day);
+
+
+        const isToday =
+          key ===
+          dateKey(new Date());
+
+
+        const dayBookings =
+          bookings.filter(
+            b =>
+              b.session_date ===
+              key &&
+              parseInt(
+                String(
+                  b.start_time || ''
+                ).split(':')[0],
+                10
+              ) === hour
+          );
+
+
+        html += `
+
+          <div
+            class="calendar-cell ${
+              isToday
+                ? 'today'
+                : ''
+            }"
+          >
+
+            ${
+              dayBookings
+                .map(
+                  b =>
+                    calendarBookingHTML(
+                      b
+                    )
+                )
+                .join('')
+            }
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
+
+
+  html += `
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  calendar.innerHTML =
+    html;
+
+}
+
+
+
+function calendarBookingHTML(booking) {
+
+  const status =
+    booking.attendance_status ||
+    'pending';
+
+
+  let statusClass = '';
+
+
+  if (
+    status ===
+    'confirmed'
+  ) {
+
+    statusClass =
+      'confirmed-booking';
+
+  }
+
+
+  if (
+    status ===
+    'declined'
+  ) {
+
+    statusClass =
+      'declined-booking';
+
+  }
+
+
+  const index =
+    allBookings.indexOf(
+      booking
+    );
+
+
+  return `
+
+    <button
+      type="button"
+      class="calendar-booking ${statusClass}"
+      onclick="openBooking(${index})"
+    >
+
+      <div class="calendar-booking-time">
+
+        ${formatTime(
+          booking.start_time
+        )}
+
+        -
+
+        ${formatTime(
+          booking.end_time
+        )}
+
+      </div>
+
+
+      <div class="calendar-booking-name">
+
+        ${escapeHTML(
+          booking.name || '-'
+        )}
+
+      </div>
+
+    </button>
+
+  `;
+
+}
+
+
+
+function changeCalendarWeek(amount) {
+
+  calendarDate.setDate(
+    calendarDate.getDate() +
+    amount * 7
+  );
+
+
+  const search =
+    document.getElementById(
+      'search'
+    );
+
+
+  const dateFilter =
+    document.getElementById(
+      'dateFilter'
+    );
+
+
+  const statusFilter =
+    document.getElementById(
+      'statusFilter'
+    );
+
+
+  renderCalendar(
+    filterBookings(
+      allBookings,
+      search
+        ? search.value
+        : '',
+      dateFilter
+        ? dateFilter.value
+        : '',
+      statusFilter
+        ? statusFilter.value
+        : ''
+    )
+  );
+
+}
+
+
+
+function goCalendarToday() {
+
+  calendarDate =
+    new Date();
+
+
+  const search =
+    document.getElementById(
+      'search'
+    );
+
+
+  const dateFilter =
+    document.getElementById(
+      'dateFilter'
+    );
+
+
+  const statusFilter =
+    document.getElementById(
+      'statusFilter'
+    );
+
+
+  renderCalendar(
+    filterBookings(
+      allBookings,
+      search
+        ? search.value
+        : '',
+      dateFilter
+        ? dateFilter.value
+        : '',
+      statusFilter
+        ? statusFilter.value
+        : ''
+    )
+  );
+
+}
+
+
+
+/* =========================================================
+   BOOKING DETAILS
+========================================================= */
+
+function openBooking(index) {
+
+  const booking =
+    allBookings[index];
+
+
+  if (!booking) return;
+
+
+  let statusClass =
+    'pending';
+
+
+  let statusText =
+    'معلق';
+
+
+  if (
+    booking.attendance_status ===
+    'confirmed'
+  ) {
+
+    statusClass =
+      'confirmed';
+
+    statusText =
+      'مؤكد';
+
+  }
+
+
+  if (
+    booking.attendance_status ===
+    'declined'
+  ) {
+
+    statusClass =
+      'cancelled';
+
+    statusText =
+      'معتذر';
+
+  }
+
+
+  const notesHTML =
+    booking.notes
+
+      ? escapeHTML(
+          booking.notes
+        ).replace(
+          /\n/g,
+          '<br>'
+        )
+
+      : `
+
+        <span class="no-notes">
+          لا توجد ملاحظات
+        </span>
+
+      `;
+
+
+  document.getElementById(
+    'bookingDetails'
+  ).innerHTML = `
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        الاسم
+      </div>
+
+      <div class="detail-value">
+
+        ${escapeHTML(
+          booking.name || '-'
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        البريد الإلكتروني
+      </div>
+
+      <div class="detail-value detail-email">
+
+        ${escapeHTML(
+          booking.email || '-'
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        رقم الحجز
+      </div>
+
+      <div class="detail-value booking-code">
+
+        ${escapeHTML(
+          booking.booking_code || '-'
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        موعد الجلسة
+      </div>
+
+      <div class="detail-value">
+
+        ${escapeHTML(
+          booking.session_date || '-'
+        )}
+
+        <br>
+
+        ${formatTime(
+          booking.start_time
+        )}
+
+        -
+
+        ${formatTime(
+          booking.end_time
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        حالة الحضور
+      </div>
+
+      <div class="detail-value">
+
+        <span
+          class="status ${statusClass}"
+        >
+          ${statusText}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        تم الحجز في
+      </div>
+
+      <div class="detail-value">
+
+        ${formatCreatedAt(
+          booking.created_at
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        رابط الجلسة
+      </div>
+
+      <div class="detail-value">
+
+        ${
+          booking.meeting_url
+
+            ? `
+
+              <div class="detail-link">
+
+                ${escapeHTML(
+                  booking.meeting_url
+                )}
+
+              </div>
+
+
+              <a
+                class="meeting-btn"
+                href="${escapeHTML(
+                  booking.meeting_url
+                )}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                فتح رابط الجلسة
+              </a>
+
+            `
+
+            : `
+
+              لا يوجد رابط جلسة
+
+            `
+        }
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        ملاحظات العميل
+      </div>
+
+      <div class="detail-value notes-value">
+
+        ${notesHTML}
+
+      </div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        تحديث حالة الحضور
+      </div>
+
+      <div class="detail-actions">
+
+        <button
+          type="button"
+          class="status-action confirm-action"
+          onclick="updateBookingStatus(
+            '${escapeHTML(
+              booking.booking_code
+            )}',
+            'confirmed'
+          )"
+        >
+          تأكيد الحضور
+        </button>
+
+
+        <button
+          type="button"
+          class="status-action decline-action"
+          onclick="updateBookingStatus(
+            '${escapeHTML(
+              booking.booking_code
+            )}',
+            'declined'
+          )"
+        >
+          تسجيل عدم الحضور
+        </button>
+
+      </div>
+
+
+      <div
+        id="actionMessage"
+        class="action-message"
+      ></div>
+
+    </div>
+
+
+    <div class="detail">
+
+      <div class="detail-label">
+        إدارة الموعد
+      </div>
+
+      <button
+        type="button"
+        class="cancel-action"
+        onclick="cancelBooking(
+          '${escapeHTML(
+            booking.booking_code
+          )}'
+        )"
+      >
+        إلغاء الموعد
+      </button>
+
+
+      <div
+        id="cancelMessage"
+        class="action-message"
+      ></div>
+
+    </div>
+
+  `;
+
+
+  document
+    .getElementById(
+      'bookingModal'
+    )
+    .classList.add(
+      'show'
+    );
+
+}
+
+
+
+/* =========================================================
+   UPDATE STATUS
+========================================================= */
+
+async function updateBookingStatus(
+  bookingCode,
+  status
+) {
+
+  if (!isLoggedIn) return;
+
+
+  const message =
+    document.getElementById(
+      'actionMessage'
+    );
+
+
+  if (!bookingCode) return;
+
+
+  const actionText =
+    status === 'confirmed'
+      ? 'تأكيد حضور هذا العميل؟'
+      : 'تسجيل عدم حضور هذا العميل؟';
+
+
+  if (!confirm(actionText)) {
+    return;
+  }
+
+
+  message.textContent =
+    'جاري تحديث الحالة...';
+
+
+  try {
+
+    const password =
+      sessionStorage.getItem(
+        'maw3id_admin_password'
+      );
+
+
+    const response =
+      await fetch(
+        '/api/admin-status.js',
+        {
+
+          method: 'POST',
+
+          headers: {
+
+            'Content-Type':
+              'application/json',
+
+            'X-Admin-Password':
+              password
+
+          },
+
+          body:
+            JSON.stringify({
+
+              booking_code:
+                bookingCode,
+
+              status:
+                status
+
+            })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      message.textContent =
+        data.error ||
+        'تعذر تحديث الحالة.';
+
+      return;
+
+    }
+
+
+    const booking =
+      allBookings.find(
+        b =>
+          b.booking_code ===
+          bookingCode
+      );
+
+
+    if (booking) {
+
+      booking.attendance_status =
+        status;
+
+      booking.confirmed_at =
+        status === 'confirmed'
+          ? new Date().toISOString()
+          : null;
+
+    }
+
+
+    message.textContent =
+      status === 'confirmed'
+        ? 'تم تأكيد الحضور ✓'
+        : 'تم تسجيل عدم الحضور ✓';
+
+
+    renderHome();
+
+
+    setTimeout(
+      () => {
+        closeModal();
+      },
+      700
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    message.textContent =
+      'حدث خطأ أثناء تحديث الحالة.';
+
+  }
+
+}
+
+
+
+/* =========================================================
+   CANCEL BOOKING
+========================================================= */
+
+async function cancelBooking(
+  bookingCode
+) {
+
+  if (!isLoggedIn) return;
+
+
+  if (
+    !confirm(
+      'هل أنت متأكد من حذف هذا الموعد؟\n\n' +
+      'سيتم إلغاء الحجز وإرسال إشعار للعميل، ' +
+      'وسيصبح الوقت متاحًا للحجز مرة أخرى.'
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const message =
+    document.getElementById(
+      'cancelMessage'
+    );
+
+
+  if (message) {
+
+    message.textContent =
+      'جاري إلغاء الموعد...';
+
+  }
+
+
+  try {
+
+    const password =
+      sessionStorage.getItem(
+        'maw3id_admin_password'
+      );
+
+
+    const response =
+      await fetch(
+        '/api/admin-cancel.js',
+        {
+
+          method: 'POST',
+
+          headers: {
+
+            'Content-Type':
+              'application/json',
+
+            'X-Admin-Password':
+              password
+
+          },
+
+          body:
+            JSON.stringify({
+
+              booking_code:
+                bookingCode
+
+            })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      if (message) {
+
+        message.textContent =
+          data.error ||
+          'تعذر إلغاء الموعد.';
+
+      }
+
+      return;
+
+    }
+
+
+    allBookings =
+      allBookings.filter(
+        booking =>
+          booking.booking_code !==
+          bookingCode
+      );
+
+
+    closeModal();
+
+
+    renderHome();
+
+
+    populateBookingRecipients();
+
+
+    alert(
+      'تم إلغاء الموعد بنجاح ✓\n\n' +
+      'تم إرسال إشعار للعميل، ' +
+      'وأصبح الوقت متاحًا للحجز مرة أخرى.'
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    if (message) {
+
+      message.textContent =
+        'حدث خطأ أثناء إلغاء الموعد.';
+
+    }
+
+  }
+
+}
+
+
+
+/* =========================================================
+   EMAIL RECIPIENT
+========================================================= */
+
+function selectRecipientType(type) {
+
+  recipientType =
+    type;
+
+
+  const bookingButton =
+    document.getElementById(
+      'recipientBookingBtn'
+    );
+
+
+  const otherButton =
+    document.getElementById(
+      'recipientOtherBtn'
+    );
+
+
+  const bookingRecipient =
+    document.getElementById(
+      'bookingRecipient'
+    );
+
+
+  const otherRecipient =
+    document.getElementById(
+      'otherRecipient'
+    );
+
+
+  if (
+    type === 'booking'
+  ) {
+
+    bookingButton.classList.add(
+      'active'
+    );
+
+    otherButton.classList.remove(
+      'active'
+    );
+
+
+    bookingRecipient.classList.add(
+      'show'
+    );
+
+    otherRecipient.classList.remove(
+      'show'
+    );
+
+  } else {
+
+    bookingButton.classList.remove(
+      'active'
+    );
+
+    otherButton.classList.add(
+      'active'
+    );
+
+
+    bookingRecipient.classList.remove(
+      'show'
+    );
+
+    otherRecipient.classList.add(
+      'show'
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   POPULATE RECIPIENTS
+========================================================= */
+
+function populateBookingRecipients() {
+
+  const select =
+    document.getElementById(
+      'bookingSelect'
+    );
+
+
+  if (!select) return;
+
+
+  select.innerHTML = `
+
+    <option value="">
+      اختر العميل
+    </option>
+
+  `;
 
 
   allBookings.forEach(
     (booking, index) => {
 
+      if (!booking.email) {
+        return;
+      }
+
+
       const option =
-        document.createElement('option');
+        document.createElement(
+          'option'
+        );
 
 
       option.value =
-        String(index);
-
-
-      const name =
-        booking.name || 'بدون اسم';
-
-
-      const email =
-        booking.email || 'بدون بريد';
-
-
-      const date =
-        booking.session_date || '';
+        index;
 
 
       option.textContent =
-        `${name} — ${email}${
-          date
-            ? ' — ' + date
-            : ''
-        }`;
+        `${booking.name || 'بدون اسم'} — ${booking.email}`;
 
 
       select.appendChild(
@@ -1573,221 +4076,35 @@ function populateBookings() {
 }
 
 
-/* =========================
-   Recipient Type
-========================= */
 
-function changeRecipientType() {
+/* =========================================================
+   SEND EMAIL
+========================================================= */
 
-  const type =
-    document.getElementById(
-      'recipientType'
-    ).value;
+async function sendEmail() {
 
+  /*
+    حماية إضافية:
+    لا يسمح بالإرسال بدون تسجيل دخول
+  */
 
-  const bookingField =
-    document.getElementById(
-      'bookingRecipientField'
-    );
-
-
-  const otherField =
-    document.getElementById(
-      'otherRecipientField'
-    );
-
-
-  const preview =
-    document.getElementById(
-      'recipientPreview'
-    );
-
-
-  if (
-    type === 'other'
-  ) {
-
-    bookingField.style.display =
-      'none';
-
-
-    otherField.style.display =
-      'grid';
-
-
-    preview.classList.remove(
-      'show'
-    );
-
-  } else {
-
-    bookingField.style.display =
-      'grid';
-
-
-    otherField.style.display =
-      'none';
-
-
-    updateRecipientPreview();
-
-  }
-
-}
-
-
-/* =========================
-   Recipient Preview
-========================= */
-
-function updateRecipientPreview() {
-
-  const select =
-    document.getElementById(
-      'bookingRecipient'
-    );
-
-
-  const preview =
-    document.getElementById(
-      'recipientPreview'
-    );
-
-
-  const name =
-    document.getElementById(
-      'recipientName'
-    );
-
-
-  const email =
-    document.getElementById(
-      'recipientEmail'
-    );
-
-
-  const index =
-    select.value;
-
-
-  if (
-    index === ''
-  ) {
-
-    preview.classList.remove(
-      'show'
-    );
+  if (!isLoggedIn) {
 
     return;
 
   }
 
 
-  const booking =
-    allBookings[
-      Number(index)
-    ];
-
-
-  if (!booking) {
-
-    preview.classList.remove(
-      'show'
-    );
-
-    return;
-
-  }
-
-
-  name.textContent =
-    booking.name || '-';
-
-
-  email.textContent =
-    booking.email || '-';
-
-
-  preview.classList.add(
-    'show'
-  );
-
-}
-
-
-/* =========================
-   Get Recipient Email
-========================= */
-
-function getRecipientEmail() {
-
-  const type =
+  const button =
     document.getElementById(
-      'recipientType'
-    ).value;
-
-
-  if (
-    type === 'other'
-  ) {
-
-    return document
-      .getElementById(
-        'otherEmail'
-      )
-      .value
-      .trim();
-
-  }
-
-
-  const index =
-    document.getElementById(
-      'bookingRecipient'
-    ).value;
-
-
-  if (
-    index === ''
-  ) {
-
-    return '';
-
-  }
-
-
-  const booking =
-    allBookings[
-      Number(index)
-    ];
-
-
-  return booking
-    ? String(
-        booking.email || ''
-      ).trim()
-    : '';
-
-}
-
-
-/* =========================
-   Send Email
-========================= */
-
-async function sendEmail(event) {
-
-  event.preventDefault();
-
-
-  const sendButton =
-    document.getElementById(
-      'sendButton'
+      'sendEmailButton'
     );
 
 
-  const recipientEmail =
-    getRecipientEmail();
+  const status =
+    document.getElementById(
+      'emailStatus'
+    );
 
 
   const subject =
@@ -1802,36 +4119,87 @@ async function sendEmail(event) {
     ).value.trim();
 
 
-  if (!recipientEmail) {
-
-    showSendMessage(
-      'حدد المستلم أو اكتب البريد الإلكتروني.',
-      'error'
-    );
-
-    return;
-
-  }
+  let recipient = '';
 
 
-  if (!isValidEmail(recipientEmail)) {
+  if (
+    recipientType ===
+    'booking'
+  ) {
 
-    showSendMessage(
-      'البريد الإلكتروني غير صحيح.',
-      'error'
-    );
+    const selectedIndex =
+      document.getElementById(
+        'bookingSelect'
+      ).value;
 
-    return;
+
+    if (
+      selectedIndex === ''
+    ) {
+
+      status.className =
+        'email-message email-error';
+
+      status.textContent =
+        'اختر العميل أولًا.';
+
+      return;
+
+    }
+
+
+    const booking =
+      allBookings[
+        Number(selectedIndex)
+      ];
+
+
+    if (!booking || !booking.email) {
+
+      status.className =
+        'email-message email-error';
+
+      status.textContent =
+        'تعذر العثور على بريد العميل.';
+
+      return;
+
+    }
+
+
+    recipient =
+      booking.email;
+
+  } else {
+
+    recipient =
+      document.getElementById(
+        'otherEmail'
+      ).value.trim();
+
+
+    if (!recipient) {
+
+      status.className =
+        'email-message email-error';
+
+      status.textContent =
+        'أدخل البريد الإلكتروني للمستلم.';
+
+      return;
+
+    }
 
   }
 
 
   if (!subject) {
 
-    showSendMessage(
-      'اكتب عنوان الرسالة.',
-      'error'
-    );
+    status.className =
+      'email-message email-error';
+
+    status.textContent =
+      'اكتب عنوان الإيميل.';
 
     return;
 
@@ -1840,92 +4208,66 @@ async function sendEmail(event) {
 
   if (!message) {
 
-    showSendMessage(
-      'اكتب نص الرسالة.',
-      'error'
-    );
+    status.className =
+      'email-message email-error';
+
+    status.textContent =
+      'اكتب نص الرسالة.';
 
     return;
 
   }
 
 
-  const password =
-    sessionStorage.getItem(
-      'maw3id_admin_password'
-    );
+  /*
+    تحقق بسيط من البريد
+  */
+
+  const emailRegex =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
-  if (!password) {
+  if (
+    !emailRegex.test(recipient)
+  ) {
 
-    showSendMessage(
-      'جلسة الإدارة غير موجودة. سجل الدخول أولًا.',
-      'error'
-    );
+    status.className =
+      'email-message email-error';
+
+    status.textContent =
+      'البريد الإلكتروني غير صحيح.';
 
     return;
 
   }
 
 
-  const confirmed =
-    confirm(
-      `هل تريد إرسال البريد إلى:\n\n${recipientEmail}`
-    );
+  button.disabled = true;
+
+  button.textContent =
+    'جاري الإرسال...';
 
 
-  if (!confirmed) {
-    return;
-  }
+  status.className =
+    'email-message';
 
-
-  sendButton.disabled = true;
-
-
-  sendButton.innerHTML =
-    '<span class="loading"></span>جاري الإرسال...';
-
-
-  hideSendMessage();
+  status.textContent =
+    '';
 
 
   try {
 
-    const recipientType =
-      document.getElementById(
-        'recipientType'
-      ).value;
+    const password =
+      sessionStorage.getItem(
+        'maw3id_admin_password'
+      );
 
 
-    const bookingIndex =
-      document.getElementById(
-        'bookingRecipient'
-      ).value;
-
-
-    let bookingCode = null;
-
-
-    if (
-      recipientType === 'booking' &&
-      bookingIndex !== ''
-    ) {
-
-      const booking =
-        allBookings[
-          Number(bookingIndex)
-        ];
-
-
-      if (booking) {
-
-        bookingCode =
-          booking.booking_code || null;
-
-      }
-
-    }
-
+    /*
+      مهم:
+      الإرسال الحقيقي يجب أن يتم
+      من API وليس من المتصفح مباشرة.
+    */
 
     const response =
       await fetch(
@@ -1948,16 +4290,13 @@ async function sendEmail(event) {
             JSON.stringify({
 
               to:
-                recipientEmail,
+                recipient,
 
               subject:
                 subject,
 
               message:
-                message,
-
-              booking_code:
-                bookingCode
+                message
 
             })
 
@@ -1971,22 +4310,46 @@ async function sendEmail(event) {
 
     if (!response.ok) {
 
-      throw new Error(
+      status.className =
+        'email-message email-error';
+
+      status.textContent =
         data.error ||
-        'تعذر إرسال البريد.'
-      );
+        'تعذر إرسال الإيميل.';
+
+      return;
 
     }
 
 
-    showSendMessage(
-      'تم إرسال البريد الإلكتروني بنجاح ✓',
-      'success'
-    );
+    status.className =
+      'email-message email-success';
+
+    status.textContent =
+      'تم إرسال الإيميل بنجاح ✓';
+
+
+    /*
+      تنظيف الحقول بعد النجاح
+    */
+
+    document.getElementById(
+      'emailSubject'
+    ).value = '';
 
 
     document.getElementById(
       'emailMessage'
+    ).value = '';
+
+
+    document.getElementById(
+      'otherEmail'
+    ).value = '';
+
+
+    document.getElementById(
+      'bookingSelect'
     ).value = '';
 
 
@@ -1995,127 +4358,78 @@ async function sendEmail(event) {
     console.error(error);
 
 
-    showSendMessage(
-      error.message ||
-      'حدث خطأ أثناء إرسال البريد.',
-      'error'
-    );
+    status.className =
+      'email-message email-error';
+
+    status.textContent =
+      'حدث خطأ أثناء إرسال الإيميل.';
 
   } finally {
 
-    sendButton.disabled = false;
+    button.disabled = false;
 
-    sendButton.textContent =
-      'إرسال البريد';
+    button.textContent =
+      'إرسال الإيميل';
 
   }
 
 }
 
 
-/* =========================
-   Reset
-========================= */
 
-function resetEmailForm() {
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
 
-  document
-    .getElementById(
-      'emailForm'
-    )
-    .reset();
+function closeModal(event) {
 
-
-  document.getElementById(
-    'recipientType'
-  ).value =
-    'booking';
+  const modal =
+    document.getElementById(
+      'bookingModal'
+    );
 
 
-  changeRecipientType();
+  if (
+    event &&
+    event.target !== modal
+  ) {
+
+    return;
+
+  }
 
 
-  document.getElementById(
-    'recipientPreview'
-  ).classList.remove(
+  modal.classList.remove(
     'show'
   );
 
-
-  hideSendMessage();
-
 }
 
 
-/* =========================
-   Messages
-========================= */
 
-function showSendMessage(
-  text,
-  type
-) {
+document.addEventListener(
+  'keydown',
+  event => {
 
-  const message =
-    document.getElementById(
-      'sendMessage'
-    );
+    if (
+      event.key ===
+      'Escape'
+    ) {
 
+      closeModal();
 
-  if (!message) return;
+    }
 
-
-  message.textContent =
-    text;
+  }
+);
 
 
-  message.className =
-    `message show ${type}`;
 
-}
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-
-function hideSendMessage() {
-
-  const message =
-    document.getElementById(
-      'sendMessage'
-    );
-
-
-  if (!message) return;
-
-
-  message.className =
-    'message';
-
-  message.textContent =
-    '';
-
-}
-
-
-/* =========================
-   Email Validation
-========================= */
-
-function isValidEmail(
-  email
-) {
-
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    .test(email);
-
-}
-
-
-/* =========================
-   Escape
-========================= */
-
-function escapeHTML(
-  value
-) {
+function escapeHTML(value) {
 
   return String(value)
 
@@ -2145,49 +4459,6 @@ function escapeHTML(
     );
 
 }
-
-
-/* =========================
-   Responsive Sidebar
-========================= */
-
-window.addEventListener(
-  'resize',
-  () => {
-
-    const sidebar =
-      document.getElementById(
-        'sidebar'
-      );
-
-
-    const overlay =
-      document.getElementById(
-        'sidebarOverlay'
-      );
-
-
-    if (
-      window.innerWidth > 800
-    ) {
-
-      sidebar.classList.remove(
-        'closed'
-      );
-
-
-      overlay.classList.remove(
-        'show'
-      );
-
-
-      sidebarOpen = true;
-
-    }
-
-  }
-);
-
 
 </script>
 
