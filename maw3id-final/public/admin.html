@@ -447,6 +447,22 @@
       color: #777;
     }
 
+    /* Cancel */
+
+    .cancel-action {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #b42318;
+      color: white;
+      font-weight: 600;
+    }
+
+    .cancel-action:hover {
+      background: #921c14;
+    }
+
     /* Mobile */
 
     @media (max-width: 800px) {
@@ -1592,6 +1608,33 @@ function openBooking(
 
     </div>
 
+
+    <div class="detail">
+
+      <div class="detail-label">
+        إدارة الموعد
+      </div>
+
+      <button
+        type="button"
+        class="cancel-action"
+        onclick="cancelBooking(
+          '${escapeHTML(
+            booking.booking_code
+          )}'
+        )"
+      >
+        إلغاء الموعد
+      </button>
+
+
+      <div
+        id="cancelMessage"
+        class="action-message"
+      ></div>
+
+    </div>
+
   `;
 
 
@@ -1738,8 +1781,146 @@ async function updateBookingStatus(
 
   } catch (error) {
 
+    console.error(error);
+
     message.textContent =
       'حدث خطأ أثناء تحديث الحالة.';
+
+  }
+
+}
+
+
+/* =========================
+   إلغاء الموعد
+========================= */
+
+async function cancelBooking(
+  bookingCode
+) {
+
+  if (!bookingCode) {
+    return;
+  }
+
+
+  const confirmed =
+    confirm(
+      'هل أنت متأكد من حذف هذا الموعد؟\n\n' +
+      'سيتم إلغاء الحجز وإرسال إشعار للعميل، ' +
+      'وسيصبح الوقت متاحًا للحجز مرة أخرى.'
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  const message =
+    document.getElementById(
+      'cancelMessage'
+    );
+
+
+  if (message) {
+
+    message.textContent =
+      'جاري إلغاء الموعد...';
+
+  }
+
+
+  try {
+
+    const password =
+      document.getElementById(
+        'p'
+      ).value;
+
+
+    const response =
+      await fetch(
+        '/api/admin-cancel.js',
+        {
+
+          method: 'POST',
+
+          headers: {
+
+            'Content-Type':
+              'application/json',
+
+            'X-Admin-Password':
+              password
+
+          },
+
+          body:
+            JSON.stringify({
+
+              booking_code:
+                bookingCode
+
+            })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      if (message) {
+
+        message.textContent =
+          data.error ||
+          'تعذر إلغاء الموعد.';
+
+      }
+
+      return;
+
+    }
+
+
+    allBookings =
+      allBookings.filter(
+        booking =>
+          booking.booking_code !==
+          bookingCode
+      );
+
+
+    renderDashboard(
+      allBookings
+    );
+
+
+    closeModal();
+
+
+    alert(
+      'تم إلغاء الموعد بنجاح ✓\n\n' +
+      'تم إرسال إشعار للعميل، ' +
+      'وأصبح الوقت متاحًا للحجز مرة أخرى.'
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    if (message) {
+
+      message.textContent =
+        'حدث خطأ أثناء إلغاء الموعد.';
+
+    }
 
   }
 
