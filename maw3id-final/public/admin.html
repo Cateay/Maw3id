@@ -1,12 +1,15 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
+
 <head>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
 
   <title>لوحة مَوعد</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -23,6 +26,8 @@
       max-width: 1200px;
       margin: auto;
     }
+
+    /* Header */
 
     .header {
       background: #172033;
@@ -42,6 +47,8 @@
       color: #cbd1dc;
       font-size: 14px;
     }
+
+    /* Login */
 
     .login {
       background: white;
@@ -98,6 +105,8 @@
       opacity: .9;
     }
 
+    /* Stats */
+
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -124,6 +133,8 @@
       font-variant-numeric: lining-nums;
     }
 
+    /* Table */
+
     .table-box {
       background: white;
       border-radius: 18px;
@@ -144,6 +155,8 @@
       font-size: 20px;
     }
 
+    /* Filters */
+
     .filters {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr auto;
@@ -160,6 +173,8 @@
     .clear-btn:hover {
       background: #e4e7ed;
     }
+
+    /* Table */
 
     table {
       width: 100%;
@@ -206,6 +221,8 @@
       white-space: nowrap;
     }
 
+    /* Status */
+
     .status {
       display: inline-block;
       padding: 6px 10px;
@@ -228,6 +245,8 @@
       background: #ffe2e2;
       color: #b42318;
     }
+
+    /* Empty */
 
     .empty {
       text-align: center;
@@ -253,10 +272,14 @@
       position: fixed;
       inset: 0;
       background: rgba(15, 23, 42, .48);
+
       display: none;
+
       align-items: center;
       justify-content: center;
+
       padding: 20px;
+
       z-index: 1000;
     }
 
@@ -267,17 +290,25 @@
     .modal {
       width: 100%;
       max-width: 540px;
+
       max-height: 90vh;
       overflow-y: auto;
+
       background: white;
+
       border-radius: 22px;
+
       padding: 26px;
+
       box-shadow: 0 20px 60px rgba(0,0,0,.18);
+
       position: relative;
+
       animation: modalIn .18s ease-out;
     }
 
     @keyframes modalIn {
+
       from {
         opacity: 0;
         transform: translateY(8px) scale(.98);
@@ -287,12 +318,16 @@
         opacity: 1;
         transform: translateY(0) scale(1);
       }
+
     }
 
     .modal-header {
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
+
       margin-bottom: 22px;
     }
 
@@ -304,16 +339,23 @@
     .close-btn {
       width: 38px;
       height: 38px;
+
       padding: 0;
+
       border-radius: 10px;
+
       background: #f1f2f5;
+
       color: #172033;
+
       font-size: 20px;
     }
 
     .close-btn:hover {
       background: #e7e9ee;
     }
+
+    /* Details */
 
     .details {
       display: grid;
@@ -322,44 +364,77 @@
 
     .detail {
       background: #f7f8fb;
+
       border-radius: 13px;
+
       padding: 14px 16px;
     }
 
     .detail-label {
       color: #777;
+
       font-size: 12px;
+
       margin-bottom: 6px;
     }
 
     .detail-value {
       font-size: 15px;
+
       font-weight: 600;
+
       word-break: break-word;
     }
 
     .detail-email {
       direction: ltr;
+
       text-align: right;
     }
 
+    .booking-code {
+      direction: ltr;
+
+      text-align: right;
+
+      letter-spacing: .5px;
+    }
+
+    .created-at {
+      font-variant-numeric: lining-nums;
+    }
+
+    /* Meeting */
+
     .detail-link {
       direction: ltr;
+
       text-align: left;
+
       color: #3156d3;
+
       overflow: hidden;
+
       text-overflow: ellipsis;
+
       white-space: nowrap;
     }
 
     .meeting-btn {
       display: inline-block;
+
       margin-top: 8px;
+
       padding: 9px 14px;
+
       border-radius: 9px;
+
       background: #172033;
+
       color: white;
+
       text-decoration: none;
+
       font-size: 13px;
     }
 
@@ -367,15 +442,25 @@
       opacity: .9;
     }
 
-    .booking-code {
-      direction: ltr;
-      text-align: right;
-      letter-spacing: .5px;
+    /* Notes */
+
+    .notes-value {
+      line-height: 1.8;
+
+      font-weight: 500;
+
+      white-space: normal;
+
+      overflow-wrap: anywhere;
     }
 
-    .created-at {
-      font-variant-numeric: lining-nums;
+    .no-notes {
+      color: #777;
+
+      font-weight: normal;
     }
+
+    /* Mobile */
 
     @media (max-width: 800px) {
 
@@ -398,6 +483,7 @@
       .header h1 {
         font-size: 23px;
       }
+
     }
 
     @media (max-width: 450px) {
@@ -409,826 +495,1186 @@
       .modal {
         padding: 20px;
       }
+
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-<div class="box">
+  <div class="box">
 
-  <div class="header">
-    <h1>مَوعد — لوحة الإدارة</h1>
-    <p>إدارة ومتابعة حجوزات الجلسات</p>
+    <!-- Header -->
+
+    <div class="header">
+
+      <h1>
+        مَوعد — لوحة الإدارة
+      </h1>
+
+      <p>
+        إدارة ومتابعة حجوزات الجلسات
+      </p>
+
+    </div>
+
+
+    <!-- Login -->
+
+    <div class="login">
+
+      <form
+        id="loginForm"
+        onsubmit="event.preventDefault(); load()"
+        autocomplete="on"
+      >
+
+        <div class="login-row">
+
+          <input
+            id="p"
+            name="password"
+            type="password"
+            placeholder="كلمة مرور الإدارة"
+            autocomplete="current-password"
+          >
+
+          <button type="submit">
+            دخول
+          </button>
+
+        </div>
+
+      </form>
+
+
+      <div id="error"></div>
+
+    </div>
+
+
+    <div id="out"></div>
+
   </div>
 
-  <div class="login">
 
-    <form
-      id="loginForm"
-      onsubmit="event.preventDefault(); load()"
-      autocomplete="on"
+  <!-- Booking Details Modal -->
+
+  <div
+    id="bookingModal"
+    class="modal-overlay"
+    onclick="closeModal(event)"
+  >
+
+    <div
+      class="modal"
+      onclick="event.stopPropagation()"
     >
 
-      <div class="login-row">
+      <div class="modal-header">
 
-        <input
-          id="p"
-          name="password"
-          type="password"
-          placeholder="كلمة مرور الإدارة"
-          autocomplete="current-password"
+        <h2>
+          تفاصيل الحجز
+        </h2>
+
+        <button
+          class="close-btn"
+          onclick="closeModal()"
+          type="button"
         >
-
-        <button type="submit">
-          دخول
+          ×
         </button>
 
       </div>
 
-    </form>
 
-    <div id="error"></div>
-
-  </div>
-
-  <div id="out"></div>
-
-</div>
-
-
-<!-- تفاصيل الحجز -->
-
-<div
-  id="bookingModal"
-  class="modal-overlay"
-  onclick="closeModal(event)"
->
-
-  <div
-    class="modal"
-    onclick="event.stopPropagation()"
-  >
-
-    <div class="modal-header">
-
-      <h2>
-        تفاصيل الحجز
-      </h2>
-
-      <button
-        class="close-btn"
-        onclick="closeModal()"
-        type="button"
-      >
-        ×
-      </button>
+      <div
+        id="bookingDetails"
+        class="details"
+      ></div>
 
     </div>
 
-    <div
-      id="bookingDetails"
-      class="details"
-    ></div>
-
   </div>
-
-</div>
 
 
 <script>
 
-let allBookings = [];
+  let allBookings = [];
 
 
-/* =========================
-   تحميل الصفحة
-========================= */
+  /* =========================
+     تحميل الصفحة
+  ========================= */
 
-window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener(
+    'DOMContentLoaded',
+    () => {
 
-  const savedPassword =
-    sessionStorage.getItem('maw3id_admin_password');
-
-  if (savedPassword) {
-
-    document.getElementById('p').value =
-      savedPassword;
-
-    load(true);
-  }
-
-});
+      const savedPassword =
+        sessionStorage.getItem(
+          'maw3id_admin_password'
+        );
 
 
-/* =========================
-   تسجيل الدخول
-========================= */
+      if (savedPassword) {
 
-async function load(autoLogin = false) {
+        document.getElementById('p').value =
+          savedPassword;
 
-  const password =
-    document.getElementById('p').value;
+        load(true);
 
-  const error =
-    document.getElementById('error');
+      }
 
-  error.innerHTML = '';
-
-
-  if (!password) {
-
-    if (!autoLogin) {
-      error.innerHTML =
-        '<p class="error">أدخل كلمة المرور.</p>';
     }
-
-    return;
-  }
+  );
 
 
-  try {
+  /* =========================
+     تسجيل الدخول
+  ========================= */
 
-    const r = await fetch(
-      '/api/admin?password=' +
-      encodeURIComponent(password)
-    );
+  async function load(autoLogin = false) {
 
-    const d = await r.json();
+    const password =
+      document.getElementById('p').value;
 
 
-    if (!r.ok) {
+    const error =
+      document.getElementById('error');
 
-      sessionStorage.removeItem(
-        'maw3id_admin_password'
-      );
 
-      document.getElementById('p').value = '';
+    error.innerHTML = '';
 
-      error.innerHTML =
-        '<p class="error">كلمة المرور غير صحيحة.</p>';
+
+    if (!password) {
+
+      if (!autoLogin) {
+
+        error.innerHTML =
+          '<p class="error">أدخل كلمة المرور.</p>';
+
+      }
 
       return;
+
     }
 
 
-    sessionStorage.setItem(
-      'maw3id_admin_password',
-      password
-    );
+    try {
 
+      const r = await fetch(
+        '/api/admin?password=' +
+        encodeURIComponent(password)
+      );
 
-    allBookings =
-      d.bookings || [];
 
+      const d = await r.json();
 
-    renderDashboard(allBookings);
 
-  } catch (e) {
+      if (!r.ok) {
 
-    error.innerHTML =
-      '<p class="error">حدث خطأ أثناء تحميل البيانات.</p>';
+        sessionStorage.removeItem(
+          'maw3id_admin_password'
+        );
 
-  }
 
-}
+        document.getElementById('p').value =
+          '';
 
 
-/* =========================
-   تحويل الوقت إلى 12 ساعة
-========================= */
+        error.innerHTML =
+          '<p class="error">كلمة المرور غير صحيحة.</p>';
 
-function formatTime(time) {
 
-  if (!time) return '-';
+        return;
 
-  const parts = time.split(':');
-
-  let hour = parseInt(parts[0], 10);
-  const minute = parts[1] || '00';
-
-  const period = hour >= 12 ? 'م' : 'ص';
-
-  hour = hour % 12;
-
-  if (hour === 0) {
-    hour = 12;
-  }
-
-  return `${hour}:${minute} ${period}`;
-}
-
-
-/* =========================
-   تنسيق تاريخ إنشاء الحجز
-========================= */
-
-function formatCreatedAt(value) {
-
-  if (!value) return '-';
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return escapeHTML(value);
-  }
-
-  const datePart =
-    date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-
-  const timePart =
-    date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    })
-    .replace('AM', 'ص')
-    .replace('PM', 'م');
-
-  return `${datePart} — ${timePart}`;
-}
-
-
-/* =========================
-   Dashboard
-========================= */
-
-function renderDashboard(bookings) {
-
-  const total =
-    allBookings.length;
-
-  const pending =
-    allBookings.filter(
-      b => b.attendance_status === 'pending'
-    ).length;
-
-  const confirmed =
-    allBookings.filter(
-      b => b.attendance_status === 'confirmed'
-    ).length;
-
-  const cancelled =
-    allBookings.filter(
-      b =>
-        b.attendance_status === 'cancelled' ||
-        b.attendance_status === 'canceled'
-    ).length;
-
-
-  const statsHTML = `
-
-    <div class="stats">
-
-      <div class="stat">
-        <div class="stat-label">
-          إجمالي الحجوزات
-        </div>
-
-        <div class="stat-number">
-          ${total}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">
-          الحجوزات المعلقة
-        </div>
-
-        <div class="stat-number">
-          ${pending}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">
-          الحجوزات المؤكدة
-        </div>
-
-        <div class="stat-number">
-          ${confirmed}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label">
-          المعتذر عنها
-        </div>
-
-        <div class="stat-number">
-          ${cancelled}
-        </div>
-      </div>
-
-    </div>
-  `;
-
-
-  const tableHTML = `
-
-    <div class="table-box">
-
-      <div class="table-title">
-        <h2>
-          الحجوزات
-        </h2>
-      </div>
-
-
-      <div class="filters">
-
-        <input
-          id="search"
-          type="text"
-          placeholder="ابحث بالاسم أو البريد الإلكتروني..."
-          oninput="applyFilters()"
-        >
-
-        <input
-          id="dateFilter"
-          type="date"
-          onchange="applyFilters()"
-        >
-
-        <select
-          id="statusFilter"
-          onchange="applyFilters()"
-        >
-
-          <option value="">
-            كل الحالات
-          </option>
-
-          <option value="pending">
-            معلق
-          </option>
-
-          <option value="confirmed">
-            مؤكد
-          </option>
-
-          <option value="cancelled">
-            معتذر
-          </option>
-
-        </select>
-
-        <button
-          class="clear-btn"
-          onclick="clearFilters()"
-          type="button"
-        >
-          مسح
-        </button>
-
-      </div>
-
-
-      <div id="results"></div>
-
-    </div>
-  `;
-
-
-  document.getElementById('out').innerHTML =
-    statsHTML + tableHTML;
-
-
-  renderTable(bookings);
-}
-
-
-/* =========================
-   الفلاتر
-========================= */
-
-function applyFilters() {
-
-  const search =
-    document.getElementById('search')
-      .value
-      .trim()
-      .toLowerCase();
-
-  const date =
-    document.getElementById('dateFilter')
-      .value;
-
-  const status =
-    document.getElementById('statusFilter')
-      .value;
-
-
-  const filtered =
-    allBookings.filter(b => {
-
-      const name =
-        String(b.name || '')
-          .toLowerCase();
-
-      const email =
-        String(b.email || '')
-          .toLowerCase();
-
-      const matchesSearch =
-        !search ||
-        name.includes(search) ||
-        email.includes(search);
-
-      const matchesDate =
-        !date ||
-        b.session_date === date;
-
-
-      let bookingStatus =
-        b.attendance_status || 'pending';
-
-
-      if (bookingStatus === 'canceled') {
-        bookingStatus = 'cancelled';
       }
 
 
-      const matchesStatus =
-        !status ||
-        bookingStatus === status;
-
-
-      return (
-        matchesSearch &&
-        matchesDate &&
-        matchesStatus
+      sessionStorage.setItem(
+        'maw3id_admin_password',
+        password
       );
-    });
 
 
-  renderTable(filtered);
-}
+      allBookings =
+        d.bookings || [];
 
 
-/* =========================
-   مسح الفلاتر
-========================= */
-
-function clearFilters() {
-
-  document.getElementById('search').value = '';
-  document.getElementById('dateFilter').value = '';
-  document.getElementById('statusFilter').value = '';
-
-  renderTable(allBookings);
-}
+      renderDashboard(
+        allBookings
+      );
 
 
-/* =========================
-   الجدول
-========================= */
+    } catch (e) {
 
-function renderTable(bookings) {
+      error.innerHTML =
+        '<p class="error">حدث خطأ أثناء تحميل البيانات.</p>';
 
-  const results =
-    document.getElementById('results');
+    }
 
-  if (!results) return;
+  }
 
 
-  const countHTML = `
+  /* =========================
+     تحويل الوقت إلى 12 ساعة
+  ========================= */
 
-    <div class="results-count">
-      عرض ${bookings.length}
-      من أصل ${allBookings.length}
-      حجز
-    </div>
-  `;
+  function formatTime(time) {
+
+    if (!time) return '-';
 
 
-  if (bookings.length === 0) {
+    const parts =
+      time.split(':');
+
+
+    let hour =
+      parseInt(
+        parts[0],
+        10
+      );
+
+
+    const minute =
+      parts[1] || '00';
+
+
+    const period =
+      hour >= 12
+        ? 'م'
+        : 'ص';
+
+
+    hour =
+      hour % 12;
+
+
+    if (hour === 0) {
+      hour = 12;
+    }
+
+
+    return `${hour}:${minute} ${period}`;
+
+  }
+
+
+  /* =========================
+     تنسيق وقت إنشاء الحجز
+  ========================= */
+
+  function formatCreatedAt(value) {
+
+    if (!value) return '-';
+
+
+    const date =
+      new Date(value);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return escapeHTML(value);
+
+    }
+
+
+    const datePart =
+      date.toLocaleDateString(
+        'en-GB',
+        {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }
+      );
+
+
+    const timePart =
+      date.toLocaleTimeString(
+        'en-US',
+        {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }
+      )
+      .replace('AM', 'ص')
+      .replace('PM', 'م');
+
+
+    return `${datePart} — ${timePart}`;
+
+  }
+
+
+  /* =========================
+     Dashboard
+  ========================= */
+
+  function renderDashboard(
+    bookings
+  ) {
+
+    const total =
+      allBookings.length;
+
+
+    const pending =
+      allBookings.filter(
+        b =>
+          b.attendance_status ===
+          'pending'
+      ).length;
+
+
+    const confirmed =
+      allBookings.filter(
+        b =>
+          b.attendance_status ===
+          'confirmed'
+      ).length;
+
+
+    const cancelled =
+      allBookings.filter(
+        b =>
+          b.attendance_status ===
+            'cancelled' ||
+          b.attendance_status ===
+            'canceled' ||
+          b.attendance_status ===
+            'declined'
+      ).length;
+
+
+    const statsHTML = `
+
+      <div class="stats">
+
+        <div class="stat">
+
+          <div class="stat-label">
+            إجمالي الحجوزات
+          </div>
+
+          <div class="stat-number">
+            ${total}
+          </div>
+
+        </div>
+
+
+        <div class="stat">
+
+          <div class="stat-label">
+            الحجوزات المعلقة
+          </div>
+
+          <div class="stat-number">
+            ${pending}
+          </div>
+
+        </div>
+
+
+        <div class="stat">
+
+          <div class="stat-label">
+            الحجوزات المؤكدة
+          </div>
+
+          <div class="stat-number">
+            ${confirmed}
+          </div>
+
+        </div>
+
+
+        <div class="stat">
+
+          <div class="stat-label">
+            المعتذر عنها
+          </div>
+
+          <div class="stat-number">
+            ${cancelled}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    const tableHTML = `
+
+      <div class="table-box">
+
+        <div class="table-title">
+
+          <h2>
+            الحجوزات
+          </h2>
+
+        </div>
+
+
+        <div class="filters">
+
+          <input
+            id="search"
+            type="text"
+            placeholder="ابحث بالاسم أو البريد الإلكتروني..."
+            oninput="applyFilters()"
+          >
+
+
+          <input
+            id="dateFilter"
+            type="date"
+            onchange="applyFilters()"
+          >
+
+
+          <select
+            id="statusFilter"
+            onchange="applyFilters()"
+          >
+
+            <option value="">
+              كل الحالات
+            </option>
+
+            <option value="pending">
+              معلق
+            </option>
+
+            <option value="confirmed">
+              مؤكد
+            </option>
+
+            <option value="declined">
+              معتذر
+            </option>
+
+          </select>
+
+
+          <button
+            class="clear-btn"
+            onclick="clearFilters()"
+            type="button"
+          >
+            مسح
+          </button>
+
+        </div>
+
+
+        <div id="results"></div>
+
+      </div>
+
+    `;
+
+
+    document.getElementById('out').innerHTML =
+      statsHTML +
+      tableHTML;
+
+
+    renderTable(
+      bookings
+    );
+
+  }
+
+
+  /* =========================
+     الفلاتر
+  ========================= */
+
+  function applyFilters() {
+
+    const search =
+      document.getElementById('search')
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const date =
+      document.getElementById(
+        'dateFilter'
+      ).value;
+
+
+    const status =
+      document.getElementById(
+        'statusFilter'
+      ).value;
+
+
+    const filtered =
+      allBookings.filter(
+        b => {
+
+          const name =
+            String(
+              b.name || ''
+            ).toLowerCase();
+
+
+          const email =
+            String(
+              b.email || ''
+            ).toLowerCase();
+
+
+          const matchesSearch =
+            !search ||
+            name.includes(search) ||
+            email.includes(search);
+
+
+          const matchesDate =
+            !date ||
+            b.session_date === date;
+
+
+          const bookingStatus =
+            b.attendance_status ||
+            'pending';
+
+
+          const matchesStatus =
+            !status ||
+            bookingStatus === status;
+
+
+          return (
+            matchesSearch &&
+            matchesDate &&
+            matchesStatus
+          );
+
+        }
+      );
+
+
+    renderTable(
+      filtered
+    );
+
+  }
+
+
+  /* =========================
+     مسح الفلاتر
+  ========================= */
+
+  function clearFilters() {
+
+    document.getElementById(
+      'search'
+    ).value = '';
+
+
+    document.getElementById(
+      'dateFilter'
+    ).value = '';
+
+
+    document.getElementById(
+      'statusFilter'
+    ).value = '';
+
+
+    renderTable(
+      allBookings
+    );
+
+  }
+
+
+  /* =========================
+     الجدول
+  ========================= */
+
+  function renderTable(
+    bookings
+  ) {
+
+    const results =
+      document.getElementById(
+        'results'
+      );
+
+
+    if (!results) return;
+
+
+    const countHTML = `
+
+      <div class="results-count">
+
+        عرض ${bookings.length}
+        من أصل ${allBookings.length}
+        حجز
+
+      </div>
+
+    `;
+
+
+    if (
+      bookings.length === 0
+    ) {
+
+      results.innerHTML =
+        countHTML +
+
+        `
+
+          <div class="empty">
+            لا توجد حجوزات مطابقة للبحث.
+          </div>
+
+        `;
+
+
+      return;
+
+    }
+
+
+    const tableHTML = `
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              الاسم
+            </th>
+
+            <th>
+              البريد الإلكتروني
+            </th>
+
+            <th>
+              التاريخ
+            </th>
+
+            <th>
+              الوقت
+            </th>
+
+            <th>
+              الحضور
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          ${bookings.map(
+            b => {
+
+              const status =
+                b.attendance_status ||
+                'pending';
+
+
+              let statusClass =
+                'pending';
+
+
+              let statusText =
+                'معلق';
+
+
+              if (
+                status ===
+                'confirmed'
+              ) {
+
+                statusClass =
+                  'confirmed';
+
+                statusText =
+                  'مؤكد';
+
+              }
+
+
+              if (
+                status ===
+                  'declined' ||
+                status ===
+                  'cancelled' ||
+                status ===
+                  'canceled'
+              ) {
+
+                statusClass =
+                  'cancelled';
+
+                statusText =
+                  'معتذر';
+
+              }
+
+
+              return `
+
+                <tr
+                  onclick="openBooking(
+                    ${allBookings.indexOf(b)}
+                  )"
+                >
+
+                  <td class="name">
+
+                    ${escapeHTML(
+                      b.name || '-'
+                    )}
+
+                  </td>
+
+
+                  <td class="email">
+
+                    ${escapeHTML(
+                      b.email || '-'
+                    )}
+
+                  </td>
+
+
+                  <td class="date-cell">
+
+                    ${escapeHTML(
+                      b.session_date || '-'
+                    )}
+
+                  </td>
+
+
+                  <td class="time-cell">
+
+                    ${formatTime(
+                      b.start_time
+                    )}
+
+                  </td>
+
+
+                  <td>
+
+                    <span
+                      class="status ${statusClass}"
+                    >
+                      ${statusText}
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              `;
+
+            }
+          ).join('')}
+
+        </tbody>
+
+      </table>
+
+    `;
+
 
     results.innerHTML =
       countHTML +
-      `
-        <div class="empty">
-          لا توجد حجوزات مطابقة للبحث.
-        </div>
-      `;
+      tableHTML;
 
-    return;
   }
 
 
-  const tableHTML = `
+  /* =========================
+     فتح تفاصيل الحجز
+  ========================= */
 
-    <table>
+  function openBooking(
+    index
+  ) {
 
-      <thead>
-
-        <tr>
-          <th>الاسم</th>
-          <th>البريد الإلكتروني</th>
-          <th>التاريخ</th>
-          <th>الوقت</th>
-          <th>الحضور</th>
-        </tr>
-
-      </thead>
+    const booking =
+      allBookings[index];
 
 
-      <tbody>
-
-        ${bookings.map(b => {
-
-          const status =
-            b.attendance_status || 'pending';
+    if (!booking) return;
 
 
-          let statusClass = 'pending';
-          let statusText = 'معلق';
+    let statusClass =
+      'pending';
 
 
-          if (status === 'confirmed') {
-            statusClass = 'confirmed';
-            statusText = 'مؤكد';
-          }
+    let statusText =
+      'معلق';
 
 
-          if (
-            status === 'cancelled' ||
-            status === 'canceled'
-          ) {
-            statusClass = 'cancelled';
-            statusText = 'معتذر';
-          }
+    if (
+      booking.attendance_status ===
+      'confirmed'
+    ) {
+
+      statusClass =
+        'confirmed';
+
+      statusText =
+        'مؤكد';
+
+    }
 
 
-          return `
+    if (
+      booking.attendance_status ===
+        'declined' ||
+      booking.attendance_status ===
+        'cancelled' ||
+      booking.attendance_status ===
+        'canceled'
+    ) {
 
-            <tr
-              onclick="openBooking(${allBookings.indexOf(b)})"
-            >
+      statusClass =
+        'cancelled';
 
-              <td class="name">
-                ${escapeHTML(b.name || '-')}
-              </td>
+      statusText =
+        'معتذر';
 
-              <td class="email">
-                ${escapeHTML(b.email || '-')}
-              </td>
+    }
 
-              <td class="date-cell">
-                ${escapeHTML(b.session_date || '-')}
-              </td>
 
-              <td class="time-cell">
-                ${formatTime(b.start_time)}
-              </td>
+    const meetingURL =
+      booking.meeting_url
+        ? escapeHTML(
+            booking.meeting_url
+          )
+        : '';
 
-              <td>
-                <span class="status ${statusClass}">
-                  ${statusText}
-                </span>
-              </td>
 
-            </tr>
-
+    const notesHTML =
+      booking.notes
+        ? escapeHTML(
+            booking.notes
+          ).replace(
+            /\n/g,
+            '<br>'
+          )
+        : `
+            <span class="no-notes">
+              لا توجد ملاحظات
+            </span>
           `;
 
-        }).join('')}
 
-      </tbody>
-
-    </table>
-  `;
+    document.getElementById(
+      'bookingDetails'
+    ).innerHTML = `
 
 
-  results.innerHTML =
-    countHTML + tableHTML;
-}
+      <div class="detail">
+
+        <div class="detail-label">
+          الاسم
+        </div>
+
+        <div class="detail-value">
+
+          ${escapeHTML(
+            booking.name || '-'
+          )}
+
+        </div>
+
+      </div>
 
 
-/* =========================
-   تفاصيل الحجز
-========================= */
+      <div class="detail">
 
-function openBooking(index) {
+        <div class="detail-label">
+          البريد الإلكتروني
+        </div>
 
-  const booking =
-    allBookings[index];
+        <div class="detail-value detail-email">
 
-  if (!booking) return;
+          ${escapeHTML(
+            booking.email || '-'
+          )}
+
+        </div>
+
+      </div>
 
 
-  let statusClass = 'pending';
-  let statusText = 'معلق';
+      <div class="detail">
+
+        <div class="detail-label">
+          رقم الحجز
+        </div>
+
+        <div class="detail-value booking-code">
+
+          ${escapeHTML(
+            booking.booking_code || '-'
+          )}
+
+        </div>
+
+      </div>
 
 
-  if (booking.attendance_status === 'confirmed') {
-    statusClass = 'confirmed';
-    statusText = 'مؤكد';
+      <div class="detail">
+
+        <div class="detail-label">
+          موعد الجلسة
+        </div>
+
+        <div class="detail-value">
+
+          ${escapeHTML(
+            booking.session_date || '-'
+          )}
+
+          <br>
+
+          ${formatTime(
+            booking.start_time
+          )}
+
+          -
+
+          ${formatTime(
+            booking.end_time
+          )}
+
+        </div>
+
+      </div>
+
+
+      <div class="detail">
+
+        <div class="detail-label">
+          حالة الحضور
+        </div>
+
+        <div class="detail-value">
+
+          <span
+            class="status ${statusClass}"
+          >
+            ${statusText}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="detail">
+
+        <div class="detail-label">
+          تم الحجز في
+        </div>
+
+        <div class="detail-value created-at">
+
+          ${formatCreatedAt(
+            booking.created_at
+          )}
+
+        </div>
+
+      </div>
+
+
+      <div class="detail">
+
+        <div class="detail-label">
+          رابط الجلسة
+        </div>
+
+        <div class="detail-value">
+
+          ${
+            booking.meeting_url
+
+              ? `
+
+                <div class="detail-link">
+
+                  ${meetingURL}
+
+                </div>
+
+
+                <a
+                  class="meeting-btn"
+                  href="${meetingURL}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  فتح رابط الجلسة
+                </a>
+
+              `
+
+              : `
+
+                لا يوجد رابط جلسة
+
+              `
+          }
+
+        </div>
+
+      </div>
+
+
+      <div class="detail">
+
+        <div class="detail-label">
+          ملاحظات العميل
+        </div>
+
+        <div class="detail-value notes-value">
+
+          ${notesHTML}
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    document
+      .getElementById(
+        'bookingModal'
+      )
+      .classList.add(
+        'show'
+      );
+
   }
 
 
-  if (
-    booking.attendance_status === 'cancelled' ||
-    booking.attendance_status === 'canceled'
+  /* =========================
+     إغلاق النافذة
+  ========================= */
+
+  function closeModal(
+    event
   ) {
-    statusClass = 'cancelled';
-    statusText = 'معتذر';
+
+    if (
+      event &&
+      event.target !==
+        document.getElementById(
+          'bookingModal'
+        )
+    ) {
+
+      return;
+
+    }
+
+
+    document
+      .getElementById(
+        'bookingModal'
+      )
+      .classList.remove(
+        'show'
+      );
+
   }
 
 
-  const meetingURL =
-    booking.meeting_url
-      ? escapeHTML(booking.meeting_url)
-      : '';
+  document.addEventListener(
+    'keydown',
+    event => {
+
+      if (
+        event.key ===
+        'Escape'
+      ) {
+
+        closeModal();
+
+      }
+
+    }
+  );
 
 
-  document.getElementById('bookingDetails').innerHTML = `
+  /* =========================
+     حماية HTML
+  ========================= */
 
-    <div class="detail">
-
-      <div class="detail-label">
-        الاسم
-      </div>
-
-      <div class="detail-value">
-        ${escapeHTML(booking.name || '-')}
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        البريد الإلكتروني
-      </div>
-
-      <div class="detail-value detail-email">
-        ${escapeHTML(booking.email || '-')}
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        رقم الحجز
-      </div>
-
-      <div class="detail-value booking-code">
-        ${escapeHTML(booking.booking_code || '-')}
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        موعد الجلسة
-      </div>
-
-      <div class="detail-value">
-
-        ${escapeHTML(booking.session_date || '-')}
-
-        <br>
-
-        ${
-          formatTime(booking.start_time)
-        }
-
-        -
-
-        ${
-          formatTime(booking.end_time)
-        }
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        حالة الحضور
-      </div>
-
-      <div class="detail-value">
-
-        <span class="status ${statusClass}">
-          ${statusText}
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        تم الحجز في
-      </div>
-
-      <div class="detail-value created-at">
-        ${formatCreatedAt(booking.created_at)}
-      </div>
-
-    </div>
-
-
-    <div class="detail">
-
-      <div class="detail-label">
-        رابط الجلسة
-      </div>
-
-      <div class="detail-value">
-
-        ${
-          booking.meeting_url
-            ? `
-              <div class="detail-link">
-                ${meetingURL}
-              </div>
-
-              <a
-                class="meeting-btn"
-                href="${meetingURL}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                فتح رابط الجلسة
-              </a>
-            `
-            : 'لا يوجد رابط جلسة'
-        }
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  document
-    .getElementById('bookingModal')
-    .classList.add('show');
-}
-
-
-/* =========================
-   إغلاق التفاصيل
-========================= */
-
-function closeModal(event) {
-
-  if (
-    event &&
-    event.target !==
-    document.getElementById('bookingModal')
+  function escapeHTML(
+    value
   ) {
-    return;
+
+    return String(value)
+
+      .replace(
+        /&/g,
+        '&amp;'
+      )
+
+      .replace(
+        /</g,
+        '&lt;'
+      )
+
+      .replace(
+        />/g,
+        '&gt;'
+      )
+
+      .replace(
+        /"/g,
+        '&quot;'
+      )
+
+      .replace(
+        /'/g,
+        '&#039;'
+      );
+
   }
-
-
-  document
-    .getElementById('bookingModal')
-    .classList.remove('show');
-}
-
-
-document.addEventListener('keydown', event => {
-
-  if (event.key === 'Escape') {
-    closeModal();
-  }
-
-});
-
-
-/* =========================
-   حماية HTML
-========================= */
-
-function escapeHTML(value) {
-
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
 
 </script>
 
 </body>
+
 </html>
