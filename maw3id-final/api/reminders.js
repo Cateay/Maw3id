@@ -41,7 +41,8 @@ module.exports = async (req, res) => {
       if (!resend()) continue;
 
       await resend().emails.send({
-        from: 'Maw3id <onboarding@resend.dev>',
+       // before from: 'Maw3id <onboarding@resend.dev>',
+        from: 'Maw3id <noreply@maw3id.online>',
         to: b.email,
         subject: 'تذكير بجلسة مَوعد',
         html: `
