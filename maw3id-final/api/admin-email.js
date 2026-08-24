@@ -55,7 +55,10 @@ export default async function handler(req, res) {
       });
     }
 
-    // Basic email validation
+    // =========================
+    // Email validation
+    // =========================
+
     const emailRegex =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -66,7 +69,7 @@ export default async function handler(req, res) {
     }
 
     // =========================
-    // Resend
+    // Resend API Key
     // =========================
 
     const resendApiKey =
@@ -86,29 +89,15 @@ export default async function handler(req, res) {
     // Sender
     // =========================
     //
-    // IMPORTANT:
-    // Change this to the email address
-    // you verified inside Resend.
-    //
-    // Example:
-    // "مَوعد <no-reply@yourdomain.com>"
+    // This is the verified Maw3id domain.
+    // We DO NOT use ADMIN_EMAIL here.
     //
 
     const from =
-      process.env.ADMIN_EMAIL;
-
-    if (!from) {
-      console.error(
-        'ADMIN_EMAIL is missing'
-      );
-
-      return res.status(500).json({
-        error: 'بريد المرسل غير مضبوط.'
-      });
-    }
+      'Maw3id <noreply@maw3id.online>';
 
     // =========================
-    // Send email
+    // Send email with Resend
     // =========================
 
     const response =
@@ -127,13 +116,15 @@ export default async function handler(req, res) {
 
           body: JSON.stringify({
             from: from,
+
             to: [to],
+
             subject: subject,
 
-            // Plain text
+            // Plain text version
             text: message,
 
-            // Simple HTML version
+            // HTML version
             html: `
               <div
                 dir="rtl"
