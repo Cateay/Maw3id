@@ -1,5 +1,9 @@
+```javascript
 export default async function handler(req, res) {
+  // =========================
   // Allow POST only
+  // =========================
+
   if (req.method !== 'POST') {
     return res.status(405).json({
       error: 'Method not allowed'
@@ -56,7 +60,7 @@ export default async function handler(req, res) {
     }
 
     // =========================
-    // Email validation
+    // Basic email validation
     // =========================
 
     const emailRegex =
@@ -69,7 +73,7 @@ export default async function handler(req, res) {
     }
 
     // =========================
-    // Resend API Key
+    // Environment variables
     // =========================
 
     const resendApiKey =
@@ -85,19 +89,82 @@ export default async function handler(req, res) {
       });
     }
 
-    // =========================
-    // Sender
-    // =========================
-    //
-    // This is the verified Maw3id domain.
-    // We DO NOT use ADMIN_EMAIL here.
-    //
+    const supabaseUrl =
+      process.env.SUPABASE_URL;
 
-    const from =
-      'Maw3id <noreply@maw3id.online>';
+    const supabaseServiceRoleKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (
+      !supabaseUrl ||
+      !supabaseServiceRoleKey
+    ) {
+      console.error(
+        'Supabase environment variables are missing'
+      );
+
+      return res.status(500).json({
+        error: 'إعدادات قاعدة البيانات غير مكتملة.'
+      });
+    }
 
     // =========================
-    // Send email with Resend
+    // Save initial email record
+    // =========================
+
+    const createRecordResponse =
+      await fetch(
+        `${supabaseUrl}/rest/v1/admin_emails`,
+        {
+          method: 'POST',
+
+          headers: {
+            'apikey':
+              supabaseServiceRoleKey,
+
+            'Authorization':
+              `Bearer ${supabaseServiceRoleKey}`,
+
+            'Content-Type':
+              'application/json',
+
+            'Prefer':
+              'return=representation'
+          },
+
+          body: JSON.stringify({
+            recipient: to,
+            subject: subject,
+            message: message,
+            status: 'failed'
+          })
+        }
+      );
+
+    const createdRecords =
+      await createRecordResponse.json();
+
+    if (!createRecordResponse.ok) {
+      console.error(
+        'Failed to create email record:',
+        createdRecords
+      );
+
+      return res.status(500).json({
+        error: 'تعذر حفظ سجل البريد.'
+      });
+    }
+
+    const emailRecord =
+      Array.isArray(createdRecords)
+        ? createdRecords[0]
+        : createdRecords;
+
+    const emailRecordId =
+      emailRecord?.id;
+
+    // =========================
+    // Send through Resend
     // =========================
 
     const response =
@@ -115,16 +182,15 @@ export default async function handler(req, res) {
           },
 
           body: JSON.stringify({
-            from: from,
+            from:
+              'Maw3id <noreply@maw3id.online>',
 
             to: [to],
 
             subject: subject,
 
-            // Plain text version
             text: message,
 
-            // HTML version
             html: `
               <div
                 dir="rtl"
@@ -146,7 +212,7 @@ export default async function handler(req, res) {
       await response.json();
 
     // =========================
-    // Resend error
+    // Resend failed
     // =========================
 
     if (!response.ok) {
@@ -155,14 +221,98 @@ export default async function handler(req, res) {
         data
       );
 
+      const errorMessage =
+        data?.message ||
+        data?.error ||
+        'تعذر إرسال البريد.';
+
+      // Update record as failed
+      if (emailRecordId) {
+
+        await fetch(
+          `${supabaseUrl}/rest/v1/admin_emails?id=eq.${encodeURIComponent(emailRecordId)}`,
+          {
+            method: 'PATCH',
+
+            headers: {
+              'apikey':
+                supabaseServiceRoleKey,
+
+              'Authorization':
+                `Bearer ${supabaseServiceRoleKey}`,
+
+              'Content-Type':
+                'application/json'
+            },
+
+            body: JSON.stringify({
+              status: 'failed',
+              error_message: errorMessage,
+              updated_at:
+                new Date().toISOString()
+            })
+          }
+        );
+
+      }
+
       return res.status(
         response.status
       ).json({
+        success: false,
+        failed: true,
+        saved: true,
+        email_id:
+          emailRecordId || null,
         error:
-          data?.message ||
-          data?.error ||
-          'تعذر إرسال البريد.'
+          errorMessage
       });
+    }
+
+    // =========================
+    // Sending succeeded
+    // =========================
+
+    if (emailRecordId) {
+
+      const updateResponse =
+        await fetch(
+          `${supabaseUrl}/rest/v1/admin_emails?id=eq.${encodeURIComponent(emailRecordId)}`,
+          {
+            method: 'PATCH',
+
+            headers: {
+              'apikey':
+                supabaseServiceRoleKey,
+
+              'Authorization':
+                `Bearer ${supabaseServiceRoleKey}`,
+
+              'Content-Type':
+                'application/json'
+            },
+
+            body: JSON.stringify({
+              status: 'sent',
+              resend_id:
+                data.id || null,
+              sent_at:
+                new Date().toISOString(),
+              error_message: null,
+              updated_at:
+                new Date().toISOString()
+            })
+          }
+        );
+
+      if (!updateResponse.ok) {
+
+        console.error(
+          'Email sent but record update failed.'
+        );
+
+      }
+
     }
 
     // =========================
@@ -172,7 +322,10 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'تم إرسال البريد بنجاح.',
-      id: data.id || null
+      id:
+        data.id || null,
+      email_id:
+        emailRecordId || null
     });
 
   } catch (error) {
@@ -195,6 +348,7 @@ export default async function handler(req, res) {
 // =========================
 
 function escapeHTML(value) {
+
   return String(value)
 
     .replace(
@@ -222,3 +376,4 @@ function escapeHTML(value) {
       '&#039;'
     );
 }
+```
