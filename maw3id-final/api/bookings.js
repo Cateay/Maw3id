@@ -10,61 +10,62 @@ const {
 
 module.exports = async (req, res) => {
   cors(res);
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('Referrer-Policy', 'no-referrer');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    let {
-      name,
-      email,
-      notes,
-      date,
-      startTime
-    } = req.body || {};
+    let { name, email, notes, date, startTime } = req.body || {};
+
+    name = String(name || '').trim();
+    email = String(email || '').trim().toLowerCase();
+    notes = String(notes || '').trim();
+    date = String(date || '').trim();
+    startTime = String(startTime || '').trim();
 
     if (!name || !email || !date || !startTime) {
-      return res.status(400).json({
-        error: 'أكملي البيانات المطلوبة'
-      });
+      return res.status(400).json({ error: 'أكملي البيانات المطلوبة' });
+    }
+
+    if (name.length > 120 || email.length > 254 || notes.length > 2000) {
+      return res.status(400).json({ error: 'البيانات المدخلة طويلة جدًا' });
     }
 
     if (!/^\S+@\S+\.\S+$/.test(email)) {
-      return res.status(400).json({
-        error: 'البريد الإلكتروني غير صحيح'
-      });
+      return res.status(400).json({ error: 'البريد الإلكتروني غير صحيح' });
     }
 
-    let [h, m] = startTime.split(':').map(Number);
-
-    let endM = h * 60 + m + 120;
-
-    let end = `${String(Math.floor(endM / 60)).padStart(2, '0')}:${String(endM % 60).padStart(2, '0')}`;
-
-    let now = new Date();
-
-    let start = new Date(
-      `${date}T${startTime}:00+03:00`
-    );
-
-    if (start <= now) {
-      return res.status(400).json({
-        error: 'هذا الموعد انتهى'
-      });
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return res.status(400).json({ error: 'التاريخ غير صحيح' });
     }
 
-    let c = code();
-    let url = meetingUrl(c);
+    if (!/^\d{2}:\d{2}$/.test(startTime)) {
+      return res.status(400).json({ error: 'الوقت غير صحيح' });
+    }
 
-    let {
-      data,
-      error
-    } = await supabase()
+    const [h, m] = startTime.split(':').map(Number);
+    if (!Number.isInteger(h) || !Number.isInteger(m) || h < 0 || h > 23 || ![0, 30].includes(m)) {
+      return res.status(400).json({ error: 'الوقت غير صحيح' });
+    }
+
+    const endM = h * 60 + m + 120;
+    if (endM > 24 * 60) {
+      return res.status(400).json({ error: 'مدة الجلسة تتجاوز نهاية اليوم' });
+    }
+
+    const end = `${String(Math.floor(endM / 60)).padStart(2, '0')}:${String(endM % 60).padStart(2, '0')}`;
+    const start = new Date(`${date}T${startTime}:00+03:00`);
+
+    if (Number.isNaN(start.getTime()) || start <= new Date()) {
+      return res.status(400).json({ error: 'هذا الموعد انتهى أو غير صحيح' });
+    }
+
+    const c = code();
+    const url = meetingUrl(c);
+
+    const { data, error } = await supabase()
       .from('bookings')
       .insert({
         booking_code: c,
@@ -80,74 +81,57 @@ module.exports = async (req, res) => {
       .single();
 
     if (error) {
-      if (error.code === '23505') {
-        return res.status(409).json({
-          error: 'هذا الموعد حُجز للتو، اختاري موعدًا آخر'
-        });
+      if (error.code === '23P01' || error.code === '23505') {
+        return res.status(409).json({ error: 'هذا الموعد حُجز للتو أو يتعارض مع موعد آخر، اختاري موعدًا آخر' });
       }
-
-      throw error;
+      console.error('Booking DB error:', error);
+      return res.status(500).json({ error: 'حدث خطأ أثناء الحجز' });
     }
 
-    let subject = `تأكيد جلسة مَوعد — ${dateLabel(date)}`;
+    const subject = `تأكيد جلسة مَوعد — ${dateLabel(date)}`;
+    const safeName = escapeHTML(name);
+    const safeUrl = escapeHTML(url);
+    const safeCode = escapeHTML(c);
+    const appUrl = String(process.env.APP_URL || '').replace(/\/$/, '');
+    const confirmUrl = `${appUrl}/api/respond?code=${encodeURIComponent(c)}&status=confirmed`;
+    const declineUrl = `${appUrl}/api/respond?code=${encodeURIComponent(c)}&status=declined`;
 
     if (resend()) {
-      let html = `
+      const customerHtml = `
         <div dir="rtl" style="font-family:Arial;line-height:1.8">
           <h2>مَوعد | Maw3id</h2>
+          <p>مرحبًا ${safeName}، تم حجز جلستك بنجاح.</p>
+          <p><b>التاريخ:</b> ${escapeHTML(dateLabel(date))}<br><b>الوقت:</b> ${escapeHTML(timeLabel(startTime))} – ${escapeHTML(timeLabel(end))}<br><b>المدة:</b> ساعتان</p>
+          <p><a href="${safeUrl}">دخول الجلسة</a></p>
+          <p><a href="${escapeHTML(confirmUrl)}">تأكيد الحضور</a> &nbsp; <a href="${escapeHTML(declineUrl)}">لن أتمكن من الحضور</a></p>
+          <p>رقم الحجز: ${safeCode}</p>
+        </div>`;
 
-          <p>تم حجز جلستك بنجاح.</p>
+      try {
+        await resend().emails.send({
+          from: 'Maw3id <noreply@maw3id.online>',
+          to: email,
+          subject,
+          html: customerHtml
+        });
 
-          <p>
-            <b>التاريخ:</b> ${dateLabel(date)}<br>
-            <b>الوقت:</b> ${timeLabel(startTime)} – ${timeLabel(end)}<br>
-            <b>المدة:</b> ساعتان
-          </p>
-
-          <p>
-            <a href="${url}">دخول الجلسة</a>
-          </p>
-
-          <p>
-            <a href="${process.env.APP_URL}/api/respond?code=${c}&status=confirmed">
-              تأكيد الحضور
-            </a>
-            &nbsp;
-            <a href="${process.env.APP_URL}/api/respond?code=${c}&status=declined">
-              لن أتمكن من الحضور
-            </a>
-          </p>
-
-          <p>رقم الحجز: ${c}</p>
-        </div>
-      `;
-
-      // إرسال تأكيد الحجز للعميل
-      await resend().emails.send({
-        from: 'Maw3id <noreply@maw3id.online>',
-        to: email,
-        subject,
-        html
-      });
-
-      // إرسال إشعار حجز جديد للإدمن
-      await resend().emails.send({
-        from: 'Maw3id <noreply@maw3id.online>',
-        to: process.env.ADMIN_EMAIL || 'Eithar.012@gmail.com',
-        subject: 'حجز جلسة جديدة — ' + name,
-        html: html
-          .replace(
-            'تم حجز جلستك بنجاح.',
-            'تم حجز جلسة جديدة.'
-          )
-          .replace(
-            /تأكيد الحضور[\s\S]*/,
-            ''
-          )
-      });
+        await resend().emails.send({
+          from: 'Maw3id <noreply@maw3id.online>',
+          to: process.env.ADMIN_EMAIL,
+          subject: `حجز جلسة جديدة — ${name}`,
+          html: `
+            <div dir="rtl" style="font-family:Arial;line-height:1.8">
+              <h2>حجز جلسة جديدة</h2>
+              <p><b>الاسم:</b> ${safeName}<br><b>البريد:</b> ${escapeHTML(email)}<br><b>التاريخ:</b> ${escapeHTML(dateLabel(date))}<br><b>الوقت:</b> ${escapeHTML(timeLabel(startTime))} – ${escapeHTML(timeLabel(end))}<br><b>رقم الحجز:</b> ${safeCode}</p>
+            </div>`
+        });
+      } catch (emailError) {
+        // The booking is already stored. Do not expose provider details to the client.
+        console.error('Booking email error:', emailError);
+      }
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       name,
       dateLabel: dateLabel(date),
       startLabel: timeLabel(startTime),
@@ -155,12 +139,17 @@ module.exports = async (req, res) => {
       meetingUrl: url,
       bookingCode: c
     });
-
   } catch (e) {
-    console.error(e);
-
-    res.status(500).json({
-      error: 'حدث خطأ أثناء الحجز'
-    });
+    console.error('Booking unexpected error:', e);
+    return res.status(500).json({ error: 'حدث خطأ أثناء الحجز' });
   }
 };
+
+function escapeHTML(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
