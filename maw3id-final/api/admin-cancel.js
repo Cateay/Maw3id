@@ -8,286 +8,88 @@ const {
 
 module.exports = async (req, res) => {
   cors(res);
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('Referrer-Policy', 'no-referrer');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({
-      error: 'Method not allowed'
-    });
-  }
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-
-    const adminPassword =
-      req.headers['x-admin-password'];
-
-    if (
-      !process.env.ADMIN_PASSWORD ||
-      adminPassword !== process.env.ADMIN_PASSWORD
-    ) {
-      return res.status(401).json({
-        error: 'Unauthorized'
-      });
+    if (!process.env.ADMIN_PASSWORD || req.headers['x-admin-password'] !== process.env.ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const {
-      booking_code
-    } = req.body || {};
-
-    if (!booking_code) {
-      return res.status(400).json({
-        error: 'رقم الحجز غير موجود'
-      });
+    const bookingCode = String(req.body?.booking_code || '').trim();
+    if (!/^[A-Za-z0-9_-]{4,80}$/.test(bookingCode)) {
+      return res.status(400).json({ error: 'رقم الحجز غير صحيح' });
     }
 
-    console.log(
-      'Cancel request:',
-      booking_code
-    );
-
-
-    // جلب الحجز
-    const {
-      data: booking,
-      error: findError
-    } = await supabase()
+    const { data: booking, error: findError } = await supabase()
       .from('bookings')
-      .select(
-        'id,booking_code,name,email,session_date,start_time,end_time,meeting_url'
-      )
-      .eq(
-        'booking_code',
-        booking_code
-      )
-      .single();
-
+      .select('id,booking_code,name,email,session_date,start_time,end_time,meeting_url')
+      .eq('booking_code', bookingCode)
+      .maybeSingle();
 
     if (findError) {
-
-      console.error(
-        'Find booking error:',
-        findError
-      );
-
-      return res.status(500).json({
-        error:
-          'تعذر العثور على الحجز',
-        details:
-          findError.message
-      });
-
+      console.error('Find booking error:', findError);
+      return res.status(500).json({ error: 'تعذر العثور على الحجز' });
     }
 
+    if (!booking) return res.status(404).json({ error: 'الحجز غير موجود' });
 
-    if (!booking) {
-
-      return res.status(404).json({
-        error:
-          'الحجز غير موجود'
-      });
-
-    }
-
-
-    // حذف الحجز
-    const {
-      error: deleteError
-    } = await supabase()
+    const { error: deleteError } = await supabase()
       .from('bookings')
       .delete()
-      .eq(
-        'booking_code',
-        booking_code
-      );
-
+      .eq('id', booking.id);
 
     if (deleteError) {
-
-      console.error(
-        'Delete booking error:',
-        deleteError
-      );
-
-      return res.status(500).json({
-        error:
-          'تعذر حذف الحجز',
-        details:
-          deleteError.message
-      });
-
+      console.error('Delete booking error:', deleteError);
+      return res.status(500).json({ error: 'تعذر إلغاء الحجز' });
     }
 
+    let emailSent = false;
 
-    console.log(
-      'Booking deleted:',
-      booking_code
-    );
-
-
-    // إرسال إيميل الإلغاء
-    if (
-      resend() &&
-      booking.email
-    ) {
-
+    if (resend() && booking.email) {
       try {
-
         const html = `
-          <div
-            dir="rtl"
-            style="
-              font-family:Arial,sans-serif;
-              line-height:1.8;
-              color:#172033;
-              max-width:600px;
-              margin:auto;
-            "
-          >
+          <div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8;color:#172033;max-width:600px;margin:auto">
+            <h2>مَوعد | Maw3id</h2>
+            <p>مرحبًا ${escapeHTML(booking.name || '')}،</p>
+            <p>نود إبلاغك بأنه تم إلغاء موعد جلستك.</p>
+            <p><b>التاريخ:</b> ${escapeHTML(dateLabel(booking.session_date))}<br><b>الوقت:</b> ${escapeHTML(timeLabel(booking.start_time))} – ${escapeHTML(timeLabel(booking.end_time))}<br><b>رقم الحجز:</b> ${escapeHTML(booking.booking_code)}</p>
+            <p>يمكنك العودة إلى مَوعد واختيار موعد آخر متاح.</p>
+            <p><a href="${escapeHTML(process.env.APP_URL || '')}" style="display:inline-block;background:#172033;color:white;padding:10px 18px;border-radius:8px;text-decoration:none">حجز موعد جديد</a></p>
+          </div>`;
 
-            <h2>
-              مَوعد | Maw3id
-            </h2>
-
-            <p>
-              مرحبًا ${booking.name || ''}،
-            </p>
-
-            <p>
-              نود إبلاغك بأنه تم إلغاء موعد جلستك.
-            </p>
-
-            <p>
-              <b>التاريخ:</b>
-              ${dateLabel(booking.session_date)}
-              <br>
-
-              <b>الوقت:</b>
-              ${timeLabel(booking.start_time)}
-              –
-              ${timeLabel(booking.end_time)}
-              <br>
-
-              <b>رقم الحجز:</b>
-              ${booking.booking_code}
-            </p>
-
-            <p>
-              يمكنك العودة إلى مَوعد واختيار موعد آخر متاح.
-            </p>
-
-            <p>
-              <a
-                href="${process.env.APP_URL}"
-                style="
-                  display:inline-block;
-                  background:#172033;
-                  color:white;
-                  padding:10px 18px;
-                  border-radius:8px;
-                  text-decoration:none;
-                "
-              >
-                حجز موعد جديد
-              </a>
-            </p>
-
-            <p style="color:#777;font-size:13px">
-              نعتذر عن أي إزعاج.
-            </p>
-
-          </div>
-        `;
-
-
-        const emailResult =
-          await resend().emails.send({
-
-            from:
-              'Maw3id <noreply@maw3id.online>',
-
-            to:
-              booking.email,
-
-            subject:
-              `إلغاء موعد مَوعد — ${dateLabel(
-                booking.session_date
-              )}`,
-
-            html
-
-          });
-
-
-        console.log(
-          'Cancellation email sent:',
-          emailResult
-        );
-
-
-      } catch (emailError) {
-
-        console.error(
-          'Email error:',
-          emailError
-        );
-
-        // الحجز انحذف بالفعل،
-        // لذلك لا نرجع 500 هنا.
-        return res.status(200).json({
-
-          success: true,
-
-          deleted: true,
-
-          emailSent: false,
-
-          message:
-            'تم إلغاء الموعد، لكن تعذر إرسال الإيميل للعميل',
-
-          emailError:
-            emailError.message
-
+        await resend().emails.send({
+          from: 'Maw3id <noreply@maw3id.online>',
+          to: booking.email,
+          subject: `إلغاء موعد مَوعد — ${dateLabel(booking.session_date)}`,
+          html
         });
-
+        emailSent = true;
+      } catch (emailError) {
+        console.error('Cancellation email error:', emailError);
       }
-
     }
-
 
     return res.status(200).json({
-
       success: true,
-
       deleted: true,
-
-      emailSent: true,
-
-      message:
-        'تم إلغاء الموعد وإرسال الإشعار'
-
+      emailSent,
+      message: emailSent ? 'تم إلغاء الموعد وإرسال الإشعار' : 'تم إلغاء الموعد'
     });
-
-
   } catch (e) {
-
-    console.error(
-      'Cancel unexpected error:',
-      e
-    );
-
-    return res.status(500).json({
-
-      error:
-        'حدث خطأ أثناء إلغاء الموعد',
-
-      details:
-        e.message
-
-    });
-
+    console.error('Cancel unexpected error:', e);
+    return res.status(500).json({ error: 'حدث خطأ أثناء إلغاء الموعد' });
   }
-
 };
+
+function escapeHTML(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
