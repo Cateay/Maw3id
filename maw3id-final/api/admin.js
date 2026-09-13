@@ -4,11 +4,11 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
   res.setHeader('Referrer-Policy', 'no-referrer');
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  const providedPassword = req.headers['x-admin-password'];
+  // Header is the preferred authentication method. Query-string support is
+  // retained temporarily for the current dashboard until its frontend is updated.
+  const providedPassword = req.headers['x-admin-password'] || req.query?.password;
 
   if (!process.env.ADMIN_PASSWORD || providedPassword !== process.env.ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Unauthorized' });
