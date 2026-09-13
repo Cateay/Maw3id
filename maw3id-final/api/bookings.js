@@ -81,9 +81,6 @@ module.exports = async (req, res) => {
       .single();
 
     if (error) {
-      if (error.code === '23P01' || error.code === '23505') {
-        return res.status(409).json({ error: 'هذا الموعد حُجز للتو أو يتعارض مع موعد آخر، اختاري موعدًا آخر' });
-      }
       console.error('Booking DB error:', error);
       return res.status(500).json({ error: 'حدث خطأ أثناء الحجز' });
     }
@@ -122,11 +119,11 @@ module.exports = async (req, res) => {
           html: `
             <div dir="rtl" style="font-family:Arial;line-height:1.8">
               <h2>حجز جلسة جديدة</h2>
-              <p><b>الاسم:</b> ${safeName}<br><b>البريد:</b> ${escapeHTML(email)}<br><b>التاريخ:</b> ${escapeHTML(dateLabel(date))}<br><b>الوقت:</b> ${escapeHTML(timeLabel(startTime))} – ${escapeHTML(timeLabel(end))}<br><b>رقم الحجز:</b> ${safeCode}</p>
+              <p><b>الاسم:</b> ${safeName}<br><b>البريد:</b> ${escapeHTML(email)}<br><b>التاريخ:</b> ${escapeHTML(dateLabel(date))}<br><b>الوقت:</b> ${escapeHTML(timeLabel(startTime))} – ${escapeHTML(timeLabel(end))}<br><b>المدة:</b> ساعتان<br><b>رقم الحجز:</b> ${safeCode}</p>
+              <p><b>رابط الجلسة:</b> <a href="${safeUrl}">${safeUrl}</a></p>
             </div>`
         });
       } catch (emailError) {
-        // The booking is already stored. Do not expose provider details to the client.
         console.error('Booking email error:', emailError);
       }
     }
@@ -150,6 +147,6 @@ function escapeHTML(value) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
+    .replace(/\"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
