@@ -1,35 +1,29 @@
 const { supabase } = require('./_lib');
 
 module.exports = async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('Referrer-Policy', 'no-referrer');
 
-  if (
-    !process.env.ADMIN_PASSWORD ||
-    req.query.password !== process.env.ADMIN_PASSWORD
-  ) {
-    return res.status(401).json({
-      error: 'Unauthorized'
-    });
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  let { data, error } = await supabase()
+  const providedPassword = req.headers['x-admin-password'];
+
+  if (!process.env.ADMIN_PASSWORD || providedPassword !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const { data, error } = await supabase()
     .from('bookings')
-    .select(
-      'id,name,email,session_date,start_time,end_time,attendance_status,booking_code,meeting_url,created_at,notes'
-    )
-    .order('session_date', {
-      ascending: true
-    })
-    .order('start_time', {
-      ascending: true
-    });
+    .select('id,name,email,session_date,start_time,end_time,attendance_status,booking_code,meeting_url,created_at,notes')
+    .order('session_date', { ascending: true })
+    .order('start_time', { ascending: true });
 
   if (error) {
-    return res.status(500).json({
-      error: 'db'
-    });
+    console.error('Admin bookings error:', error);
+    return res.status(500).json({ error: 'تعذر تحميل الحجوزات' });
   }
 
-  res.json({
-    bookings: data || []
-  });
+  return res.json({ bookings: data || [] });
 };
